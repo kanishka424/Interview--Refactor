@@ -1,0 +1,9 @@
+HASHCODE()
+
+
+@Override 
+public int hashCode(){
+sout("hashcode called");
+return this.name.hashcode()+57;
+}
+

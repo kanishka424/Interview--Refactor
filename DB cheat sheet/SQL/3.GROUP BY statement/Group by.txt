@@ -1,0 +1,209 @@
+$$$$$$$$$$$$$$$$$$$$$$$$ Introduction to GROUP BY$$$$$$$$$$$$$$$$
+
+
+
+GROUP BY and Aggregate functions
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Aggregate function $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+Takes multiple inputs and outputs single RESULT 
+
+AVG()
+COUNT()
+MAX()
+MIN()
+SUM()
+
+******aggreagte function calls ONLY HPPENS IN THE SELECT CLAUSE OR HAVING CLAUSE
+
+
+
+
+
+
+AVG()-floating point value 
+        we can use ROUND() to specify precisions
+
+COUNT()/COUNT(*)-returns number of rows
+
+
+
+select MIN(cost) FROM film
+
+select MIN(cost),MAX(cost) from film
+
+select MIN(cost),film_id FROM film//wont work without the GROUPBY() this doesnt make sense because we are just calling aggregate function and MIN(replacment_cost) just returns a single value in order to call other columns we need to call GROUPBY
+
+BUT
+
+select MIN(cost),MAX(cost) FROM film; ;//This will work because MIN() and MAX() both returns a singuler vallue
+
+
+
+
+SELECT AVG(cost)//this will give so many numbers after the decimal point
+FROM film;
+
+
+SELECT ROUND(AVG(cost),2)//here we limit the number of digitd after the decimal point to two
+FROM film;
+
+SELECT SUM(cost)
+FROM film;
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ GROUP BY $$$$$$$$$$$$$$$$$$$$$$$
+
+GROUP BY allows us to aggreagte columns per some category
+
+we need to choose a CATEGORICAL column to GROUP BY
+categorical columns are non-continoues
+but they can be Numerical,such as cabin class categories on a ship(
+        class 1,class 2,class 3
+)
+
+ref-categorical columns
+
+
+HOW GROUP BY WORKS
+it works per ccategory basis
+it first group by the category 
+then implement the aggregate function
+
+
+ref-how GROUP BY work
+ref-how GROUP BY work with COUNT
+1.split the table up on a per category basasi
+2.the agregate function takes multiple values and reduces it to one single value
+
+
+
+
+SELECT category_col,AGG(data_col)//group by column is in Select 
+FROM table 
+GROUP BY category_col
+
+
+
+****THe GROUP BY clasuse must appear right after a FROM or WHERE statement
+
+SELECT category_col,AGG(data_col)
+FROM table 
+WHERE category_col!='A'
+GROUP BY category_col
+ we can filter data before GROUP BY in the WHERE clause
+
+
+
+*****IMPORTANT*******in the SELECT ststement,columns must either have an aggreagte function or be in 
+the GROUP BY call
+
+
+
+***********************IMPORTANT **********in the SELECT statement .coluns must either have an aggreagte functin or be in
+the GROUP BY call OTHERWISE IT IS NOT ALLOWED TO ADD IN SELECT CLAUSE IF WE ARE USING GROUP BY
+
+
+
+*****below both company and division appears in GROUP BY and sales is in an aggregate function
+SELECT company,division,SUM(sales)
+FROM finance_table
+GROUP BY company,division
+
+
+WHERE statements SHOULD NOT REFER TO AGGREAGTE RESULTS
+WE have HAVING for that
+
+
+SELECT company,division,SUM(sales)
+FROM finance_table
+WHERE division IN ('marketing','transpot')//here we didnt use sales beccause it has the aggreagte function
+GROUP BY company,division
+
+
+****This returns total number of sales per company and per division
+
+
+WHERE SHOULD NOT RESUL TO AGGREGATION RESULTS BECAUSR AGGREGATION HAPPENS AFTER WHERE CLAUSE
+AGGREGATION HAPPENS EVEN AFTER GROUP BY
+
+to filter on aggreagtion function we must use HAVING
+
+
+*****IF YOU WANT TO SORT RESULTS BASED ON THE AGGREAGTE ,Make sure to referencedthe entire function
+(like in alias)
+
+SELECT company,SUM(sales)
+FROM finance_table
+GROUP BY company
+ORDER BY SUM(sales) DESC//using just sales wont work
+LIMIT 5
+
+IF I ORDER BY AN AGGREGATE FUNCTION THAT AGGREGATE FUNCTION SHOULD BE IN SELECT CLAUSE
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 4.GROUP BY 2 $$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+SELECT customer_id,staff_id,SUM(amount) FROM payment
+GROUP BY staff_id,customer_id
+
+//Each staff for particular customer_id
+
+SUM()-the addition of column values e.g-number og total cost
+COUNT()-tha number of columns e.g-number of transactions
+
+//IF YOU WNAT THE CORRECT  ORDERING give the same as GROUP By 
+SELECT customer_id,staff_id,SUM(amount) FROM payment//go through ahgin IMPORTANT
+GROUP BY staff_id,customer_id
+ORDER BY staff_id,customer_id
+
+
+SELECT DATE(payment_date),SUM(amount) FROM payment//use of  DATE() to extract ONLT THE DATE
+GROUP BY  DATE(payment_date)
+ORDER BY SUM(amount) DESC
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 6.HAVING $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+ALLLOWS US TO FILTER AFTER AN AGGREGATION HAS ALREADY TAKEN PLACE
+
+
+SELECT company,SUM(sales)
+FROM finance_table
+WHERE company!='Google'
+GROUP BY company
+
+
+************IMPORTANT***********************WE CANT USE WHERE TO FILTER BASED OFF OF AGGREAGTE RESULTS,BECAUSE THOSE HAPPEN AFTER A WHERE IS EXECUTED
+SO WE HAVE TO USE HAVING FOR THAT
+
+
+******IMPORTAT*************
+
+SELECT company,SUM(sales)
+FROM finance_table
+WHERE company!='Google'
+GROUP BY company
+HAVING SUM(sales)>100
+
+
+to filter along with GROUP BY we need 
+
+aggregate function happens (in select) after GROU BY
+
+
+SELECT store_id,COUNT(customer_id) FROM customer_id
+GROUP BY store_id
+HAVING COUNT (customer_id)>300
+
+

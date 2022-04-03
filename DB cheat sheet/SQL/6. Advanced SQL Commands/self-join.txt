@@ -1,0 +1,44 @@
+SELF-JOIN
+
+A table is joined to itself
+
+comparing values in a column of rows wihin the same table
+
+can be viewed as two copies joined of the same table
+
+
+the table is not actullay copied but sql performs it as though it where
+
+
+THERE IS NO SPECIAL KEYWORD SIMPLY STANDARD "JOIN" WITH THE SAME TABLE IN BOTH PARTS
+
+HOWEVER WHEN USING SELF-JOIN IT IS NECESSARY TO USE AN ALIAS FOR THE TABLE OTHERWISE THE TABLE NAMES WOULD BE AMBIGUOUES
+
+*****syntaxt
+
+SELECT tableA.col,tableB.col
+FROM table AS tableA
+JOIN table AS tableB ON
+tableA.some_col=table.other_col
+
+
+***tableA and tableB refers to same table
+
+
+eg-time 3.03
+
+where emloyee reports to another emplyee
+in EM[PLOYEES table
+e.g-software engineer to Tech lead]
+
+
+ref -self join graphical
+
+SELECT emp.col ,report.col AS rep
+FROM employees AS emp
+JOIN employees AS report ON
+emp.emp_id=report.report_id
+
+
+
+

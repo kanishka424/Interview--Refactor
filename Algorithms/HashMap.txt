@@ -1,0 +1,12 @@
+1.Simple Explanation of HashMap, HashSet, ArrayLists and Big O: O(n), O(1)-https://www.youtube.com/watch?v=FhNJ6aikTVI
+2.14.11 HashMap and HashTable in Java(teluko)-https://www.youtube.com/watch?v=z5tZ0Zb5rJQ
+entrySet() and getKeySet()
+
+3.HashTable section of Data Structures and Algorithms: Deep Dive Using Java
+
+
+
+To whom it may concern,
+My friend Mr.Kushan Katugampala made a reservation(for tomorrow) at you hotel for three people via your website(please find your confirmation mail with this),full board basis.Due to unavoidable circumstances he would not be able to come tomorrow only me and my other friend are coming.Therefor can you please change  our booking from three people to two people?please find my contact details below
+mobile number-0712128307
+Thanks and regards,Kanishka Malpana

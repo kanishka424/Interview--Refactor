@@ -1,0 +1,41 @@
+my question
+is it a  array I get as an iput?no arryalist
+
+my solution
+
+get the input ,arraylist
+define a variable totalOfInput and find the total using a  loop
+define totalWithoutDuplicates variable and to find the value use the method totalTillNumber()\
+use fromula N*(N-1)/2  n is the formula
+if(totalNumber==totalWithoutDuplicates ){
+return N
+}else{
+ then duplicateNumber=totalOfInput -totalWithoutDuplicates 
+}
+
+
+public int findDuplicateNumber(List<Integer> numList){
+
+
+int totalNumber=0;
+totalWithoutDuplicates=0;
+for(Integer num:numList){
+totalNumber+=num;
+}
+totalWithoutDuplicates=totalTillNumber(numList.size());
+if(totalWithoutDuplicates==totalNumber){
+return numList.get(numList.size()-1);
+}else{
+int duplicateNumber=totalOfInput -totalWithoutDuplicates ;
+return duplicateNumber;
+}
+}
+}
+
+public int totalTillNumber(int value){
+int total=value*(value-1)/2;
+return total;
+
+}
+
+}

@@ -1,0 +1,14 @@
+LINKEDHASHMAP PRESERVES THE ORDER
+
+
+Collections.unmodifiableMap(list);
+
+for(Map.Entry<StockItem,Integer> item:list.entrySet()){
+s=s+item.getKey()+","+item.getValue()
+}
+
+
+*******LinkedHasMap preserves the order
+
+
+

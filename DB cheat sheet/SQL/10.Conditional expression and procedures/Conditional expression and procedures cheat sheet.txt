@@ -1,0 +1,176 @@
+£=$$$$$$$$$$$$$$$$$$$$$$$$$$4 1.Conditional expression and procedures
+
+
+CASE
+COALESCE
+NULLIF
+CAST
+Views
+Import and Export
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 2.CASE$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+two main ways to use
+1.general CASE
+2.CASE expression
+
+we use 
+        CASE
+        WHEN
+        THEN
+        ELSE
+        END
+
+SELECT a,
+CASE WHEN a=1 THEN 'one'//a is the column
+CASE WHEN a=2 THEN 'two'
+ELSE 'other' AS label//this will overide efault column name 'case' to label
+END
+FROM test
+
+a is the column
+
+we create another column for results and it is by deafult called 'Case' but we can change it
+
+
+ref-CASE example
+
+
+
+
+CASE expression
+
+first evaluates an ecxpression then compares the result  with each value 
+in the WHENclauses
+sequentially
+
+
+Rewriting our previous exampl
+
+
+
+SELECT a,
+    CASE a WHEN 1 THEN 'one'//the "a" is the difference compare with above
+        WHEN 2 THEN 'two'
+        ELSE 'other'
+    END AS results
+    FROM test;
+
+
+    time 18.01 watch an advaanced sceanrio but easy actually
+
+e.g-
+SELECT customer_id,
+CASE 
+	WHEN (customer_id<=100) THEN 'Preium'
+	WHEN (customer_id BETWEEN ) THEN 'Plus'
+	ELSE 'Normal'
+END AS customer_class
+FROM customer
+ 
+
+SELECT 
+    SUM(CASE rental_rate
+        WHEN 0.99 THEN 1
+        ELSE 0
+        END)AS baragins
+        FROM film
+
+
+
+
+***we use case in SELECt
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 4.COALESCE $$$$$$$$$$$$$$$$
+
+returns the first not null value if null returns null
+
+
+SELECT item,(price-COALESCE(discount,0))//return 0 if discount  //discount is the column
+AS final FROM table
+
+
+
+can use if you have null values in table
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$ 5.CAST$$$$$$$$$$$$$$$$$$$$
+
+
+not 100% 
+
+
+
+SELECT CAST ('5' AS INTEGER) as new_int FROM rental
+
+
+****to use string functions on int we can use cast
+
+
+
+SELECT CHAR_LENGTH(CAST(inventory_id AS VARCHAR)) FROM rental
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 6.NULL IF$$$$$$$$$$$$$$$$$$$$$
+
+NULLIF(10,10)-true
+
+
+
+SELECT(
+    SUM(CASE WHEN department='A' THEN 1 ELSE 0 END)/
+    NULL IF(SUM(CASE WHEN department='B' THEN 1 ELSE 0 END),0)//if 0 it would return null
+     
+) AS dept_ratio
+FROM depts
+
+dividing y zero returns an error divide by null retrurrns null
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 7.VIEW$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+virtula table
+
+
+CREATE VIEW customer_info AS//only different part
+SELECT first_name,last_name FROM customer_id
+INNER JOIN address
+ON customer.address_id=address.address_id
+
+
+
+ALTER A VIEW  
+
+
+CREATE OR REPLACE VIEW customer_info AS//this is the only different part
+SELECT first_name,last_name FROM customer_id,age
+INNER JOIN address
+ON customer.address_id=address.address_id
+
+
+DROP  VIEW customer_info
+
+ALTER VIEW customer_ifo RENAME to c_info
+
+
+
+
+
+

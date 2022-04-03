@@ -1,0 +1,3 @@
+took around 12 min 
+
+try solving 2837 in Leetcod it is  a medium diffculity with different aspect

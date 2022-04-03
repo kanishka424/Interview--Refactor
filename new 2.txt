@@ -1,0 +1,59 @@
+class Solution {
+    public boolean backspaceCompare(String s, String t) {
+    int i =s.length()-1;
+    int j=t.length()-1;
+        
+        boolean sReadyToCheck=false;
+                boolean tReadyToCheck=false;
+          int sHashNum=0;
+            int tHashNum=0;
+        
+        while(i>=0 && j>=0){
+                                             System.out.println(i);
+
+            
+          if(s.charAt(i)=='#'){
+              sHashNum++;
+              sReadyToCheck=false;
+              i--;
+              
+          }else if(sHashNum>0){
+              i--;
+              sHashNum--;
+              sReadyToCheck=false;
+          }else{
+                            sReadyToCheck=true;
+}
+            
+                      if(t.charAt(i)=='#'){
+              tHashNum++;
+                          j--;
+              tReadyToCheck=false;
+              
+          }else if(tHashNum>0){
+              j--;
+              tHashNum--;
+              tReadyToCheck=false;
+          }else{
+                            tReadyToCheck=true;
+}
+            
+            if(tReadyToCheck==true && sReadyToCheck==true){
+                if(s.charAt(i)!=t.charAt(j)){
+                    return false;
+                }
+                System.out.println(s.charAt(i));
+                                 System.out.println(t.charAt(i));
+                                System.out.println("************");
+
+                  
+                i--;
+                j--;
+            }
+        }
+
+            return true;
+
+    }
+
+}

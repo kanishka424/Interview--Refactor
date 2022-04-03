@@ -1,0 +1,499 @@
+$$$$$$$$$$$$$$$$$  3. Let's start coding!$$$$$$$$$$$$$$$$$$$$$
+
+
+adding JS 
+1.Inline script 
+inside HTML using <script></script>
+advantage -we dont have to load an additional file
+
+2.Extenal script
+create a  new JS file(e.g-script.js)
+Here also we use <script>
+but we use "src" this time
+advantag-allows us to keep html and js separately in files and nicely 
+*******code***********
+
+<script src="src/script.js"></script>(for src we need to provide path)
+
+
+$$$$$$$$$$$$$$$$$$$$$$$ 4. A Brief Introduction to JavaScript$$$$$$$$$$$$$$$$$$
+
+1.lightweighted 
+2.cross-platform
+3.object-oriented
+
+
+1.lightweighted
+reletaviley need less space in computer
+simple syntax and features(relatively)
+
+2.cross-platform
+can be used in multiple platforms,systems not just for web development
+
+3.Object oriented Programming
+besed on objects
+
+
+**Javascript is one of the three core technologies of web development(others being css and HTML)
+
+
+**Javascript can be used in different places
+client-side:JS was traditionally only used in the browser
+server-side:thanks for node.j,we can use JS on the server as well
+
+
+**JS is what made modern web development possible
+dyanmic effects and interactivity
+modern web applications that we can interact with
+
+reference-what js,html and css
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$ 5. Variables and Data Types
+
+
+decalring a Variables
+
+var firstname='John';
+var age=28;
+
+
+JS data Types
+1.Number:floating point numbers,for decimals  and integers(js are always floating point numbers even we see 5 it is 5.0)
+2.String
+3.Boolean: true or false
+4.Undefined data type of a variable that doess not have a value yet
+5.Null:means there is no such value
+
+
+
+
+DYANMIC TYPING
+
+we dont have to decalre  a TYPE MANUALLY JS DOES THAT FOR US
+e.g-var firstNmae='John' (here we dont state a type but JS knows it is a String)
+e.g-var fullAge=true; (here we dont state a type but JS knows it is a Boolean)
+
+
+var job;
+console.log(job) //this is 'undefined'
+
+later 
+
+var job='Teacher'
+console.log(job)//now we see 'Teacher' Type is String
+
+
+we can start a variable with a digit
+
+e.g- var 3years=true;(wrong)
+    var &3years=true;(wrong)
+    var jhn/Mark="john and Mark"(wrong)
+    var _3years=true;(correct)
+
+    *** cant use reserved key word
+    e.g-function,delete,if,etcc...
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$ 6. Variable Mutation and Type Coercion
+
+Type Coercion
+
+var firstName='John'
+var age =28;
+
+
+console.log(firstname + ' ' +age);
+
+
+//this would bse printed as "John 28"(as a String) because of  Type Coercion
+
+Type Coercion-JS converts type from one another as needed 
+                so it converts "age" in console.log() to a String
+                in other programinf languages we have to convert our self
+                e.g-in java to print 28 we need Integer.paraseInt(28) otherwise it would print ASCII  vslue
+
+joining strings like "console.log(firstname + ' ' +age);"
+is many examples of type Coercion
+
+
+we can decalre multiple varibles as below
+
+****var job,isMarried,nationality;(these are undefined)
+
+    job='teacher';
+    isMarried=false;
+
+
+
+    console.log(firstname +' is a' +age +'year old'
+    +job + '.is he married?' + is Married+'nationality is'+ nationality);
+
+answer-John  is a 28 year old job is he married? true nationality is undefined
+
+
+here we can see Boolean Number Undefined all converts to a String
+                which is Type Coercion
+
+
+
+VARIBALE MUTATION 
+
+var age=28;(type is Number)
+age='twenty eight'(type is String) (JS can change type on the fly)
+
+
+
+var lastName=prompt('what is his lastname?');/try this it is new
+console.log(firstName+' ' +lastname)
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$7.basic Operators $$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+var johnOlder=4<6(is true)
+
+*******typeOf
+
+*******console.log(typeOf johnOder) (will be Boolean)
+
+
+var firstname='John'
+*******console.log(typeOf johnOder) (willbe String)
+
+console.log(typeOf 'Hi there') (willbe String)
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$ 8. Operator Precedence
+
+
+see operator Precedence
+
+Precedence
+
++ and - > >=(greater tahn or equal) or <=(less than or equal)  > =(equals)
+
+var isFullAge=(3)now -(1)yearJohn >=(2)fullAge;
+//precedence order is in brackets
+
+
+
+
+()-highest precedence
+
+var average=(ageJohn+ageMark)(1)/(2)2
+//precedence order is in brackets
+
+
+var x=(3+5)[1]*[2]4 -[3]6;
+
+
+2+4+5 happens from left to right
+but there are others from right to left Assignment is like that
+ 
+ x=y=(3+5)
+
+
+x*=2
+
+y+=2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$ 17. Functions $$$$$$$$$$$$$$$$$$$$$$
+
+
+a piece of code that we need to run again and again
+
+
+****code******
+
+function calculateAge(birthYear){
+    return 2021-birthYear;
+}
+
+var ageJohn=calculateAge(1990)//calling a function
+
+
+function yearsTillRetirement(year,firstname){
+    var age=calculateAge(year);
+    var retirment=65-age;
+    console.log(age+year);
+}
+
+yearsTillRetirement(1990,'John');//here we dont assign because it doesnt return anything
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 18. Function Statements and Expressions $$$$$$$$$$$$$$$$$$$$
+
+Function statements (used in previous section) VS Function Expressions
+
+
+Function Expressions
+
+It's a function but written in different manner(under  the hood also it works differently)
+
+
+******code***
+
+//FUNCTION EXPRESSION -IMPORTANT
+var whatdoYouDo=function(job,firstname){
+    switch(job){
+        case 'Teacher':
+            return firstName +'teaches';
+        case 'driver':
+            return firstName+ 'drives a cabin Lisbon'
+        defaults:
+        retrun firstNmae;
+
+    }
+}
+
+
+
+
+*****WHEN EVER JS EXPECTS A VALUE WE SHOULD WRITE AN EXPRESSION
+        *********Expressions DO NOT PRODUCE IMMEDIATE RESULTS
+
+
+
+
+******STATMENTS DO NOT PRODUCE IMMEDIATE RESULTS
+***********THEY PERFORM BUNCH OF ACTIONS
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 19.Arrays
+//iNITALIZE NEW ARAY
+var names=['james','jane','Mark'];
+
+var years=new Array(1990,1969,1878); rarely used
+
+
+
+names[0]//accessing elements
+
+
+names.length-shows the number of elements in the Array
+
+
+//Replace
+names[1]='Ben'
+
+
+
+??MUTATE ARRAY
+
+names[5]='Mary'//works weell names[4] is Empty
+//adding to last element ,trick
+names[names.length]='Mary'
+
+
+//DIFFERENT DATA TYPES CAN BE IN AN ARRAY
+
+
+
+
+var john=['John',1990,false];
+
+
+
+john.push('blue')//adds to the end of the Array
+john.unshift('Mr')//adds from beginning
+
+john.pop()//remove from last
+john.shift()//remove from start
+
+
+john.indexOf(1990);//return the index of first occurence of 1990 which is 1 here
+
+*******john.indexOf(34);//since 34 is not in the array it will return -1;
+
+
+
+inserting to a specified position
+
+var arr = [];
+arr[0] = "Jani";
+arr[1] = "Hege";
+arr[2] = "Stale";
+arr[3] = "Kai Jim";
+arr[4] = "Borge";
+
+console.log(arr.join()); // Jani,Hege,Stale,Kai Jim,Borge
+arr.splice(2, 0, "Lene");
+console.log(arr.join()); // Jani,Hege,Lene,Stale,Kai Jim,Borge
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$ 22. Objects and Properties
+
+
+in objects we can access properties by name (in an array we accesssed using index)
+in object the order doesnt matter as an array
+
+
+
+
+CREATING Objects
+1object literals
+2.new Object();
+
+//1stAPProach -using object literals
+
+
+
+var john={
+    firstName:'John',
+    latName:'Smith'
+    family:['Jane','Mark','bob']
+    isMarried:false,
+    job:'software engineer'
+
+}
+
+
+//RETRIVING VALUES FROM AN OBJECT
+
+john.firstName//return 'John'
+
+john['lastname']//returns 'Smith'
+
+
+
+
+//assigning values (replacing)
+
+
+john.job='designer';
+
+//2nd APPROACh
+
+
+var jane=new Object();
+jane.firstName='Jane';
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$ 23. Objects and Methods $$$$$$$$$$$$$$$$$$$$
+
+
+//IMPORTANT--WE CAN EVEN ATTACH FUNCTIONS TO OBJECTS NOT ONLY ARRAYS AND PRIMITIVE DATA
+
+here we will see use of function statement and declartion
+
+
+
+
+var john={
+    firstName:'John',
+    latName:'Smith'
+    family:['Jane','Mark','bob']
+    isMarried:false,
+    birtYear:1990,
+    job:'software engineer',
+    calcAge:function(){
+        this.age=return 2018-this.birthYear;
+    }
+
+}
+
+
+//THIS FUNCTION HAS BECOME A METHOD CALL calcAge
+
+
+//Calling the method
+
+***************john.calcAge(1990)
+
+but 1990 is already defined as 'birthYear' inside the object (done in method look in object)
+
+so to access that we can use 'this'
+
+john.calcAge()//setting Age
+
+ 
+
+*******************Arrays are Objects
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

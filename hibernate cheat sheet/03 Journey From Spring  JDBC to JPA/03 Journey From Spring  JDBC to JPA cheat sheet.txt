@@ -1,0 +1,476 @@
+##################019 Introduction to Journey from JDBC To JPA########################
+
+
+
+
+#################020020 Step 01 - Setting up a project with JDBC_ JPA_ H2 and Web Dependencies###################
+
+go and create a spring boot application from spring initalizer
+with "JPA","JDBC","H2" and "WEB"
+
+
+#############021 Step 02 - Launching up H2 Console#####################
+
+
+Spring boot has the feature called auto configuration when comes to "H2"
+This auto configuration looks at the fact that "H2" is one of the configurations available and it will automatiaclly configure a CONNECTION to H2 databse
+
+
+we can configgure it using "applicstion.properties"
+
+wpring.h2.console.enable=true;close the app and start
+
+
+then go to localhost:8080/h2-console
+
+a soon as application stop dB get killed
+
+we use a  url to navigate to UI of the database
+
+good option to lerarning stuff
+
+
+
+$$$$$$$$$$$$$$022 Step 03 - Creating a Database Table in H2%%%%%%%%%%%%%%%%%%%%%%%%%%
+we get a feature throgh auto configuration
+that is we can define a file data.sql in src/main/resources
+if we do like that when we launch our application
+dat.sql gets called all the data in the data.sql will initalised the databse
+
+
+create table peron
+(
+id integer not null,
+name varchar(255) not null,
+location varchar(255),
+birth_date timestamp,
+primary  key(id)
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$023 Step 04 - Populate data into Person Table$$$$$$$$$$$$$$$$
+in db console 
+
+
+INSERT INTO PERSON {ID,NAME,LOCATION,BIRTH_DATE}
+VALUES (10001,"Ranga","Hyderabde"sysdate());
+INSERT INTO PERSON {ID,NAME,LOCATION,BIRTH_DATE}
+VALUES (10002,"James","New York",sysdate());
+INSERT INTO PERSON {ID,NAME,LOCATION,BIRTH_DATE}
+VALUES (10001,"Ranga","Amsterdam"sysdate());
+
+
+
+
+$$$$$$$$$$$$$024 Step 05 - Implement findAll persons Spring JDBC Query Method$$$$$$$$$$
+
+creat a new class
+PersonJdbcDAO.java
+This talks to Databse and gets values from there so use "@Repository" for this
+
+
+to connect to DB use a "JdbcTeplate" object we can get it by @Autowired 
+
+
+@Autowired
+JdbcTeplate jdbcTemplate;
+
+
+*****code*******
+
+@Repository//Importan
+public class PersonJdbcDao{
+@Autowired//Important
+JdbcTemplate jdbcTemplate;
+
+public List<Person> findAll(){
+
+return jdbcTemplate.query("select* from person",
+new BeanPropertyRowMapper(Person.class))//******THIS MAPS THE ATTRIBUTES BY NAMES TO "Person" CLASS
+
+}
+
+we need to create Person.java but I skipped it for the note
+
+
+
+$$$$$$$$$$$$$$$$$025 Step 06 - Execute the findAll method using CommandLineRunner$$$$$$$$$$$$$
+
+now we need to fire findAll() method in previous chapter when the application starts
+
+
+
+in our applications main class implement a CommandLineRunner
+CommandLineRunner is one of the interfaces present in Spring boot
+
+***************code***********
+@SpringBootApplication
+public class DatbaseDemoApplication implemetns CommandLineRunner{//implementCommandLineRunner
+public static void main(String[] args){
+
+
+}
+
+}
+
+***************code***********
+
+in CommandLineRunner thereis a method to be implemente  which is run()
+
+
+
+****IMPORTANT*********Always the entity (Peron,Course,etc...)should have a no-arg constructor
+
+
+Overrid ethe toString of Person
+
+return String.format("\nPerson [id=%s,name=%s,locaation=%s],id,name,location)
+
+
+
+
+
+
+****************code********************
+@SpringBootApplication
+public class DatbaseDemoApplication implemetns CommandLineRunner{//implementCommandLineRunner
+private Logger logger=LoggerFactory.getLogger(this.getClass());
+
+@Autowired
+PersonJdbc dao;
+
+public static void main(String[] args){
+SpringApplication.run(DatabseDemoApplication.class,args);
+
+}
+
+@Override
+public void run(String... args) throws Exception{
+logger.info("All user->{}",dao.findAll());
+
+
+}
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$026 step 07 Review$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$027 Step 08 - Whats in the background_ Understanding Spring Boot Autoconfiguration$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$028 Step 09 - Implementing findById Spring JDBC Query Method$$$$$$$$$$$
+
+here we use "queryForObject" 
+***************code********************
+in PersonJdbcDao class
+
+public Person findById(int id){
+return jdbcTemplate.queryForObject("select * from person where id=?",
+new Object[] {id},
+new BeanPropertyRowMapper<Person>(Person.class));
+}
+
+
+
+in "DatabaseDemoApplication"
+
+@Autowired
+PersonJdbcDAO  dao;
+
+
+@Override
+public void run(String... args)throw Exception{
+logger.info("USer id 10001->{}",dao.findById(10001));
+}
+
+}
+}
+
+
+
+$$$$$$$$$$$$$$029 Step 10 - Implementing deleteById Spring JDBC Update Method$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+here for a delete we use "update" method
+
+IRRESPECTIVE OF A UPADTE OR DELETE WE USE "update()" method
+
+we don't need RowMapper here
+
+
+
+
+
+
+
+
+
+***************Code**********************
+
+in "DatabaseDemoApplication"(our main)
+
+
+logger.info("Deleting 1002->No of Rows Deleted-{}",dao.deleteById)
+
+
+
+public nt deleteById(int id){
+return jdbcTemplate.update("delete ffrom person where id=?",new Object[]{id});//here for a delete we use "update" method
+
+}
+
+//IRRESPECTIVE OF A UPADTE OR DELETE WE USE "update()" method
+
+//we don't need RowMapper here
+
+
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$030 Step 11 - Implementing insert and update Spring JDBC Update Methods$$$$$$$$$$
+
+
+DO LATER FILL WITH NOTES
+
+
+****************Code******************************************
+
+IN PersonJdbc
+
+jdbcTemplate.update("insert into person(id,name,location,bday)"+"values(?,?,?,?),
+new Object[]{
+person.getId(),person.getName(),person.getLocation,new Timestamp*pesron.getBirthDate().getTime())})
+
+
+
+****************Code**********************
+uPDATE
+
+
+
+public intupdate(Person peron){
+return jdbcTemplate.update("update person"+"set name=?,locstion new Object[] {person.getName().person.getLocation(),new Time person.getId()});
+
+in DatabaseDemoApplication
+
+logger.info("Update 10003->{}",
+				dao.update(new Person(10002."Pieter","Utrecht",new Date())));
+********************************************
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$*031 Step 12 - Creating a custom Spring JDBC RowMapper$$$$$$$$$$$$$$$$$$
+
+
+If the column name doesnt match ith field name we need to define our ownrow mapper
+
+
+class PersonRowMapper implements RowMapper<Person>{
+@Oveeride;
+public Person mapROw(ResultSet rs,int rowNum)throws SQLException{
+Person person =new Person();
+person.setId(rs.getInt("id");
+person.setName(rs.getString("name"));
+person.setLocation(rs.getString("name"));
+peron.setBirthData(rs.getTimeStamp("target_date")):
+return person;
+
+}
+
+//Now  we can use the above mapper
+public List<Person> findAll(){
+return jdbcTemplate.query("select* fro person",new PersonRowMapper())."
+}
+}
+
+
+
+
+$$$$$$$$$$$032 Step 13 - Quick introduction to JPA$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+incstead of the row mappers we would define an entity @Entity
+
+JPA-a standard for ORM
+
+e.g-apping "Person" object to "PERSON" table
+
+
+
+$$$$$$$$$$$$$033 Step 14 - Defining an entity$$$$$$$$$$$$$$$$$$$$$$$$
+
+always define a no-args constructor
+
+***********************code*****************
+@Entity
+@Table("PERSON")//only if name of the table i different
+public class Person{
+
+@Id
+@GeneratedValue
+private int id;
+
+@Column(name="nmaeX")//only if name of the table column is different
+private String name;
+
+$$$$$$$$$$$$$$$$$$$$034 Step 15 - Implementing findById JPA Repository Method$$$$$$$$$$$$
+
+
+here we will implemetn transaction at the level of repository
+idealaly transaction ha to be around your busines services but for this we will restrict t repository
+*************************code*************************88
+
+@Repository//DEclares it as a repository
+@Transactional//declares it to preserve transactional properties
+public class PeronJpaRepoitory{
+@PersistenceContext//this is where all operations are stored
+EntityManager entityManager;//connect to database
+//EntityManager all the operations you perform in  a SPECIFIC SESSION are stored in //the entity manager.All operations need to go through EntityMnager
+//EntityManager is the interface to @PersistenceContext
+
+public Person findById(int id){
+ return entityManager.find(Person.class,id);
+
+}
+
+
+}
+
+**********************code************************************************
+in DatabaseDemoApplication
+
+
+@Autowired
+PeronJpaRepoitory repository;
+
+@Oveeride
+public void run(String...args)throws Exception{
+logger.info("USer id 10001 ->{}",repository.findById(10001));
+
+
+*****************************************************
+
+here we get an error because data.sql we try to create PERSON table
+but here hibernate is creating the table for us and we don't need to create table in data.sql//triggered by spring boot auto configuration
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^configurations^^^^^^^^^^^^^^^^^^^^^^
+
+shows the sql query in console when we add following in application.properties
+
+
+spring.jpa.show-sql-=true;
+
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+
+
+*********************************035 Step 16 - Implementing insert and update JPA Repository Methods*******************************************
+
+
+
+we use "merge" in Enttiy Manager to upadta or inserrt
+if there is an id (primary key) in the object merge knows its an insert else it knows that its an update
+
+**************code***************
+public Pesron update(Person perosn){
+
+return entityManager.merge(peron);
+}
+
+
+
+
+public Pesron insert(Person perosn){
+
+return entityManager.merge(peron);
+}
+
+
+//both are  the same so we don't need two
+***********************************************************************
+
+********code*************************
+logger.info("Inserting ->{}",repository.inert(new Peron("Tara","Berlin",new Date())));
+
+
+logger.info("Update  1003->{}",repository.inert(new Peron(1003,"Pieter","Utrecht",new Date())));
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$036 Step 17 - Implementing deleteById JPA Repository Method$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+*****************code***********
+
+public void deleteByID(int id){
+Person person=findById(id);//we defined findById(int id) earlier
+entityManager.rmove(person);
+
+}
+
+******************************************
+
+
+****************88code********************
+
+repository.deleteByID(1002)//we cant logger becuase thi method returns nothing
+
+
+*****************
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$4037 Step 18 - Implementing findAll using JPQL Named Query$$$$$$$$$$$$$$$4
+
+
+JPQL-java persitenc Query Language
+***************code********************************
+
+in PeronJpaRepoitory.java
+
+
+public List<Person> findAll(){
+namedQuery==entityManager.createdNamedQUery("find_all_persons",Person.class);//we define the namedQuery inside  the enttiy herr it is "Person"
+return namedQuery.getResultList();
+
+}
+
+in Person.java
+
+
+@NamedQuery(name="find_all_persons",query="select p from Perosn p")//JPQL docesnt use DB it ues entites
+public class Person

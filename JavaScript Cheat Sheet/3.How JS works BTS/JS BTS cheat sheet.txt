@@ -1,0 +1,455 @@
+$$$$$$$$$$$$$$$$$$$$$$$ 3. How Our Code Is Executed JavaScript Parsers and Engines
+
+
+JS is  hosted in an environment
+mainly BROWSERS
+e.g-Google Chrome
+	Internet Explorer
+	Safari
+
+
+	there can be other host such as NodeJS WEB server
+	even some applications that accepts JS code inputs
+
+
+	In this course we will always focus on BROWSERS
+
+
+PROCESS
+
+the host takes our code and executes it
+JS ENGINE is a program that executes java script codes
+e.g-Google v8 engine(used in google chrome)
+	spider monkey
+	JS CCORE
+
+
+1.Our code is parsed by a "Parser"
+read line by line and check if the syntax we provide was correct
+this means Parser knows jaascript rules and syntax how it needs to be correct/valid
+If we make mistake it bascally throws an error stops EXECUTION
+
+
+
+
+2.If everything is correct then the parser produces a data structure Known as "Abstract Syntax three"
+3.which is then translated to machine code(this can command processr)
+4.Code runs
+
+
+
+Reference-JS CODE execution
+
+
+
+
+$$$$$$$$$$$$$$$$$$$ 4. Execution Contexts and the Execution Stack $$$$$$$$$$$$$
+
+
+order of how code runs
+
+
+Execution Context
+All JS context need to be run on Environment these are called 
+Execution Context
+
+time 0.40 box analogy(do if time permits)
+
+
+
+The default execution context is Global Execution context
+
+code not inside any function
+
+associated with global object
+
+In the browser that is the window object
+so everthing we creats automatically get attached to the window object
+e.g-decaring variable named lastName
+
+lastName===window.lastName
+
+it is like lastName is the property object
+properties are just varibles  attached to objects
+
+
+GEC is for code that are not inside any function
+*****for functions EVERY TIME WE CALL A ONE IT GETS ITS OWN EXECUTION CONTEXT
+
+time 3.05-FUNCTION DECLARATIONS ARE ALSO IN GLOBAL EXECUTION CONTEXT
+
+SO first(),second() and third() all are in the same EXCECUTION CONTEXT
+
+*****code****
+first();
+
+here a new Execution Context is created and PUT ON TOP OF CURRENT EXCECUTION
+FORMING EXECUTION CONTEXT AND NEWLY ADDED CONTEXT BECOME ACTIVE CONTEXT (execution context  for first())
+then EXecution context for second() and then for third()
+
+thise executin context will pop in following order
+third()
+secnd()
+first()
+
+BUT GEC kept in Execution Stack(GCE-GLOBAL EXECUTION CONTEXT)
+
+EXECUTION CONTTEXT ARE CREATED WHEN YOU CALL FUNCTIONS 
+reference-Execution context and Execution Stack
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 5. Execution Contexts in Detail Creation and Execution Phases and Hoisting
+
+
+we can associated execution context with an  object
+
+EXECUTION CONTEXT OBJECT
+
+
+it has three properties(EXECUTION CONTEXT OBJECT)
+
+1.Variable Object (VO)-contains function arguments,inner variable decalarations,function decalarations
+2.Scope chain -contains current variable object	and variable objeccts of its parent  
+3."This" variable
+
+
+HOW  EXECUTION CONTEXT IS CREATED
+
+a new execution context is put onexecution Stack
+
+THIS HAPPENS IN TWO PHASES 
+1.CREATION PHASES
+2.EXECUTTION PHASES
+
+
+
+1.CREATION PHASES'
+
+A)Creation Of the Vsarible Object(VO)
+B)Creation of the scope chain
+c)Determines value of the "this" varibles
+
+
+2)Execution Phases
+
+The code of the function that generated the cureent execution context is ran line byline
+and all the varibles are defined
+
+If its the Global Context  then it is a global code Executed
+
+Reference-Execution Context Object
+
+1)CREATION OF VARIBLE OBJECT IN CREATION PHASES
+a)argument object is created containg all the argument taht were passed into the
+function
+
+b)code is scanned for function decalaration:for each function
+a property is created in the Variable object.POINTING TO THE FUNCTION
+this means all the functions were installed in varible object even before code executing start
+
+
+c)code is scanned for VARIBLE DECALARTIONS;For each variable a property is created in the variable Object and set to undefined
+
+
+IMPORTANT-HOISTING===b+c (above)
+
+
+
+****which means functions and varibles are available before the Execution  phase starts
+but functions and varibles are HOISTED IN DIFFERENT WAYS
+DIFFERENCE IS
+		functions are already DEFINED
+		varibles are set to Undefined and only will be defined in Execution phase
+
+
+		BEFORE EXECUTION PHASE STARTS
+
+Execution phase comes right after CREATION PHASE
+
+
+
+EACH EXECUTION CONTEXT HAS AN OBJECT(VARIABLE OBJECT) THAT KEEP IMPORTANT DATA THE FUNCTION WILL USE WHILE ITS RUNNING
+THIS HAPPENS EVEN BEFORE CODE EXECUTED
+
+
+
+
+$$$$$$$$$$$$$$$$ 6. Hoisting in Practice
+
+******code**************
+
+
+calculateAge(1965);//will print 51 because of HOISTING
+
+function calculateAge(year){//THIS IS A FUNCTION DECALARTIONS
+	console.log(2016-year);
+}
+
+
+
+this Still works because of HOSITING
+
+HOISTING defines functions already
+
+
+due to hoisting we can use the function before decalring it 
+
+this only works for function declaration,what about function expression?
+
+***Code**
+retirement(1956)
+
+var retirement =function(year){//THIS IS A FUNCTION EXPRESSION
+	console.log(65-(2016-year));
+}
+
+
+THIS WONT WORK BECAUSE FUNCTION HOISTING ONLY WORKS FOR FUNCTION DECALRATIONS 
+NOT FUNCTION Expressions
+
+
+TIME -7.25 
+CHECKING FOR VARAIBLE
+****code*******
+function foo(){
+console.log(age);THIS GIVES UNDEFINED BECAUSE OF HOSITING
+var age-=23
+
+console.log(age);//this gives 23
+
+}
+
+foo();
+console.log(age)
+
+
+************code******************8
+
+console.log(apple)
+
+
+this give us an error because no variable "apple"
+but for age JS knew there is a varible and at the moment it is undefined
+
+
+
+GLOBAL EXECUTION CONTEXT
+
+
+console.log(age)
+var age 23;
+
+
+function foo(){
+	console.log(age)//this is undefined
+	var age =65;
+	console.log(age);//here 65 is printed 
+}
+foo();
+console.log(age)//here we print 23,global execution context
+
+
+***VARIBLE "age" IS DEFINED IN IN OBJECT VARIBLE OF FUNCTION"foo" WHILE OTHER (OUTER) VARAIBLE
+IS DEFIENED IN GLOBALEXECUTION CONTEXT VARIBLE OBJECT
+
+*****SO EACH ONE GETS IT OWN VARIBLE OBJECT AND ARE DIFFERENT
+******THAT IS WHY FIRST console.log(age) IN FOO IS "Undefined" BUT IF WE DIDNT DEFINE 
+		"age" INSIDE "foo()"IT WOULD HAVE PRINTED 23 DUE TO HOISTING IT PRINTS 65;
+
+***SAME VARIBLE CANT BE DECALRED TWICE OR MORE IN SAME EXECUTION CONTEXT
+
+
+Biggest take away from hoisting
+WE CAN USE FUNCTION DECLARATION BEFORE WE ACTUALLY DECALRE THEM IN OUR CODE(FUNCTION EXPRESSIONS CANT )
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$ 7. Scoping and the Scope Chain
+
+CREATION PHASE 2nd STEp-SCOPE CHAIN
+
+SCOPING IS "WHERE CAN WE ACCESS A CERTAIN VARIABLE"
+
+*****IMPORTANT--EACH NEW FUNCTION CREATS A Scope
+THE SPACE/EnvironmentIN WHICH THE VARIABLE IT DEFINES ARE ACCESIBLE
+******IN OTHER LANGUAGES SCOPES ARE DEFINED BY IF,FOR,WHILE BLOCKS BUT NOT IN JS
+
+SO HERE IN JS WE MUST CREATE  A NEW FUNCTION *******IMPORTANT
+
+
+
+LEXICAL SCOPE:a function that is lexically within another function gets access to the 
+scope of the outer function
+
+GLOBAL SCOPE-the scope ACCESSIBLE FROM AY WHERE,JUST LIKE GLOBALE EXECUTION CONTEXT THIS IS THE GLOBAL SCOPE
+
+first() ha acess to its SCOPE+GLOBAL SCOPE BECAUSE OF LEXICAL SCOPE
+
+second() has access to its scope(VO2)+first() scope(VO1)+Global Scope(VOglobal)
+
+
+IMPORTANT-INSIDE second() when printiong "console.log(a+b+c)" second() will first look for "a" in its scope when it cant be found it would serch in first() scope
+when it cant be found in first() IT SEARCHES in GLOBLA SCOPE
+Bubbeling up the scope
+If not found it bubbles up searching each scope and throws an error
+
+e.g-if we add console.lg(d)
+
+same for "b" and "c"
+
+
+BUT THIS DOESNT WORK BACKWARDS 
+E.G-GLOBAL SCOPE DOESNT HAVE ACCESS TO "a" and "b" 9UNLESS WE RETURN VALUES FROM FUNCTIONS LIKE, var sec=second()
+
+
+
+**VARIABLES ARE NOT VISIBLE FOR PARENT SCOPE(unless returned)
+
+
+IN CREATION PHASE EACH EXECUTION CONTEXT OBJECT WILL GET ITS SCOPE CHAIN
+WHICH IS ALL VARIBLE OBJECT EACH CNTEXT OBJECT HAS ACCESS TOS
+
+VARIBLE OBJECT IS WHAT STORES ALL VARIBLES AND FUNCTIONS DEFIENED
+
+SO IN second() SCOPE WE HAVE ACCESS TO VARAIBLE OBJECT FROM GLOBAL AND first()
+
+
+REFERENCE-SCOPING
+
+IMPORTANT-EACH INNER FUNCTION HAS ACCSSES TO ITS OUTER FUNCTION(S) SCOPE AND THE GLOBALE SCOPE
+THIS SCOPE CHAINING
+
+
+
+
+TIME-6.53
+
+imporatnt-EXECUTION STACK IS DIFFERENT FROM SCOPE CHAIN
+
+
+reference-exection stack vs scope chain
+
+
+time 9.09-practicle
+
+the code gives not defined error
+
+third() doesnt  have acces to "c" because it is NOT WITHIN second()
+but it has acces to d(defined in its own scope) and "a" (defined in globale scope)
+
+SO THE EXECUTION STACK IS DIFFERENT FORM SCOPE CHAIN
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$b 8.THE 'THIS' VARAIBLE
+EVERY EXCECUTION CONTEXT HAS'This' variable
+
+In a regular function call 'this'
+keyword points at the global object
+e.g-window object,in the browser
+
+
+In A METHOD CALL -points to object taht is calling the method
+
+
+the 'this' keyword is not assigned a value until a function where it is define is actually 
+called
+
+
+EVEN HOUGH IT APPEARS THAT THIS VARIBLE REFERS TO THE OBJECT WHERE IT IS DEFINED
+THE "this" VARIBLE ONLY ASSIGNED A VALUE AS SOON AS AN OBJECT CALLS A METHOD
+
+THE 'this' VARIBLE IS ATTACHED TO A EXECUTION CONTEXT OBJECT WHICH IS ONLY CREATED WHEN A FUNCTION IS CREATED
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$ 9.THE 'THIS' VARAIBLE in practice
+
+
+In a regular function call 'this'
+keyword points at the global object
+e.g-window object,in the browser
+
+
+function calculateAge(year){
+console.log(this);
+}
+
+this function is attached to global object
+
+
+
+lets consider an object
+
+
+
+var john={
+	name:'John',
+	yearOfBirt:1990,
+	calculateAge:function(){//this is a method actually
+	console.log(this)//here it refers to "John" object
+}
+
+}
+
+
+john.calculateAge()
+
+
+refer-this reference
+
+
+Now lets add an inner function(time-5.25) in "calculateAge"
+
+
+
+var john={
+	name:'John',
+	yearOfBirt:1990,
+	calculateAge:function(){//this is a method actually
+	console.log(this)//here it refers to "John" object
+	function innerFunction(){//the inner function
+	console.log(this)
+	}
+	innerFunction()
+}
+
+}
+
+
+}
+
+
+//NOW THE "innerFunction()" "this" IS REFERING TO "window " OBJEC AGAIN(TO GLOBAL OBJECT)
+
+//"innerFunction()" IS NOT A METHOD,"calculateAge()" is a METHOD
+//so it will no longer point to "John" object
+//
+In a regular function call 'this'
+keyword points at the global object
+e.g-window object,in the browser
+ 
+
+ 
+//EVEN HOUGH IT APPEARS THAT THIS VARIBLE REFERS TO THE OBJECT WHERE IT IS DEFINED
+THE "this" VARIBLE ONLY ASSIGNED A VALUE AS SOON AS AN OBJECT CALLS A METHOD (time 7.42)
+WATCH!!!!!!!!!!!!
+
+var mike={
+ name:'Mike',
+ yearOfBirt:1984
+};
+
+
+mike.calculateAge=john.calculateAge;//Method borrowing
+mike.calculateAge();//this prints according to mike object
+//**THIS ONLY ASSIGNED WHEN ACTUALL METHOD IS CALLED

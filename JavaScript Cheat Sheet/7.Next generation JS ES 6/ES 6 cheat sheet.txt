@@ -1,0 +1,593 @@
+$$$$$$$$$$$$$$$$$$ 3.What's new in ES 6 2015 $$$$$$$$$$$$$$$$$$$$4
+
+1/let and const
+2.Blocks and IIFs
+3.String
+4.Arrow function
+5.Destructuring
+6.Arrays
+7.The spread operation
+8.Rest and Default parameters
+9.Maps
+10.classes and subclasses
+
+
+
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$ 4.Varaible Decalrations  $$$$$$$$$$$$$$$$$$
+
+
+let and const
+
+with let and const variables are not function scoped but BLOCK scoped
+var is unction scoped
+
+
+Block-{ }
+
+
+
+
+
+// function driverTest6(passedTest){//won't work becaue after initalization you can't change a const
+//     let name;
+//     const yob;
+//     if(passedTest){
+//          name='john';
+//          yob=1991;
+//     }
+//     console.log(name+" born in "+ yob +" passed the test");
+// }
+
+// driverTest6(true);
+
+// function driverTest6(passedTest){//this shows an error since let and const are BLOCK SCOPED
+//     if(passedTest){
+//         let name='john';
+//         const yob=1991;
+//     }
+//     console.log(name+" born in "+ yob +" passed the test");
+// }
+
+// driverTest6(true);
+
+
+// function driverTest6(passedTest){//this will work because var is function scoped
+//     if(passedTest){
+//         var name='john';
+//         var yob=1991;
+//     }
+//     console.log(name+" born in "+ yob +" passed the test");
+// }
+
+// driverTest6(true);
+
+
+with var we can use variblesbefore decalring(value will be undefined) but with var we cant
+
+
+
+// function driverTest6(passedTest){//this wont  work because var is function scoped and  //console.log(name+" born in "+ yob +" passed the test") is outside
+
+//     if(passedTest){
+//         let name='john';
+//         const yob=1991;
+//     }
+//    
+// }
+
+ //console.log(name+" born in "+ yob +" passed the test");
+// driverTest6(true);
+
+
+
+
+
+
+// function driverTest6(passedTest){//this wont  work because we assign a value to a const after decalaring it ,we cahnge value from undefined to 1990
+		let firstName;
+		const yearOfBirth;
+//     if(passedTest){
+//         name='john';
+//         yob=1991;
+//     }
+//    
+// }
+
+ //console.log(name+" born in "+ yob +" passed the test");
+// driverTest6(true);
+
+
+
+// function driverTest6(passedTest){//this works perfectly this is the way to accesss define the variable in outer block
+		let firstName;
+		const yearOfBirth;
+//     if(passedTest){
+//         name='john';
+//     
+//     }
+//    
+// }
+
+ //console.log(name+" born in "+ yob +" passed the test");
+// driverTest6(true);
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$ BLOCKS AND IIFS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+block scoped and function scope provides data privacy
+
+ES 6 pro much simple way of data privacy which is a block
+
+we can create a block
+1.{}
+2.for loop
+3.while loop
+
+
+//ES 6 data privacy
+{
+	const a=1
+	const b=2;
+	var c=3;
+}
+
+console.log(a+b);//since block scope an error
+console.log(c)//will work
+
+ES 5data privacy
+
+(function(){
+	var c=3;
+})();//creating and calling function (())
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$ 6. strings in ES 6 $$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+// console.log(
+//     `Hi I'm ${firstName} ${lastName}.I am currently ${calAge(birthYear)}`// TEMPLATE LITERALS 
+// )
+
+
+// //============new String Methods==================
+
+// const n=`${firstName}${lastName}`
+// console.log(n.startsWith("J"));//case sensetive
+// console.log(n.endsWith("kj"));
+// console.log(n.includes('oh'));
+// console.log(`${firstName} `.repeat(5));//because we need space we use TEMPLATE LITERALS
+
+
+
+
+
+
+
+
+7.Arrow function basics(watch the explanation on 'this' to better understand) 
+
+
+
+function(el){
+	return 2016-el;
+}
+
+
+IS SIMILAR
+
+el =>2016-el
+
+
+//if we have more than one line in code we 
+//have to use curl braces  and 'return' key word
+
+
+(el,index)=>{//this can pass to a map function map() takes function with two parameters?
+const now=new Date().getFullYear();
+const age=now -el;
+return `Age elements ${index+1}`
+}
+
+
+
+#####################8.Arrow Function Lexical 'this' Keyword(watch the explanation on 'this' to better understand) 
+
+
+//BIggest advantage of using Arrow functions is THEY SHARE THE SURROUNDING 'this' keyword
+
+e.g-
+
+var box5={
+	color:'green',
+	position:1,
+	clickMe:function(){
+	var self=this;//work around to refer to objecct inside function below
+	document.querySelector('.green').addEventListner('click',
+	function(){
+	var str='this is box number'+this.position//****if 'var self=this;' wasnt there 'this' would be undefined since its a function
+})
+}
+}
+
+
+
+box5.clickMe()
+
+
+//BUT IF WE USE ARROW FUNCTION WE DONT NEED THE WORK AROUND BECAUSE  ARROW FUNCTIONS SHARE THE SAME 
+//SURROUNDING 'this' VARIBLE!!!
+
+
+
+e.g-
+
+const box6={
+	color:'green',
+	position:1,
+	clickMe:function(){
+	document.querySelector('.green').addEventListner('click',
+	()=>{
+	var str='this is box number'+this.position//'this' refers to surrounding 'this' which is 'box6' object
+})
+}
+}
+
+
+
+box6.clickMe()
+
+
+
+what if we make the function 'clickMe' an arrow funciton//time 9.50
+
+//this in 'clickMe' refers to this
+const box6={
+	color:'green',
+	position:1,
+	clickMe:() => {//**where we changed
+	document.querySelector('.green').addEventListner('click',
+	()=>{
+	var str='this is box number'+this.position//'this' refers to surrounding 'this' which is 'undefined' because we have used an arrow function for method(the global object)
+})
+}
+}
+
+
+
+box6.clickMe()
+
+
+//SO BE CAREFUL WITH ARROW FUNCTION!!
+
+
+//time 14.15 watch agiain
+
+//ES5
+function  Person(name){
+	this.name=name;
+}
+
+
+
+Person.prototype.myFriends5=
+	function(friends){
+	var arr=friends.map(function(el)
+	{
+	return this.name+ 'is friends with' + el;//if we didnt bind this(line after this will be "undefined" since inside map() we are calling a function and 'this' in that function points to global object
+	},bind(this));//the work around here we create a copy of the function by manually assigning 'this'
+
+
+}
+
+
+var friends=['Bob','jane','Mark'];
+
+new Person('John').myFriends5(friends)
+
+
+
+//NOW ES 6 of above
+//here we dont need the work around
+
+Person.prototype.myFriends5=
+	function(friends){
+	var arr=friends.map(el=>
+	`${this.name}+ is friends with ${el}`);
+
+
+
+here the 'this' of function inside map() refers to surrounding 'this' which is the object
+
+
+new Person('Mike').myFriends6(friends);//new is IMPORTANT!! OTHERWISE WE JUST DO A SIMPLE FUNCTION CALL!!INSTEAD OF CREATING NEW OBJECT
+					//'Person('Mike').myFriends6(friends)' 
+
+
+
+
+//=======================================ES 5 with bind()=====================================
+// function Person(name){
+//     this.name=name
+// }
+
+// var john=new Person('John');
+
+
+
+// Person.prototype.myFriends5=function(friends){
+//     var arr=friends.map(function(el){
+//         return`${this.name} is friends with ${el}`
+//       }
+//     .bind(this))//this binds the "this" of Person object to the function another way instead of var self=this;
+//     console.log(arr)
+// }
+
+// let friends=['Steve','Harry','Kathy'];
+
+
+// john.myFriends5(friends);
+
+
+
+// function Person(name){
+//     this.name=name
+// }
+
+// var john=new Person('John');
+
+
+
+// Person.prototype.myFriends5=function(friends){
+//     var arr=friends.map(el=>`${this.name} is friends with ${el}`  
+//     )
+//     console.log(arr)
+// }
+
+// let friends=['Steve','Harry','Kathy'];
+
+
+// john.myFriends5(friends);
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$ 9.Destructuring $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+// //ES 5 way,practically difficult when more values in the array
+// var john=['john',26];
+// var name5=john[0];
+// var age5=john[1];
+
+
+// //ES6 desttructuring
+// const [name,age]=['john',26];//creats two varibles named "name" and "age" using the value provided by the array
+//   console.log(name);
+// console.log(age)
+
+// //ES 6 destructuring for objects
+// var obj={
+//     firstName:"Tim",
+//    lastName:"Wu"
+// }
+
+
+// const {firstName,lastName}=obj//exact same property name and { } braces are a must
+// console.log(firstName);
+// console.log(lastName);
+
+
+// const {firstName: a,lastName: b}=obj//if you want different names
+// console.log(a);
+// console.log(b);
+
+// //Before ES 5 if we are to return more than single value we must return an object
+// //but with destructuring it is much easier
+
+// var calAge=(birthYear)=>{
+// const age=new Date().getFullYear()-birthYear;//the varibles returned are block scoped
+// return [age,65-age];
+// }
+
+// const[agex,retirment]=calAge(1990);
+// console.log(agex);
+// console.log(retirment);
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$ Arrays in ES 6 $$$$$$$$$$$$$$$$$$$$$$$$$$
+
+for (const cur of boxesArr6){
+	if(cur.className==='box blue'){//can also use cur.className.includes('blue')
+		continue;
+	}
+
+	cur.textContent='I changed to blue'
+	
+}
+
+
+
+##################################### 14.Maps#############################################333
+
+up until ES 6 we used objects insted of maps for the same purpose
+beforw we mapped sting keys to abitary values
+
+In objects we are limited to String
+but in Maps we can use anything in place of String(numbers,objects,Booleans,functions,etc...)
+
+
+creating new map
+######code###
+
+const questions=new Map();
+
+inserting to map using set()
+####code####
+
+questions.set('question','What is the offiicial na,e of the least major JS version?")
+question.set(1,'ES 5');//assining a number as a key
+question.set(2,'ES 6');
+question.set(3,'ES2015');
+question.set(4,'ES7');
+question.set('correct',3);//assining a String as a key
+question.set(true,'correst answer')//assining boolean as a key
+question.set(false,'incorrest answer')
+
+
+
+retreiving values from map using get()
+
+################code############
+
+console.log(question.get('question))//
+
+
+****size
+
+questions.size//returns the size of the map (this is not "length" as in arrays it is "size")
+
+
+***delete(key)
+
+question.delete(4);//delete and returns the vaalue
+
+
+***IMPORTNT***has(key)
+
+question.has(4)//return true is key  4 exists
+
+
+****clear()**********
+
+question.clear()//clear all the items in the mapp
+
+
+
+MAPS ARE ITERABLE WE CANT DO IT WITH objects
+
+
+*****IMORTNT*****we can use forEach() 
+
+
+forEach() is in proto type property  of  MAP function constructor
+ so all maps inherits it
+
+#####code############
+
+
+question.forEach((value,key)=>{
+	conole.log(`This is ${key},and it's set to ${value}`)
+})//not for arrays but worksfor Maps as weell
+
+
+
+#####code #####
+
+for(let entry of question.entries())//IMPORTANT
+{
+
+}
+
+
+question.entries()-RETURNS ALL ENTRIES IN OUR MAP
+WE USE DESTRUCTRING TO GET KEYS AND VALUES SEPERATLY
+
+
+#############code###########
+for(let [key,value] of quetions.entries()){
+	conole.log(`This is ${key},and it's set to ${value}`);
+}
+
+
+
+for(let [key,value] of quetions.entries()){
+	if(typeOf(key)==='number'){
+		console.lg('answer ${key}:${value}`)
+	}
+}
+
+
+
+
+
+SUMMRAY
+
+set(key,values)
+get(key)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+in an object question is a property 
+
+
+
+
+
+
+
+
+
+
+
+
+

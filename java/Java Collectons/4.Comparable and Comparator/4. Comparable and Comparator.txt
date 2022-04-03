@@ -1,0 +1,25 @@
+1.implemetns comparable
+
+2.Overriding compareTo
+public int compareTo(Seat seat){
+return this.seatNumber.compareToIgnoreCae(seat.getNumber());
+}
+
+now we can use Collections.sort() and Collections.reverse();
+
+
+
+3.CREATING A COMPARATOR
+
+static final Comparator<Seat> PRICE_ORDER=new Comparator<Seat>(){
+@Override
+public int compare(Seat seat1,Seat seat 2){
+if(seat1.getPrice()<seat2.getPrice()){
+return -1;
+}else if(seat1.getPrice()>seat2.getPrice()){
+return 1;
+}else{
+return 0;
+}
+
+3.Collections.sort(priceSeats,Theatre.PRICE_ORDER)

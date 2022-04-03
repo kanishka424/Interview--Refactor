@@ -1,0 +1,121 @@
+DISTINCT
+
+
+SELECT DISTINCT(rental_rate) FROM film;
+ COUNT
+RETURNS NUMBER OF ROWS in a table
+
+can combine with other commands
+
+
+
+e.g-SELECT COUNT(DISTINCT name) FROM table;//() are nedded otherwis sql will think we are call COUNT on 
+DISTINCT 
+SELECT COUNT(*) FROM paymetn;
+
+$$$$$$$$$$$$$$$$$412.ORDER BY$$$$$$$$$$$$$$$$$$$$$$$$
+SELECT store_id,first_name,lat_name FROM customer
+ORDER BY store_id,first_name
+
+
+
+
+SELECT store_id,first_name,lat_name FROM customer
+ORDER BY store_id DESC,first_name ASC
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$13 LIMIT $$$$$$$$$$$$$$$$$$$$
+
+
+SELECT * FROM payment
+ORDER BY payment_date DESC
+LIMIT 5;
+
+
+$$$$$$$$$$$$$$$$$$15.BETWEEN$$$$$$$$$$$$$$$$$$$
+
+SELECT * FROM payment
+WHERE amount BETWEEN 8 and 9;
+
+SELECT * FROM payment
+WHERE amount NOT BETWEEN 8 and 9;
+
+
+SELECT * FROM payment
+WHERE payment_date BETWEEN '2007-02-01' AND '2007-02-15'
+note 
+timestamps contain TIME AS WELL!!!!
+SO it would negelect anything within 2007-02-15 other than 00:00;00 (hh:mm:ss)
+
+$$$$$$$$$$$$$$$$$$$$$$$$16.IN$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+SELECT * FROM payment
+WHERE amount IN (0.99,1.98)
+
+
+SELECT * FROM payment
+WHERE amount NOT IN (0.99,1.98)
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&717.LIKE and ILIKE$$$$$$$$$$$$$$$$$$$$$$$
+
+
+LIKE is case sensitive and ILIKE is not
+
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'J%'
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'J%' AND lat_name LIKE 'S%'
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'%er%'//even if its in the end it is okay
+
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'%er%'//**********even if its in the end it is okay
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'_er%'//ONLY ONE CHARACTER BEFORE "er"
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'A%'
+
+
+SELECT * FROM customer 
+WHERE fitrst_name LIKE'A%' AND last_name NOT LIKE 'B%'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

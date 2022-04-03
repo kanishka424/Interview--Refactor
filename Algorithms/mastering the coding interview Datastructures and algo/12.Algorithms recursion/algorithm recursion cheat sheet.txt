@@ -1,0 +1,42 @@
+$$$$$$$$$$$$$$$$$3.STACKOVERFLOW$$$$$$$$$$$
+
+IN RECURSTION WE NEED TO HOLD ON TO EACH FUNCTIONS EXCECTION CONTEXT(IN JS TERMS)
+UNTIL THE ENTIR THING HITS THE BASE CASE AND START RETURNING
+THIS IS A DOWNSIDE
+Thiscan casuse STACKOVERFLOW ERROR
+
+
+
+$$$$$$$$$$$$$$$4.Anatomy of Recursion$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Reursive functions has two paths
+
+1.calling the function again via same functin
+2.the base case
+
+e.g-
+
+int counter=0;
+
+function inception(){
+conole.log(counter)
+if(counter>3){
+return 'done!';
+
+}
+counter++;
+return inception();//alpha link
+}
+
+inception();
+
+
+
+H0W the cabove execution works
+(inception(inception(inception(inception()))))=>(inception(inception(inception('done'))))
+
+ 
+SO we need to say return otherwise it would return 'undefined' alpha link
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$5.Excercise Factoril$$$$$$$$$$$$$$$$$$

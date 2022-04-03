@@ -1,0 +1,608 @@
+*******IMPORTANT***************************
+FIND OTHER CHEAT SHEETS INSIDE FOLDERS
+
+
+********************044 Introduction to JPA and Hibernate in Depth********************
+
+
+
+**************045 Step 01 - Create a JPA Project with H2 and Spring Boot
+
+Dependencies nedded
+JPA 
+WEB
+H2(or db driver preffered)
+
+
+extra
+in addition to above springbootalways add "spring-boot-starter-test"
+for us to unit test
+ we can run DemoApplicationTest.java(in src/test/java) as a junit test
+
+
+
+
+
+
+
+********************46 Step 02 - Create JPA Entity Course******************
+
+
+Lets create an Entity
+
+Lets creat an Entity for "Course"
+we use annotation @Entity to define that A BEAN IS AN ENTITY
+WITHOUT @Entity this is like just any Java BEAN
+@Entity maps to a row
+
+@Id-define a Key
+@GeneratedValue-generates value (hibernate would provide the created course object with an ID)
+
+
+ALWAYS PROVIDE A NO ARG CONSTRUCTOR TO ENTITES(like Course,etc...)
+
+protected Course(){
+
+}
+
+
+ref -Entity createtion
+
+
+
+
+
+
+**********47 Step 03 - Create findById using JPA Entity Manager
+
+Here we will create a Repositry so We can creatw create courses,delete courses,etc...(we created Course entity before)
+
+
+
+create a PACAKGE CALL "Repository"
+create class CourseRepository.java
+and annotate with @Repository
+
+@Repository//DEFINES A REPOSITORY
+public class CourseRepository{
+
+    @Autowired
+    EntityManager em;//EntityManager HANDLES EVERYTHING IN REPOSITORY
+
+    public Course findById(Long id){
+        return em.find(Course.calss,id)//CALLING EntityManager'S find()
+
+    }
+}
+
+ref-create a repository
+
+
+how to consume CourseRepository.java in DemoApplication.java(main)
+
+@Autowire
+private CourseRepository repository;
+    .
+    .
+    .
+    .
+    Course course=repository.findById(10001L)
+
+ref-using repository in main and using a logger
+
+
+time4.13-HOW TO CREATE a Data.sql and initalize data in the beiginning
+
+
+
+
+
+*********************step 48 Step 04 - Configuring application_properties to enable H2 console and logging***********
+
+
+WATCH THE VIDEO 
+JUST some appliccation.properties file
+
+
+
+
+
+
+**************************049 Step 05 - Writing Unit Test for findById method*****************8
+
+
+
+we will write a unit test to CourseRepository's
+public Course findById(Long id) {
+    retrun em.findById(Course.class,id);
+}
+
+
+TEST CODE SHOULD BE SEPERATED FROM SOURCE CODE
+THERE FOR WE USE src/test/java
+
+in thee we would create CourseRepositoryTest.java
+
+@RunWith(SpringRunner.class)-to use a spring context
+@SpringBootTest(classes=DemoApplication.class)-the spring context we want to launch
+//here as the class w egive the main class
+
+In this test class Autowre the repositpory
+
+@Autowired
+CourseRepository repository;
+
+//then do the test you desire
+@Test
+public void findById_basic(){//THE MOST BASIC 
+    Course course=repository.findById(10001L);
+    assertEquals("JPA in 50 Steps",course.getName());//the these both results are equal then THE TEST PASSES
+}
+
+
+REF-first basic test
+
+Unit test is run between the context Launch and destroy
+
+
+
+
+*******************step 50 Step 06 - Writing a deleteByID method to delete an Entity***********
+
+
+
+
+in CourseRepository.java
+
+public void deleteByID(Long id){
+    Course course=findById(id);//to delete we first need to find the course(findById was defined in previous video in the same repository)
+    return em.remove(course);//after finding we  can delete
+}
+
+
+
+in DemoApplication.java(main)
+
+repository.deleteByID(10001L)
+
+
+
+If we are to remove data (manipulte) we need to make the deleteByID adhere to transaction 
+
+
+spring makes transaction managment really easy
+***deleteByID is making a change to course but findById is just getting data
+
+***IMPORTANT***IF YOU ARE MAKING CHANGES TO DATA YOU SHOULD MAKE IT WITH TRANSACTION
+
+
+***********@Transactional-TO MANAGE TRANSACTION IN SPRING
+                DEFINED JUST AFTER @Repository
+
+
+
+@Repository
+@Transactional
+public class CourseRepository{
+    @Autowired
+    EntityManager em;
+        .
+        .
+        .
+
+}
+
+
+when @Transactional is given the deleteByID method  WILL BE ATOMIC AND RUN AS A WHOLE AT ONE GO
+
+
+
+********051 Step 07 - Writing Unit Test for deleteById method******
+
+
+In CourseRepositoryTest
+
+
+@Test
+@DirtiesContext
+public void deleteById_basic(){
+    repository.deleteByID(10002L);
+    assertNull(repository.findById(10002L))//***assertNull() checks if something is null if previous step deleted the value then assertNull() would return ture
+
+}
+
+********@DirtiesContext-SINCE THIS IS A TEST WE SHOULD RESTORE THE DATA,WE CAN USE THIS ANNOTATION FOR IT
+
+
+
+
+
+
+*******************STEP 52 Step 08 - Writing a save method to update and insert an Entity
+
+
+
+in CourseRepository.java
+
+
+
+publc Course save(Course course){
+    if(course.getId()==null){//check if  the object exist or not if not exist save otherwise update
+    em.persist(course);//persist is to save
+}else{
+    em.merge(course)//merge IS TO UPDATE
+}
+
+return course;
+}
+
+
+
+in DemoApplication.java
+repository.save(new Course("hibernate course"))
+
+
+***********EntityManager methods so far
+
+em.find()-search
+em.remove()-delete
+em.persist()-save
+em.merge()-update
+em.flush()-the changes which are done until it will be sent to database
+em.detach(course2)-the  changes to course2 are no longer track by entity Manager so the changes to "course2" wont be persisted
+                    to database
+em.claer()-would clear everything on there in EntityManager and won't persist anything to db after this
+em.refresh(course1)-all the changes done to "course1" are gone course1 is loaded from database
+
+
+
+
+
+
+
+
+*********053 Step 09 - Writing Unit Test for save method*****
+
+
+
+in CourseRepositoryTest.java
+
+
+@Test
+@DirtiesContext
+public void save_basic(){
+    //get a course
+    Course course=repository.findById(10001L);
+    assertEquals("Hibernate Course",course.getName());
+
+    //update details
+    course.setName("Hibernate Course-updated");
+
+    repository.save(course);
+
+    //check the value
+    Course course1=repository.findById(10001L);
+    assertEquals("Hibernate Course-updated",course1.getName());
+}
+
+
+
+*********054 Step 10 - Quick Review and Debugging Tips
+
+
+******055 Step 11 - Playing with Entity Manager******
+
+
+in CourseRepository.java
+
+
+public void playWithEntityManager(){
+    Course course=new Course("Web Service in 100 steps");
+    em.persist(course);
+    course.setName("Web Service in 100 step-updated");
+
+}
+
+when we run this in CourseRepositoryTest we will see that a update to course will also 
+persist to TABLE(when inspecting console for queries) EVEN THOUGH WE HAVE NOT 
+USE persist() or merge() after using setName() above
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& REALLY IMPORTANT
+*****REALLY IMPORTANT****REASON - beacuse we used @Transactional just above the repository class 
+            and the code inside playWithEntityManager() method is in a single transaction
+            AND WHILE WE ARE WITHIN SCOPE OF A SINGLE TRANSACTION EntityManager KEEPS
+            TRACK OF ALL THE THINGS THAT WERE INSERTED THROUGH ITT
+            SO AFTER
+
+             course.setName("Web Service in 100 step-updated");
+
+             IN ABOVE CODE WE REALLY DON'T WANT TO sAY 
+             em.merge()
+
+EntityManager will persist the change to database
+BECAUSE THE METHOD IS A ONE TRANSACTION ITSELF
+AND IT WOULD KEEP ATOMACITY
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+
+
+
+&&&&&&&&&&&&&&&&&&& 056 Step 12 - Entity Manager Methods - clear and detach &&&&&&&&&&&&&&&&&&&
+
+
+em.flush()-the changes which are done until it will be sent to database
+
+
+em.detach(course2)-the  changes to course2 are no longer track by entity Manager so the changes to "course2" wont be persisted
+                    to database
+
+
+em.claer()-would clear everything on there in EntityManager and won't persist anything to db after this
+
+
+
+public void playWithEntityManager(){
+    Course course1=new COurse("Web services in 100 steps");
+    em.persist(course1);
+    Course course2=new Course("Angular JS in 100 steps");
+    em.persist(course2);
+
+    em.flush();
+
+    em.clear();
+
+    course1.setName("Web services in 100 steps-updated");
+    em.flush();
+
+    course2.setNAame("Angular JS in 100 steps-updated");
+    em.flush();
+
+}
+
+
+
+
+HERE 
+
+ course1.setName("Web services in 100 steps-updated");
+    em.flush();
+
+    course2.setNAame("Angular JS in 100 steps-updated");
+    em.flush();
+
+
+    part won't be persisted to db beacuse of em.clear()
+
+
+
+
+
+
+######################057 Step 13 - Entity Manager Methods - refresh######################
+
+
+em.refresh(course1)-all the changes done to "course1" are gone course1 is loaded from database
+
+refresh() will fire a select query on "course1"
+
+
+
+
+
+
+***********EntityManager methods so far
+
+em.find()-search
+em.remove()-delete
+em.persist()-save
+em.merge()-update
+em.flush()-the changes which are done until it will be sent to database
+em.detach(course2)-the  changes to course2 are no longer track by entity Manager so the changes to "course2" wont be persisted
+                    to database
+em.claer()-would clear everything on there in EntityManager and won't persist anything to db after this
+em.refresh(course1)-all the changes done to "course1" are gone course1 is loaded from database
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&058 Step 14 - A Quick Review of Entity Manager&&&&&&&&&&&
+
+
+Review
+
+
+
+
+######################### 059 Step 15 - JPQL - Basics#################################3
+
+
+we write JPQL with ENTITES
+
+SELECT * FROM Course
+
+WILL BE
+
+SELECT c FROM Course c
+
+
+Create JPQLTest.java
+
+
+@RunWith(SpringRunner.class)
+@SpringBootTEs(classes=DemoApplication.class)
+public class JPQLTest{
+
+private Logger logger=LoggerFactory.getLogger(this.getClass());
+
+@Autowired
+EntityManager em;
+
+@Test
+Public void findById_basic(){
+
+Query query=em.createQUery("select c From Course c");//"Query" is the type it returns
+List.resultList=query.getResultList();
+logger.info("Select c From Course c-> {}",resultList)
+}
+
+}
+
+
+List resultList=em.createQuery("Select c FROM Course c").getResultList();
+
+THIS IS THE IMPORTANT LINE
+
+
+
+@Test
+Public void findById_basic(){
+
+TypedQuery<Course> query=em.createQUery("Select c From Course c where name like '%100 steps'",Course.class);//"TypedQuery" is the type it returns
+List.resultList=query.getResultList();
+logger.info("Select c From Course c-> {}",resultList)
+}
+
+}
+
+
+
+//here we are using Entites in future we will use relationships
+
+
+
+######################060 Step 16 - JPA and Hibernate Annotations - @Table###############
+Incomplete NOTES
+
+
+@Table(name="")
+
+
+
+
+##############061 Step 17 - JPA and Hibernate Annotations - @Column
+
+
+Incomplete NOTES
+
+
+@Column(name="fullname",nullable=false)
+private String name;
+
+
+
+
+######################## 062 Step 18 - JPA and Hibernate Annotations - @UpdateTimestamp & @CreationTimestamp
+##########
+
+
+@UpdateTimestamp//this is  a Hibernate annotation not a JPA annotation
+private LocalDateTime lastUpdateDate;
+
+
+@CreationTimestamp
+private LocalDateTime createdDate;
+
+
+
+ref-result of create and update
+
+
+sysDate() in query
+
+
+
+##########################063 Step 19 - JPA and Hibernate Annotations - @NamedQuery and @NamedQueries##################
+
+Named Queries are there for reusability (that the difference);
+
+Named queries are defined in ENtity class not in Repository
+but used in repository
+
+
+@Entity
+@NamedQuery(name="query_get_all_queries",query="Select c From Courses c")
+
+
+
+
+
+usng named query in JPQLTest.java
+
+
+@Test
+public void jpql_typed(){
+    TypedQuery<Course> query=em.createdNamedQuery("query_get_all_courses",courses.class);
+
+    List<Course> resultList=query.getResultList();
+
+}
+
+
+
+@NamedQuery IS NOT REPETABLE
+SO IN @Entity class (here Course) we CANT DECLARED TWO @NamedQuery
+
+@NamedQueries
+
+
+SO WE HAVE TO SAY @NamedQueries(
+    value={
+        @NamedQuery(name="",query)
+        @NamedQuery(name="",query)
+    }
+)
+
+
+
+################064 Step 20 - Native Queries - Basics###############
+
+WRITTING SQL QUERIES INSTEAD OF JPQL
+
+
+@Test
+public void native_queries_basics(){
+    Query quey=em.createNativeQuery("SELECT * FROM COURSE",Course.class);
+    list resultList=query.getResultList();
+    logger.info("Select c From COurse c ->{}",resultList)
+}
+
+
+
+@Test
+public void native_queries_with_parameter(){
+    Query quey=em.createNativeQuery("SELECT * FROM COURSE where id=?",Course.class);
+    query.setParameter(1,10001L)//how to set positiona parmaeters
+    list resultList=query.getResultList();
+    logger.info("Select c From COurse c ->{}",resultList)
+}
+
+
+@Testpublic void native_queries_with_named_parameter(){
+    Query query=em.createNativeQuery("SELECT *FROM COURSE where id=:id->{}",resultList);
+    query.setParameter("id",1000L)
+     list resultList=query.getResultList();
+}
+
+
+
+Bette to use JPQL but native queries must also be used in some situations
+
+
+
+
+WHEN THE OPERATION IS NOT SUPPORTED BY JPQL
+
+WHEN USING A MASS UPDATE
+becauwse idf we are to use JPQL we need to give row by row
+e.g-
+@Test
+@Transactional
+public void native_queries_to_update(){
+    Query query=em.createNativeQuery("UPDATE COURSE set last_updated_date=sysdate")
+}
+

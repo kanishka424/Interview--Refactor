@@ -1,0 +1,11 @@
+1.languages.remove("java") //languages is a map
+//remove(key) method returns a boolean true if success
+
+
+2.languages.replace(key,value) //IF THE KEY DOEN'T EXIST THIS KEY AND VALUE WON'T BE ADDED  TO MAP
+
+3.languages.replace(key,oldValue,newValue)
+if any of the  key and value doesnt match this won't replace and will return false
+
+
+4.new HashMap<String,Integer>(exits)//"exits" is a map

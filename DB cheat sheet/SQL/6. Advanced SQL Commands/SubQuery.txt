@@ -1,0 +1,119 @@
+===================SubQuery=========================================
+
+e.g-Getting students who scored more than average score 
+
+this is where a subquery can help us GET THE RESULT IN A "SINGLE"
+QUERY REQUEST
+
+
+
+SELECT student,grade
+FROM test_scores 
+WHERE grade>(SELECT AVG(grade)
+FROM test_score)
+
+
+IN parntheses we have our subquery
+
+*****THE SUBQUERY RUNS FIRST SO IT WOULD LOOK LIKE BELOW
+
+SELECT student,grade
+FROM test_scores 
+WHERE grade>(70)
+
+
+THEN SQL WILL RUN THE OTHER QUERY
+
+we also can use the "IN" operator in conjunction with a subquery to check against multiple results
+returned
+
+
+e.g-
+SELECT student,grade
+FROM test_scores
+WHERE student IN(SELECT student FROM honor_roll_table)
+
+   ^
+   |
+
+
+SELECT student,grade
+FROM test_scores
+WHERE student IN(('Zach','Chris','Karissa'))
+
+
+seems like a join but for some complex queries it is easier to think as a subquery
+
+EXISTS-used to test for existence of rows IN A SUBQUERY
+
+typically  a subquery is passed in the EXISTS() function to check if any rows are returned with the subquery
+
+
+e.g-SELECT column_name
+    FROM table_name
+    WHERE EXISTS
+    (SELECT column_name FORM table_name WHERE condition);//EXISTS would return  True or False
+
+
+e.g-people who happened to have AT LEAST(this is IMPORTANT THIS IS WHY WE USE "EXISTS")t one payment and amount greater than 11
+
+
+******THIS ONE GIVES GOOD IDEA ABOUT "EXIST "  
+SELECT first_name,last_name
+FROM customer AS c
+WHERE NOT EXISTS
+(SELECT * FROM payment as p
+WHERE p.customer_id=c.customer_id
+AND 
+amount>11)
+//THiS is a Correlated query
+//*********important-FOR Correlated QUERIES-https://www.geeksforgeeks.org/sql-correlated-subqueries/
+Correlated subqueries are used for row-by-row processing. Each subquery is executed once for every row of the outer query.
+
+LINK for IN VS EXISTS-https://www.javatpoint.com/in-vs-exists 
+
+
+
+ ON DB EXTRAS=========(for a quick recap above section is enough)
+tip -first start with the subbquerry
+
+SELECT title ,rental,rental_rate
+FROM film
+WHERE rental_rate>
+(SELECT AVG(rental_rate) FROM film)//this subquery returns a SINGLE VALUE so we can use "<" with it
+//but if the subquery returns multiple values then we should use something like "IN"
+
+e.g-retrive every movie rented between a particular time period
+
+SELECT film_id,title
+FROM film 
+WHERE film_id IN
+(SELECT inventory.film_id
+FROM rental 
+INNER JOIN inventory ON inventory.inventory_id=rental.inventory_id
+WHERE return _date BETWEEN '2005-05-29' AND '2005-05-30')
+ORDER BY film_id//"ORDER BY" MUST BE OUTSIDE OF THE SUBQUERY IT'S A PART OF MAIN QUERY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

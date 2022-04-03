@@ -1,0 +1,109 @@
+$$$$$$$$$$$$$$$$$$ step 58 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Transaction involves multiple changes to data
+you need to make sure either all of them are succesful or none of the updates are successful
+
+Annation JPA provides make transaction managment easy
+
+time 3.30-inconsistent state
+
+@Transactional-will roll back if any of transaction step fails
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ step 59 $$$$$$$$$$$$$$$$$$$$$$$$
+
+
+ACID
+
+Atomacity
+
+Concurrent-doesnt matter how many concurrent transaction are running but the result should be same as 
+            each transaction happened one after another
+
+Isolation-will a tansaction is able to see an inbetween transaction
+
+
+Durability-If the system crashes the data must be persisted after recorded in Durability
+
+
+$$$$$$$$$$$$$$$$ 60.Understanding Dirty _phantom and non repeatable reads $$$$$$$$$$$$$$
+
+
+Three concepts to understand
+
+DIRTY READ 
+NON REPETABLE READ
+PHANTOM READ
+
+
+
+
+DIRTY READ -time 1.07
+
+Another transaction reading a modified value of another transaction before even it completes
+(inside same transaction)
+
+NON REPETABLE READ-time 5.31
+
+we get different values to same query because some other transaction updated it
+(inside same transaction)
+
+Phantom Read -time 6.55
+e.g -you get three rows first and in another step you get four rows because some other transaction entered
+    those
+
+
+ref-DIRTY NON REPETABLE PHANTOM READ
+
+
+
+$$$$$$$$$$$$$$$$ 4 ISOLATION LEVELS $$$$$$$$$$$$$$$$$$$$$44
+
+
+
+READ UNCOMMITED
+READ COMMITED
+REPETABLE READ
+SERIALIZABLE
+
+
+READ COMMITED-A LOCK IS ACQUIRED TO VALUES BEING UPDATED TILL THE TRANSACTION completes
+        NO DIRTY reads
+
+
+REPEATABLE READ-A LOCK IS ACUIRED TO ROW UNTIL THE TRANSACTION COMPLETE
+                NO DIRTY reads
+                NO READ UNCOMMITED
+
+
+SERIALIZABLE-A TABLE LOCK FOR THE THAT QUERY DATA SET
+                NO DIRTY READ 
+                NO  NON REPETABLE READ
+                 NO PHANTOM READ
+
+
+READ COMMITED IS MOSTLY used
+
+SERILIZATION WILL CAUSE PERFORMANCE ISSUES BECUASE IT HOLDS ALL OTHER TRANSACTIONS
+
+
+
+@Transactional MAKE IT TRANSACTION
+
+1.@Transactional(Isolation=SERIALIZABLE)(fro method)
+
+2.spring.jpa.properties.hibernate.connection.isolation=2;
+(through out the app)
+
+
+
+
+
+
+
+
+
+
+

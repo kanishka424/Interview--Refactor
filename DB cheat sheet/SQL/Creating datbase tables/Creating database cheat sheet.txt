@@ -1,0 +1,360 @@
+
+
+=============2.Data Types================================
+
+see video or data type documentation
+
+COMMON DATA TYPES
+Boolean-true or false
+Character-char,varchar and text
+Numeric-integer and floating-point numbers
+Temporal-date,time,timestamp and interval
+
+
+
+
+
+
+tip - better to use VARCHAR for telephone rather than a numeric 
+        because of less arithmetic operations
+
+
+        search besst practices for online
+
+
+        **You ccan always remove historical inforation you've decided you arent using,but you cant go back in time to 
+        add in information
+
+=====================3.Primary keys and foreign keys=========
+
+
+
+Primary key-column or a group of columns used to identify
+            a row uniquely in a table.
+
+
+Foreign key-field or group of fields in a table
+            that uniquely identifies a rowin another table
+
+
+referencing table/child table-contains foreign key
+
+referenced table-parent table
+
+a table can have multiple foreign keys
+
+
+
+we can use constraints to define columns as being primary key or attaching a foreign
+key relationship to another table
+
+
+
+in pgadmin click tables and in constraints see constraints
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$ 4.constraints$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+Rules enforced on data columns on table
+used to prevent invalid data from being entered into  the database
+ensures the accuracy  and reliability of the data in the database
+
+
+OCnstraints
+
+1.column constraints
+2.table constraints
+
+
+watch the video(replacewhen have time)
+NOT NULL
+UNIQUE
+PRIMARY KEY
+FOREIGN KEY
+CHECK
+EXCLUSION
+REFERENCES
+
+TABLE constraints
+UNIQUE
+PRIMARY KEY(multiple key columns)
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$ 5.CREATE TABLE$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+CREATE TABLE table_nae(
+    column_name TYPE column_constraint,
+    column_name TYPE column_constraints,
+    table_constraint table_constraint
+) INHERITS existing_table_name
+
+
+
+time 2.50 -SERIAL-creats sequence of data
+
+exaple synatx
+
+
+CREATE TABLE players(
+    player_id SERIAL PRIMARY KEY,
+    age SMALLINT NOT NULL
+    usename VARCHAR(50) UNIQUE NOTNULL,
+    password VARCHAR(50) NOT NULL,
+    eamil VARCHAR(250)   UNIQUE NOT NULL,
+    created_on TIMESTAMP NOT NULL,
+    last_login TIMESTAMP
+)
+
+create table with foreign key
+
+CREATE TABLE account_job(
+    user_id INTEGER REFERENCE account(user_id)//account is a table
+    job_id INTEGER REFERENCE job(job_id)
+)
+
+Now in pgadmin account_job->constraints we can see these foreign key constraints
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ INSERT $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+INSERT INTO table(column1,column2,....)
+VALUES 
+    (value1,vlaue2,....)
+    (value1,vlaue2,....)
+
+
+
+From another table INSERT
+
+INSERT INTO table(column1,column2,....)
+SELECT column1,column2,.......
+FROM another_table
+WHERE condition
+
+
+but you cant enter break violating foreign key constraints
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$ UPDATE $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+UPDATE table 
+SET column1=value1
+    column2=vlaue2
+
+WHERE
+    condition
+
+
+********Using another tables values (UPDATE join)
+
+
+UPDATE TableA
+SET original_col=TableB.new_col
+FROM TableB
+WHERE TableA.id=TableB.id
+
+
+
+******Retrun affected rows
+
+UPDATE account
+SET last_login=created_on
+RETURNING account_id,last_login
+
+
+
+
+
+***************************8.DELETE
+
+
+
+DELETE FROM table
+WHERE row_id=1
+
+
+
+we can delete rows based on their presence i othe tables
+
+DELETE FROM TableA
+USING TableB WHERE tableA.id=tableB.id//USING
+
+dlete all rows
+
+DELETE FROM table
+
+
+
+
+RETURNING
+
+DELETE FRO job
+WHERE job_name='Cowboy'
+RETURNING job_id,job_name
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$ ALTER $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+adding
+dropping
+renaming  columns
+
+changing data type
+
+CHECK constraints
+
+REname table
+
+
+
+
+adding
+
+ALTER TABLE existing_table_name
+ADD COLUMN new_col TYPE
+
+
+removing
+
+ALTER TABLE existing_table_name
+ADD COLUMN column_name
+
+
+£££ ALter constraints
+
+
+
+ALTER TABLE existing_table_name
+ALTER COLUMN column_name
+SET DEFAULT value
+
+
+ALTER TABLE existing_table_name
+ALTER COLUMN column_name
+SET NOT NULL
+
+
+ALTER TABLE existing_table_name
+ALTER COLUMN column_name
+DROP NOT NULL
+
+
+
+
+
+ALTER TABLE existing_table_name
+ALTER COLUMN column_name
+ADD CONSTRAINT constraint_name
+
+***rename table 
+
+ALTER TABLE information
+RENAME TO new_info
+
+
+*** rename column  **
+
+ALTER TABLE information
+RENAME COLUMN person TO people
+
+
+
+***** drop not NULL
+
+
+ALTER TABLE new_info
+ALTER COLUMN people DROP NOT NULL//any constrain
+
+
+************** set constraints
+
+ALTER TABLE new_info
+ALTER COLUMN people SET NOT NULL//any constraint
+
+
+see docs for ALTER
+
+
+
+
+
+
+
+************************ DROP TABLE
+
+complete remove of a column in a table
+it will automatically remove indexes and constraints  involve the column
+
+HOWEVER IT WILL NOT REMOVE COLUMNS USED IN VIEWS,TRIGGERS,OR STORED PROCEDURES
+WITHOUT THE ADDITIONAL CASCADE CLAUSES
+
+
+synatx
+
+
+ALTER TABLE existing_table_name
+DROP COLUMN column_name
+
+
+to remove all dependencies//CASCADE
+
+
+
+ALTER TABLE existing_table_name
+DROP COLUMN column_name CASCADE
+
+
+
+
+***** check for existence to avoid errors
+
+ALTER TABLE existing_table_name
+DROP COLUMN IF EXISTS col_name
+
+
+
+DROP multiple columns
+
+
+
+ALTER TABLE table_name
+DROP COLUMN col_one
+DROP COLUMN col_two
+
+=========================================11.CHECK=====================
+
+
+
+CREATE TABLE example(
+    ex_id SERIAL PRIMARY KEY,
+    age SMALLINT CHECK(age>21
+    parent_age SMALLINT CHECK(parent_age>age),
+    birthdate DATE CHECK (birthdate>'1900-01-01'))
+)
+
+
+when inserting we should not violate CHECK()
+
+
+

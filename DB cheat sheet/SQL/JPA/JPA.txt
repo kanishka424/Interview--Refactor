@@ -1,0 +1,43 @@
+@Repository
+@Transactional
+
+
+@persistenceCOntext
+EntityManager em
+
+
+
+//all except for findAll() returns a Persons
+//find
+em.find(Person.class,id)
+
+//both insert and update
+em.merge(person)
+
+
+
+//deleteBYId
+findBYId(id)//the find metod we created
+em.remove(person);
+
+//findAll()
+
+TypedQuery<Person> namedQuery=em.createNamedQuery("find_all_persons",Person.class)//second argument is the type of query it returns
+namedQuery.getResultList();
+
+
+@Entity 
+@NamedQuery(name="find_all_persons",query="select p from Person p") //this doesnt deal with tabes
+
+
+
+public cass Person{
+    .
+    .
+    .
+
+
+
+
+
+    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ JPA and Hibeernate in depth$$$$$$$$$$$$$$$$$$$$$$

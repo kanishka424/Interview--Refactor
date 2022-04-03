@@ -1,0 +1,21 @@
+1.ArrayList(Collection<? extends E> c)
+Constructs a list containing the elements of the specified collection, in the order they are returned by the collection's iterator.
+
+This will  create a SHALLOW COPY
+
+2.Collection.reverse(Collection<? extends E> c)
+Collection.shuffle(Collection<? extends E> c)
+
+Collection.min(Collection<? extends E> c)
+Collection.max(Collection<? extends E> c)
+
+Collection.swap(Collection<? extends E> c,int index1,int index 2);
+
+
+
+
+Collection.copy(newList,oldList);
+
+
+
+

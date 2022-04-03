@@ -1,0 +1,42 @@
+question 
+is the middle index excluded?
+
+olution
+
+1.get the array nums
+
+2.get two pointers "leftPonter" and "rightPonter"
+
+3.defien two variables "leftSum" and "rightSum"
+
+4.start by adding first two number from left move the pointer by one and add values to "leftSum"
+check if leftSum>rightSum do it to right side(uing rightPointer and rightSum)
+do it till otherwise do it to left
+if leftSum==rightSum and leftPointer==rightPointer return leftPointr
+if rightPointer<leftPointer throw an exception
+5.
+
+
+class Solution {
+    public int pivotIndex(int[] nums) {
+      int leftPointer=0;
+int rightPointer=nums.length-1;
+int rightSum=0;
+int leftSum=0;
+
+while(leftPointer<rightPointer){
+if(leftSum>rightSum){
+
+rightSum+=nums[rightPointer--];
+}else{
+leftSum+=nums[leftPointer++];
+}
+ if(rightSum==leftSum && rightPointer==leftPointer){
+return rightPointer;
+}
+
+}
+
+return -1;  
+    }
+}

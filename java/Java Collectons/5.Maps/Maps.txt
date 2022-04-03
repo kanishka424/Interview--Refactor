@@ -1,0 +1,12 @@
+1.when you put the same key again in a map the value get overriden
+
+2.map.containsKey("ab") //return boolean
+we can use this to avoid overriding values when ading the same key with a different value
+
+3.printing key and value
+
+for(String key:languages.keySet()){
+sout(key+":"+languages.get(key));
+}
+
+in a map we don't have in order

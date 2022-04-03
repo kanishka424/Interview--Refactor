@@ -1,0 +1,205 @@
+JOIN types
+1.INNER JOIN
+2.OUTER JOIN
+3.FULL JOIN
+4.UNIONS
+
+
+
+$$$$$$$$$$$$$$$$$$$ 3.AS Statement $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+AS
+ allows us to create an alias
+
+
+SELECT SUM(amount) AS net_revenue
+FROM payment;
+
+result will be shown but instead of "amount" it would be net_revenue
+
+
+The AS operator gets executed at the very end of query//SAME AS Aggregate functions
+meaning we cant use ALIAS inside WHERE operator
+
+we will only be able to use alias in SELECT statement
+
+
+e.g-
+SELECT customer_id,SUM(amount) AS total_spent
+FROM payment
+GROUP BY customer_id
+HAVING total_spent > 100//this is wrong  for above reason,alias get assigned at end
+
+
+-----THE CORRECT---
+
+SELECT customer_id,SUM(amount) AS total_spent
+FROM payment
+GROUP BY customer_id
+HAVING SUM(amount) > 100
+
+
+
+4.INNER  JOIN
+
+WIll result with the set of recods that match in both tables
+
+reference -inner join(venn diagram)
+
+
+SELECT * 
+FROM TableA INNER JOIN TableB
+    ON TableA.col_match=TableB.col_match
+
+
+since we select * columns joining will duplicate
+
+
+SELECT reg_id,Loigns.name,log_id//Loigns.name is the catch here
+FROM Registrations
+INNER JOIN Loigns
+ON Registrations.name=Logins.name
+
+
+
+
+INNER JOIN ===join
+
+
+5.FULL OUTER JOIN
+
+there are few different types of OUTER JOINs
+
+they will allow us to specify how to deal with values
+only preseent in one of  the 
+tables being joined
+
+
+FULL OUTER JOIN
+LEFT OUTER JOIN
+RIGHT OUTER JOIN(opposite of LEFT OUTER JOIN)
+
+
+
+
+
+FULL OUTER JOIN
+
+GRABS everything
+refernce-full outer join
+
+
+SELECT * FROM TableB
+FULL OUTER JOIN TableA
+ON TableA.col_match=TableB.col_match
+
+
+reference-full outer join table
+
+
+
+*****FULL OUTER JOIN WITH WHERE
+Get rows unique to ether table
+(rows not found in both tables)
+
+IMPORTANT
+
+
+SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.col_match=TableB.col_match
+WHERE TableA.id IS null OR TableB.id IS null//where the difference is
+
+
+reference-Full outer join with WHERE (unique to each table rows)
+
+
+tie 12.23-where we select customers without payments and payments without customers
+
+
+
+
+
+6.LEFT OUTER JOIN
+
+ 
+reuts in the set of records taht are in the left table,if there is no matchwith the right 
+table,the results are null
+
+refernce -left outer join
+
+
+Select * from TableA 
+LEFT OUTER JOIN TableB 
+ON TableA.col_match=TableB.col_match
+
+tablA+(dat in TableA and TableB)
+
+data only in table B wont be included
+
+
+here left table is the first one we refer to
+here table order MATTERS
+
+
+reference-Left outer join tables
+
+
+
+
+
+LEFT OUTER JOIN WITH WHERE
+
+SSELECT * FROM TableA
+LEFT OUTER JOIN TableB
+ON TableA.col_match=TableB.col_match
+WHERE TableB.id is null
+
+gets unique records to table A
+
+refernce-left outer join with where
+
+e.g-tme 11.01
+movies we have info but not in our inventory
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 7.RIGHT OUTER JOIN$$$$$$$$$$$$$
+
+
+JUST WATCH THE VIDEO EASY
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 8.UNION $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+UNION operator is used to combine the result-set of two or more SELECT statements
+
+
+it concatenate two results together,essentially "pasting"
+them together
+
+
+SELECT column_name(s) FROM table 1
+UNION 
+SELECT column_name(s) FROM table 2
+
+
+
+*The table structures must be identical (columns)
+
+
+
+
+
+
+
+
+
+
+
+
+

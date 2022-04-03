@@ -1,0 +1,179 @@
+2.Asynchronous Javascript(2nd video)
+
+
+e.g 1-Synchronized JS
+
+const second=()=>{
+    console.log('second');
+}
+
+
+const first=()=>{
+    console.log('one');
+    second()
+    console.log('three');
+}
+
+OUTPUT-one
+       second
+       three
+
+
+e.g 2-Asynchronous JS
+
+const second=()=>{
+   setTimeout(()=>{
+       console.log("Async second here")
+   },2000)
+}
+
+
+
+const first=()=>{
+    console.log('one');
+    second()
+    console.log('three');
+}
+
+OUTPUT-one
+       three
+       Async second here //appears after two seconds
+
+
+       NOTE 
+       We have let function second()  have asynchronous function setTimeout()
+    therefor it will be executed after 2s
+    but it won't stop from
+    rest of the outside code from executing
+
+
+
+
+
+
+
+
+   3.Understanding Asynchronous JS the event loop(3 rd video)
+
+Synchronoused code -one statement is processed after another
+                    line by line in single Thread of JS engine
+                    (for example see the code  at top)
+
+
+
+Asynchronoused code    -when calling the second function we have set a timer to second function but it wont stop 
+                        the first function continue its execution while second function waits
+                        this is called Asynchronous see the top          
+
+
+real example-const image =document.getElementById('img').src;
+
+processLargeimage(image,()=>{
+    console.log('Image processed')
+})
+processing image will take time (previously it was setTimeout())till image is processing other things operations will run
+we dont want the code to wait till image is processing which will be terrible
+
+
+what we have done here is we have a function passed(a callback function) to execute as soon as the image proccessed 
+In the background image will be processed
+
+
+If a code is blocked a web page wont work you cant click butttons,etc..
+
+
+
+
+
+EVENT LOOP
+
+watch time 4.14
+
+WEB API-dom manipulation,geo location,HttpRequest,local storage,etcc.
+        these are outside of JS engine 
+        but we have access because they are also in JS runtime
+
+ IN WEB API the TIMER will running for 2s when we call settimeOut() in previous method asynchronously
+    So our code can run without blocked
+
+    const second=()=>{
+   setTimeout(()=>{
+       console.log("Async second here")
+   },2000)
+}
+
+
+const first=()=>{
+    console.log('one');
+    second()
+    console.log('three');
+}
+
+    So when we call setTimeOut function the timer is created with our call back function
+    right inside WEB API environment
+    there it keeps sitting untill it finshes it work all in an asynchronus way
+    Until timer keeps waiting all the other code will execute in execution stack(time 5.43)
+    now the setTimeOut() returns and pops of the stack and so does the execution context of the second function
+    which now returns as well
+    Now a new log function context is given to stacked and print  to console and popped off
+    and also the first() execution context is also 
+
+    Now back to original stack with Global Execution Stack
+
+
+
+    NOW our callback function residing in WEB API will be placed in MESSAGE QUEUE
+    READY to be executed as soon as Execution Stack is empty
+
+    THIS IS EXACTLY WHAT HAPPENS WITH DOM EVENTS because DOM eventss happens exact same way
+
+
+
+    HOW CALLBACK FUNCTIONS IN MESSAGE QUEUE IS EXECUTED?
+    EVENT LOOP will CONSISTENTLY MONITOR MESSAGE QUEUE and EXECUTION STACK 
+    and push to execution stack as soon as the EXECUTION STACK is empty
+
+    and inside that callback function we would simply call log execution context  and remove its execution context from Excecution Stack
+    and will finally pop EXecution Context timer callback
+
+
+
+
+4.The Old Way way Asynchronus JS with callbacks(4th video)
+
+we will simulate asynchronus behaviour where we make three ajax calls 
+
+function getReceip(){
+setTimeOut(()=>{
+    const receipeID=[523,883,432,974];
+    console.log(receipeID);
+
+    setTimeOut(id=>{
+        const receipe={
+            title:'Fresh tomato pasta';
+            publisher:'Jonas'}
+            console.log('${id}:${receipe.title}');
+
+            setTimeOut(publisher=>{
+                const receipe2={
+                    title:'Italian Pizza',publisher:'Jonas'}
+                },1500,recipe.publisher)//the parameter passed to ccall back
+            },1500,recipeID[2])
+        }
+            
+        }
+    })
+})
+
+}
+
+
+SELECT * 
+   FROM CUSTOMERS 
+   WHERE ID IN 4,5,7
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+
+EQUALS() 
+
+@Override
+public boolean equals(Object obj){
+if(this==obj){
+return true;
+}
+if((obj==null)||(obj.getClass()!=this.getClass()){//WE NEED TO CHECK FOR NULL FIRST OTHERWISE IF IT IS NULL WE ARE CALLING getClass() on a null
+return false;
+}
+
+String objName=((HeavenlyBody)obj.getName();
+return this.name.equals(objName);
+
+}

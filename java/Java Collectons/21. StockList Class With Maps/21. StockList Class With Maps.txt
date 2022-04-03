@@ -1,0 +1,18 @@
+hashMap.getOrDefault(item.getName(),item);
+
+
+
+Looping ENTRY SET
+
+for(Map.Entry<String,StockItem> item:list.entrySet()){
+
+StockItem stockItem=Item.getValue();
+
+double itemValue=stockItem.getPrice()*stockItem.getQuntityStock();
+}
+
+
+UnmodifiableMap
+
+
+

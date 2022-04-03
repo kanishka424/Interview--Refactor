@@ -1,0 +1,12 @@
+1.Class must be implememnts by Comparable in order to be compared and also it must override (Comparable is an interface)
+compareTo() in Comparable
+
+
+2.Collection.binarySearch(<list of things to be compared>,<thing we search for>,null)//chcek what null is
+
+3.BinarySearch is the fastes way to find  something in a sorted list
+
+4.
+
+
+ 

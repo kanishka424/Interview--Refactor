@@ -1,0 +1,116 @@
+=============71.Introduction to caching=========================
+
+
+
+ref-layers of a software
+
+
+Hibernate and Jpa come to picture in "Data" layer
+the data layer needs to retreive data from database
+
+
+e.g-I want to show a username in every page of the application
+    we need to get that data  from database everytime/for every page If I DONT HAVE ANY CACHING MECAHNISM
+    typically a database is s   troed in a seperate system compared to your application so there is a network round trip
+
+    however this 'username' data DOES NOT CHANGE THAT OFTEN so THIS CAN BE CAHCHED
+    Hibernate provides multiple options to cache this data
+    what will happen is the first time the user logs in we will get user name
+    and we will put it into cache so we can return that data to specific user in in subsequent requests
+    so we will avoid the network round trip,THIS IS THE CONCEPT OF CAHCHE
+
+
+IN Hibernate
+1.FIRST LEVEL cache
+2.SECOND LEVEL cache
+
+
+DIFFERENCE BETWEEN FIRST LEVEL AND SECOND LEVEL CACHE
+
+
+ref-first and second level caching
+in a typical transaction there are multiple transactions going On in parallel
+and each transaction is associated with Persistence context of its own
+the Persistence context keeps track of  all the entites that change during that particular transaction
+
+e.g- lets say during 'Transaction1' it retrives data of same course again and again
+        lets say I retrive the details of course with courseID 10001 again and again 
+        waht would happen is Hinbernate would not go to the database again and again
+        first time it will go to the Database and retrive data and store it in Persistence context of Transaction1
+        next time you ask for the same data Hibernata will return it from Transaction1 Persistence contexgt
+        ,it won't retrieve this time from database
+        THIS IS CALLED FIRST LEVEL CACHING
+        first level transaction is WITHIN THE BOUNDRY OF A SINGLE Transaction1
+        SO within the boundry of  a single transaction the retrive happens in  a cahche thats the first level cahching
+
+
+SECOND LEVEL CACHE comes to picture across multiple transactions
+
+e.g- application server deployed on application server or a web server
+     and there are multiple users using this application IRESSPECTIVE OF THE USERS THE LIST OF COUNTRIES AND LIST OF STATES 
+     ARE  THE SAME LIST OF COUNTRIES AND LIST OF STATES DOES NOT CHANGE
+     WHAT WE CAN DO IS WE CAN STORE SUCH DATA IN SECOND LEVEL CACHE
+     SECOND LEVEL CACHE WOULD TYPICALLY STORE COMMON DATA OF ALL USERS
+
+     LETS SAY THE APPLICATION HAS JSUT LAUNCH UP AND THERE IS A REQUEST FOR LIST OF COUNTRIES
+     Transaction1 would go to Persistence context of it and then second level cache but the data is not there so it would go to database and retrieve data PUT IT IN SECOND LEVEL CACHE
+     THEN ANY OF THE TRANSACTION (UNLIKE IN FIRST LEVEL CAHCHE) CAN USE THAT COMMON DATA
+
+
+
+
+
+====================121 Step 72 - Hibernate and JPA Caching - First Level Cache==========================
+(This note was written in hurry)(NEED TO WATCH THE VIDEo)
+
+using  @Transactional we can define first level cahe (see what is first level cahce above)
+
+If we use @Trnsactional in service call-see time1.50
+
+If we define @Transactional above the repository class only(without defining it above the calling service method ) then then each method CALL
+would run its own transaction
+but the second time I call the same method it would create a new transaction
+thats why when we retrive the course 10001L the seconf time(using repository.findById(10001L)) we have to retrive from
+databse ,not from cahce,because first level transactions are bounded by that particualar transaction
+
+
+
+
+
+==================== 73 - Hibernate and JPA Caching - Basics of Second Level Cache with EhCache
+
+
+
+we have to add a dependency in pom.xml "hibernate-ehcache"
+
+and 
+
+***configure ehcache in application.properties
+
+1.enable second level cache
+2.specify cahing framework-EhCache
+3.Only Cache what I tell you to cache
+4.what to cache
+
+ref-application propert file
+
+
+option of sharedCache(in third step)
+ALL
+NONE
+ENABLE_SELECTIVE
+UNSPECIFIED
+
+4th step will be done in next video
+
+
+
+
+
+==============step 74 - Hibernate and JPA Caching - Second Level Cache Part 2============
+
+
+using @Cacheable in the MODEL class(e.g-Course.java) we can implement second level caching
+here it caches according to retrieved value if it didnt have 10002L it will retrive it from DB
+
+L2C -caching

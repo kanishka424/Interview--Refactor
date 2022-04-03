@@ -1,0 +1,17 @@
+1.get the number as an int
+2.get the right most digit
+3.asign to variable "reverse",foolowing didgits should append after
+fo this until there are no digits in value
+
+public int reverseInt(int number){
+int revers=0;
+
+while(number==0){
+int currentNum=number%10;
+number=number/10;
+reverse=reverse*10+currentNum;
+
+
+}
+ return reverse;
+}

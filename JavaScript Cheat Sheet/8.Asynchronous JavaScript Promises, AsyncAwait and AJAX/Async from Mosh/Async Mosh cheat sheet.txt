@@ -1,0 +1,623 @@
+#########################1. Synchronous Vs. Asynchronous Code##################
+
+
+simple example of a synchronus or blocking program
+
+****code******
+
+console.log('Before');
+console.log('Afer')
+
+OUTPUT-
+Before
+After
+
+
+In JS we have asynchronus programing
+
+*****code************
+
+console.log('Before');
+setTimeOut(()=>{//all this function does is scheduling atask for future
+console.log('Reading a user from a datbase....')
+},2000)//after 2s the callback function given in 1st parameter would be called
+console.log('After');
+
+OUTPUT-
+Before
+After
+Reading a user from a datbase...//after 2s this would be displayed
+
+ASYNCHRONUS DOESNT MEAN CONCURRENT
+
+
+the single thread will display "Before"
+the single thread will schedule setTimeOut()
+the single thread will print "After"
+ after 2s 'Reading a user from a datbase....' is printed //schedule in second step
+
+
+example for asynchronus -a waiter that takes orders and won't wait till it gets prepared but takes others orders
+
+
+In Node WHENEVER YOU INVOLVE EWITH THIS OR NETWORK CALL YOU ARE DEALING WITH ASYNCHRONUS 
+WE SHOULD KNOW HOW TO LEARN ASYNCHRONUS PROGRAMMING IN CLEAN AND MAINTAINABLE Way
+
+
+
+
+
+############################2. Patterns For Dealing With Asynchronous Code#################
+
+
+lets make this program more relalistic
+
+
+console.log('Before');
+const user=getUser(1);
+console.log(user)//this will print 'undefined' because when this line execute getUser() has not returned it returns after 2s
+console.log('After');
+
+
+function getUser(id){
+    setTimeOut(
+        ()=>{
+            conole.log('Reading a user from database...');
+            return {id:id ,gitHubUsername:'mosh'}
+        },2000);
+
+        return 1;
+}
+
+
+
+
+SO THERE ARE THREE PATTERNS TO DEAL WITH ASYNCHRONUS CODE (TO OVER COME ABOVE PROBLEM)
+
+
+1.CALLBACKS 
+2.PROMISES 
+3.ASYNC/AWAIT(SYNTACTICAL SUGER OVER PROMIESE)
+
+
+
+
+##################################### 3.CALLBACKS##################
+
+
+WE will add anothe parameter which is called a "callback"
+******CALLBACK- AFUNCTION WE WOULD CALL WHEN A RESULT OF AN ASYNCHRONUS FUNCTION IS READY
+function getUser(id,callbacK){
+        .
+        .
+        .
+        .
+}
+
+so in our example we will call the callback function with
+the result 
+           " return {id:id ,gitHubUsername:'mosh'}"
+
+
+*****code****
+console.log('Before');
+getUser(1,function(user){//changed from previous code
+    console.log('User',user)
+});
+console.log('After');
+
+
+function getUser(id,callback){
+    setTimeOut(()=>{
+        consol.log('Reading a user from a database....');
+        callback({id:id,gitHubUsername:'mosh'});////changed from previous code
+    },2000);
+    
+}
+
+
+OUTPUT-
+
+Before
+After
+Reading a user from a database....
+{id:id,gitHubUsername:'mosh'}
+
+
+note-we can also use  an arrow function
+
+***Code***
+
+getUser(1,(user)=>{//changed from previous code
+    console.log('User',user)
+});
+
+
+WE USE CALLBACK FUNCTION WITH ASYNCHRONUS FUNCTIONS BECAUSE OF THE POSSIBILTY OF HAVING A "undefiened"as explained above
+
+
+****EXAMPLE SOLUTION***************
+here from one asynchronous function (getUser()) we get user name and according to the user name we received we wil get the repos using another
+asynchronus function (getRepositories()).and we use this async function inside the call back function of  getUser() because the username value i given to getRepositories()
+by getUser()
+ 
+****newly added code*****************
+
+function getRepositories(username,callback){
+    setTimeOut(()=>{
+        console.log('Calling Github API...");
+        callback(['repo1','repo2','repo3']);
+    },2000)
+}
+
+
+getUser(1,user=>{
+    getRepositories(user.gitHubUsername,(repos)=>{//getRepositories() called inside getUser()'s callback function
+        console.log('Repos',repos)
+    }
+})
+
+*****************complete code with getRepositories()
+console.log('Before')
+getUser(1,user=>{
+    getRepositories(user.gitHubUsername,(repos)=>{//getRepositories() called inside getUser()'s callback function
+        console.log('Repos',repos)
+    }
+})
+console.log('After')
+
+getUser(1,(user)=>{//changed from previous code
+    console.log('User',user)
+});
+
+function getRepositories(username,callback){
+    setTimeOut(()=>{
+        console.log('Calling Github API...");
+        callback(['repo1','repo2','repo3']);//here we just pass the parameter andcall the function"['repo1','repo2','repo3']" is the parameter that we pass to the call back funtion
+    },2000)
+}
+
+
+
+#####################4. Callback Hell##############
+
+
+
+//Asynchronous
+console.log('Before')
+getUser(1,user=>{
+    getRepositories(user.gitHubUsername,(repos)=>{//getRepositories() called inside getUser()'s callback function
+      getCommits(repo,(commits)=>{//getCommits() called  inside getRepositories()'s callback
+
+      })
+    }
+})
+console.log('After')
+
+
+This structure is called callback Hell//chritsmas tree problem
+
+
+//Synchronoused 
+console.log('Before')
+const user=getUser(1);
+const repos=getRepositories(user.gitHubUsername);
+const commits=getCommits(repos[0]);
+console.log('After');
+
+
+you can see the Synchronized version was MUCH READABLE!!!
+
+
+
+##############5. Named Functions to Rescue#########################
+
+
+NAMED FUNCTIONS ARE A SOLUTION FOR A CALL back
+
+
+anonymous function can be replaced with NAMED FUNCTIONS AS  A SOLUTION
+HERE WE HAVE USE ANONYMOUS FUNCTIONS AS CALLBACKS
+
+SO WE NEED TO REPLACE ANONYMOU FUNCTIONS WITH NAMED
+
+WE HAVE TO START WITH THE DEEPEST LEVEL
+SO LETS REPLACE CALL BACK FUNCTION PASSED TO getCommits(repo,callback)
+with named function "displayCommits(commits)"
+
+***code
+function displayCommits(commits){//new code added
+    console.log(commits);
+}
+
+
+console.log('Before')
+getUser(1,user=>{
+    getRepositories(user.gitHubUsername,(repos)=>{//getRepositories() called inside getUser()'s callback function
+      getCommits(repo,displayCommits);//code change//displayCommits is passed without() which means as a reference (if we need to call to execute we should displayCommits() )
+    }
+})
+console.log('After')
+
+
+
+SO WE WILL REPLACE ALL ANONYMOUS FUNCTIONS WITH NAMED FUNCTIONS
+
+*****Complete Code*************************
+
+console.log('Before')
+getUser(1,getRepositories);//WE MADE THE CODE SIMPLE!!!
+console.log('After')
+
+
+function getRepositories(user){//newly added code
+    getRepositories(user.gitHubUsername,getCommits)////not same as above lines "getRepositories" first one takes one argument second one takes two arguments
+}
+
+
+
+functions getCommits(repos){//newly added code
+    getCommits(repo,displayCommits)//not same as above lines "getCommits"
+}
+
+
+function  displayCommits(commits){//newly added code
+    console.log(commits);
+}
+
+*****************complete code***************
+
+
+
+this is not ideal but better than what we had before
+
+
+
+
+################################6. Promises#############################
+
+PROMISE-AN OBJECT THAT HOLDS THE EVENTUAL RESULT OF AN ASYNCHRONOUS OPERATION
+
+THE RESULT CAN EITHER HOLD A VALUE OR AN ERROR
+A PROMISE  PROMISES YO IT WILL GIVE A RESULT OF AN ASYNCHRONOUS OPERTAION
+
+
+A PROMISE HAS THREE STATES
+
+1.PENDING -when we send send the asynchronusfunction and it is processing
+2.FULLFILLED-when we get succsseful response
+3.REJECTED-when something went wrong
+
+
+creating a new Promise object
+We need to pass a  PARAMETER TO A PROMISE that PARAMETER IS A FUNCTION WHICH ACCEPTS TWO PARMETERS ITSELF
+WHICH ARE "resolve" and "reject"
+inside that  FUNCTION WE WILL WRITE SOME ASYNC CODE
+
+E.g-access database
+    backend calls
+    timeouts
+
+****code***
+const p=new Promise((resolve,reject)=>{
+    //kick off some async work
+
+})
+
+
+***code**
+
+
+
+after that the value or error will be stored in "const p" for latter consumption 
+***code**
+resolve(1);
+reject("an error")
+**code**
+
+
+as a best prctice always pass an Error object rather than passing a String
+e.g-reject(new Error('messge'))
+
+
+resolve(1)
+
+
+in a real world application we will have a "User" object returned from a
+datbase rather than"1"
+
+
+NOW WE NEED TO CONSUME "p" SOMEWHERE ELSE IN CODE
+
+p.then(reult=>console.log("Result",result))//result has substitute "1" we earluier used
+
+
+****code****using resolve
+
+ //1.How we create a promis
+const p =new Promise((resolve,reject)=>{
+    setTimeOut(()=>{//this is async work because it takes 2s
+        resolve(1);//pending=>resolved,FULLFILLED
+        //reject(new Error('messge'))//pending=>rejected
+    },2000)
+});
+
+
+//2.How we consume Promise
+p
+    .then(result=>console.log('Result',result))//when resolve()
+    .catch(err=>console.log('Error'.err.messsage))//when reject()
+
+
+**********code*************
+
+
+
+
+
+
+######################### 7. Replacing Callbacks with Promises#############
+
+
+
+*****IMPORTANT*****so to over come call back hell we need to MODIY OUR ASYNCHRONOUS FUNCTION TO RETURN 
+PROMISES
+
+ WE WILL MODIFY getUser() first
+ IF WE ARE TO USE PROMISES WE DON'T NEED THE CALL BACK
+
+
+ ****CODE WITH CALL BACKS***************
+
+
+ function getUser(id,callback){
+    setTimeOut(()=>{
+        consol.log('Reading a user from a database....');
+        callback({id:id,gitHubUsername:'mosh'});
+    },2000);
+    
+}
+
+*****************CALLBACKS REPLACED WITH  PROMISES*************
+//now we dont need a callback so we dont pass callback butuse resolve()
+
+function getUser(id){//changed,removed the callback
+ return new Promise((resolve,reject)=>{//NEW CODE,Now we are returning a PROMISE HERE
+    setTimeOut(()=>{
+        consol.log('Reading a user from a database....');
+        resolve({id:id,gitHubUsername:'mosh'});////changed replace callback with resolve()
+    },2000);
+    
+});
+
+}
+
+****WHAT WE  PASS TO resolve() inside Promise() will be passed as the parameter
+to the function we passes to then() (when consuming)
+
+NOW WE CAN ALSO DO THIS WITH getRepositories() AND getCommits()
+
+*****code***
+function getRepositories(username,callbacK){
+    return new Promise((resolve,reject)=>{
+        setTimeOut(()=>{
+            consol.log('Calling Github API...');
+            resolve(['repo1','repo2'.'repo3']);
+        },2000);
+    });
+}
+
+
+function getCommits(repo,callbacK){
+    return new Promise((resolve,reject)=> {
+        setTimeOut(()=>{
+        consol.log('Calling Gitthub APi...');
+        reoslve(['commit']);
+    },2000)
+}
+
+
+NOW INSTEAD OF CALLBACKS WE USE PROMISES HERE
+
+
+
+#######################8. Consuming Promises######################
+
+
+
+
+NOW LETS CHECK HOW TO CONSUME ALL THE PROMISES WE RETURN
+
+
+****code***CONSUMING Promise returned by getUser(1);
+
+const p=getUser(1);
+p.then(user=>console.log(user));//here "user" is "1"
+
+
+
+****code***
+///NOW we will remove "p" and we will chain thingd
+
+getUser(1).
+        then(user=>console.log(user));//here "user" is "1"
+
+
+***code***IMPORTNT CONSUMING******************
+
+Now lets make it as the earlier code using Promises
+
+
+
+getUser(1)
+        .then(user=>getRepositories(user.gitHubUsername))//if this function returns a value it will be wrrped in ANOTHER PROMISE
+        .then(repo=>getCommits(repo[0]))//this is to consume PROMISE rturned from beofre code line's getRepositories()
+        .then(commits=>console.log('Commits'.commits))//this is to consume PROMISE rturned from beofre code line's getCommits()
+        .catch(err=>consol.log('Error',err.message))//thi will handel any error return fro any then()
+
+
+
+******************FINALIZED CODE***************
+
+
+//CREATING PROMISES WITH FUNCTIONS
+function getUser(id){//changed,removed the callback
+ return new Promise((resolve,reject)=>{//NEW CODE,Now we are returning a PROMISE HERE
+    setTimeOut(()=>{
+        consol.log('Reading a user from a database....');
+        resolve({id:id,gitHubUsername:'mosh'});////changed replace callback with resolve()
+    },2000);
+    
+});
+
+}
+
+function getRepositories(username,callbacK){
+    return new Promise((resolve,reject)=>{
+        setTimeOut(()=>{
+            consol.log('Calling Github API...');
+            resolve(['repo1','repo2'.'repo3']);
+        },2000);
+    });
+}
+
+
+function getCommits(repo,callbacK){
+    return new Promise((resolve,reject)=> {
+        setTimeOut(()=>{
+        consol.log('Calling Gitthub APi...');
+        reoslve(['commit']);
+    },2000)
+}
+
+****************CONSUMING*****************
+
+
+getUser(1)
+        .then(user=>getRepositories(user.gitHubUsername))//if this function returns a value it will be wrrped in ANOTHER PROMISE
+        .then(repo=>getCommits(repo[0]))//this is to consume PROMISE rturned from beofre code line's getRepositories()
+        .then(commits=>console.log('Commits'.commits))//this is to consume PROMISE rturned from beofre code line's getCommits()
+        .catch(err=>consol.log('Error',err.message))//thi will handel any error return fro any then()
+
+
+
+############################## 9.Creating Settled Promises##################
+
+writtin promises all ready resolved ,specially for unit test
+
+****code
+const p=Promise.resolve({id:1});
+p.then(result=>console.log(result));
+
+similarly resolved also
+
+const p=Promise.reject(new Error('Error  reason'));
+p.catch(error=>consol.log(error);)
+
+
+note-if we pass a simple String to Error() we wont get a call stack
+        we only get the reason
+
+
+
+
+############################10. Running Parallel Promises#################
+
+RUNNING SEVERLA ASYNCHRONUS OPERATIONS TOGETHER AND RETUN SOMETHING WHEN 
+ALL ASYNC OPERATIONS RETURNS
+
+
+
+
+
+
+
+
+
+
+
+const p1=new Promise((resolve)=>{//HEREE WE DIDNT PASS reject()
+    setTimeOut(()=>{
+        console.log('sync operation 1....');
+        resolve(1);
+    },2000)
+})
+
+
+const p2=new Promise((resolve)=>{
+    setTimeOut(()=>{
+        console.log('sync operation 2....');
+        resolve(2);
+    },2000)
+})
+
+
+
+Promise.all([p1,p2])//RETURNS A PROMISE WHEN ALL THE PROMISES PASSES IN AN ARRAY ARE RESOLLVED
+    .then(result=>console.log(result))
+
+
+    OUTPUT-
+    sync operation 1....
+    sync operation 2....
+    [1,2]
+
+
+
+IN PREVIOUS CODE EACH ASYNCHRONUS OPERATION STARTED AFTER PREVIOUS ONE COMPLETED
+USER->REPO->Commits
+
+HERE BOTH THE ASYNCHRONOUS FUNCTIONS STARTED AROUND THE SAME TTIME
+
+
+INSIDE all() WE HAVE AN ARRAY OF RESOLVED VALUES NOT JUST ONE
+IF ANY OF OUR PROMISES INSIDE THE ARRAY REJECTED OUR "Promise.all()" IS ALSO CONSIDERED FINALIZED
+
+
+*****CODE***
+
+const p1=new Promise((resolve,reject)=>{//PASSING REJECT
+    setTimeOut(()=>{
+        console.log('sync operation 1....');
+        resolve(1);
+    },2000)
+})
+
+
+const p2=new Promise((resolve)=>{
+    setTimeOut(()=>{
+        console.log('sync operation 2....');
+        resolve(2);
+    },2000)
+})
+
+
+
+Promise.all([p1,p2])//RETURNS A PROMISE WHEN ALL THE PROMISES PASSES IN AN ARRAY ARE RESOLLVED
+    .then(result=>console.log(result))
+    .catch(err=>console.log('Error',err.message);)
+
+
+////race()
+
+    Promise.race([p1,p2])//WHEN YOU NEED TO something TO HAPPEN AS SOON AS ANY OF PROMISES COMPLETES
+     .then(result=>console.log(result))
+    .catch(err=>console.log('Error',err.message);
+
+
+
+
+
+
+
+
+
+
+##########################11. Async and Await##############################-o[]
+
+
+
+
+
+
+
