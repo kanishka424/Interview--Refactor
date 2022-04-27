@@ -1,0 +1,186 @@
+LInk-https://www.youtube.com/watch?v=vv4y_uOneC0
+
+
+OSI-Open System Interconnection 
+
+OSI model-defines how two computers communicate over network 
+
+
+In most basic form two computers connected With Lan cables and connectors(RJ45) and sharing data with NIC cards
+
+but if one is Windows other is Mac OS how will they communicate??
+
+OSI MODEL
+1.Application
+2.Presentation
+3.Session
+4.Transport
+5.Network
+6.DataLink
+7.Physical
+
+
+Each layer above is a PACKAGE OF PROTOCOLS
+when we say Application layer it doesnt include applications like chrome or firefox but it includes application layer protocols that need to make friefox,chrome,etc.. like applications make correctly in internet
+
+1.APPLICATION LAYER
+
+APplication Layer is used by Network Applications
+Network applications means applications that uses internet that are chrome,firefox,outlook,skype,etc.....
+web browser is an application that runs on PC it doesnt reside on application layer but it uses 
+applications level protocols like HTTP,HTTPs to do web surfing
+all network applications are dependent on Application layer protocols that enables various function at thislevel
+
+APPLICATION LAYER PROTOCOLS
+HTTP
+HTTPS
+FTP
+NFS
+FMTP
+DHCP
+SNMP
+TELNET
+IRC
+NNTP
+POP3
+
+These protocls provide basis for functions like 
+FILE transfer 	-FTP
+web surfing		-HTTP/HTTPS
+Emails			-SMTP
+virtual terminals-TELNET
+
+2.PRESENTATION LAYER
+I)recives data fro application layers 
+these data are in form of CHARACTERS and NUMBERS
+PRESENTATION LAYER CONVERT THESES DATA TO FORM OF BINARY WHICH MACHINES CAN UNDERSTAND
+E.G-ASCII TO EBCDIC
+THIS PART IS CALLED TRANSLATION(SEE VIDEO 2.57 FORIMAGE)
+II)BEFORE TRANSMISSION PRESENTATION LAYERS REDUCES THE NUMBERS OF BITS THAT ARE TO REDUCE ORIGINAL DATA
+this is called DATA COMPRESSION
+IT can be 
+1.Lossy
+2.Lossless
+
+III).when data is reduces it requires less transmission time
+DATA COMPRESSION  is useful rela time video and audio
+to keep intergrity of data data is encrypted
+
+in senders it is encrypted and recivers it is decrypted
+SSL i (Secure Socket Layer) is used 
+
+
+SO ABOVE DISCUSSED PRESENTATION LAYER FUNCTIONS
+1.TRANSLATIONA
+2.DATA COMPRESSION
+3.ENCRYPTION/DECRYPTION
+
+3)SESSION LAYER
+THINK OF IT AS PARTY ORGANIZER/HELPERS THEY WILL MANAGE AND CLOSE THE PARTY
+this is a cobination of connections and sessions
+Helpers for the Session layer is its APIs
+e.g-NETBIOS(allows computers to communicate over network)
+just before connection is establish with server ,server performs  a function called AUTHENTICATION
+AUTHENTICATION-aking hwo you are?
+we usally give our user Name and Password
+oncae the credentials are matched a session is established between client and server
+
+affter AUTHENTICATION AUTHORIZATION is checked
+AUTHORIZATION-what access rights you have
+
+
+image,ffiles,etc..downloading will open a seperate session and this session will send thoe images,files,etc,,, as data packets 
+SESSION LAYER KEEPS OF THE TRACK WHICH DATA PACKET BELONGS TO WHICH FILE EITHER TEXT,IMAGE,ETC.. AND TRACKS WHERE THE DATA PACKET GOES WEB BROWSER(SESION MANAGMENT)
+
+FUNCTIONALITES OF SESSION Laye
+
+1.AUTHENTICATION
+2.AUTHORIZATION
+3.SESSION MANAGMENT
+
+
+
+4.TRANSPORTATION LAYER 
+
+keeps RELIABILTY of communication with 
+1.SEGMENTATION
+2.FLOW CONTROL
+3.ERROR CONTROL
+
+
+HERE data received through SESSION layer is divide to small data called SEGMENTS/DATA UNIT
+
+DATA UNIT HAS
+I)SEQUENCE NUMBERS-COLLECTS AND RE-ASSEMBLES DATA IN RIGHT ORDER TO FORM CORRECT MESSAGE AT RECEIVER
+II)PORT NUMBER-HELPS TO DIRECT TO THE CORRECT APPLICATION
+
+
+
+FLOW CONTROL 
+TL CONTROLE THE AMONT OF DATA  TRANSFORMED XXXX Mbps
+
+
+if the erver has 100Mbps and client mobile has 10Mbps
+if the Server send 50Mbps but client can only take 10Mbps 
+WTH THE HELP OF TL CLIENT CAN SAY I CAN ONLY RECEIVE DATA 10 Mbps AND SERVER WILL SEND 10Mbps SO NO DATA GETS LOST
+SAME HAPPENS IF SERVER SEND 5MbPS SO CLIENT CAN TELL i NEED 10Mbps TO MAINTAIN SYSTEM PERFORMANCE SO SERVER WOULD GIVE SO
+
+ERROR CONTROL
+7.50-IMAGE
+
+IF DATA DIDNT ARRIVE "AUTOMATIC REPEAT REQUEST" IS USED 
+"CHECKSUM"IS USED IF CORRUPTED DATA IS RECEIVED
+
+
+PROTOCOLS
+Transmission Control Protocol(TCP)
+USer Datagram Protocol(UDP)
+
+services
+1)connection oriented transport-TCP
+2)Connectionless Transmission-UDP
+
+UDP is faster than TCP
+because it doesnt provide any feedback whether data is recived but TCP do provide feedback 
+THERFOR LOST DATA CAN BE RE TRNSMITTED IN TCP
+
+
+SO UDP IS USED WHERE THE DATA RECIVED INFORMATION DOESNT MATTER
+E.G-MOVIES
+MUSIC
+VIDEO GAMES
+DNS
+TTFP
+VOICE OF ip
+
+
+TCP IS USED WHER WHOLE DATA DELIVERY IS MUST
+
+WWW
+FTP
+EMAIL
+
+5)NETWORK LAYER
+
+WORKS FOR TRANSMISSION OF SEGMENTEDD DATA TO FROM ONE COMPUTER TOOTHER RESIDES IN ANOTHER NETWORK
+
+DATA UNITS IN NETWORK ARE CALLED PACKETS
+
+FUNCTIONALITES1.LOGICAL ADDRESSING
+2.PATH DETERMINATION
+3,ROUTING 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+$$$$$$$$$$$$$$$$$$$078 Step 30 - ManyToOne Mapping - Designing the database$$$$$$$$$$$$$$
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$079 Step 30 - Part 2 - ManyToOne Mapping - Implementing the Mapping$$$$$$$$$$$$$$$$$$4
+
+

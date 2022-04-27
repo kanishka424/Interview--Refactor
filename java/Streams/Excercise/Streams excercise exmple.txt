@@ -1,0 +1,105 @@
+REF-https://blog.devgenius.io/15-practical-exercises-help-you-master-java-stream-api-3f9c86b1cf82
+
+
+NON-TERMINAL OPERATIONS
+filter()
+map()
+distinct()
+sorted()
+peek()
+
+
+
+TERMINAL OPERATIONS
+anyMatch()
+collect()//collect(Collectors.toMap(Student::getName, Student::getAvgGrade));
+count()
+findFirst()
+min()
+max()
+sum()
+average()
+
+
+products.stream().filter(p->p.getCategory().equals("book")).filter(b->b.getPrice()>100).collect(Collectors.toList());
+
+
+2.Obtain a list of order with products belong to category “Baby”
+
+orders.steam().filter(0->o.getProducts().anyMatch(p->p.getCategory().eIgnoreCase("Baby"))
+)
+.collect(Collectors.toList())
+
+
+result as a map example
+
+Map<String, Double> nameToAvgGrade = students.stream()
+                .collect(Collectors.toMap(Student::getName, Student::getAvgGrade));
+				
+				
+result as SET
+
+        Set<String> mySet = s.collect(Collectors.toSet());
+
+
+
+Exercise 3 — Obtain a list of product with category = “Toys” and then apply 10% discount
+
+
+List<Product> result = productRepo.findAll()
+        .stream()
+		.filter(p->p.getCategory().eIgnoreCase("Toys"))
+		.map(p->p.withPrice(p.getPrice*0.9))
+		.collect(Collectors.toList());
+		
+		
+		
+Exercise 4 — Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021
+
+
+ List<Product> result = orderRepo.findAll()
+  .stream()
+  .filter(o -> o.getCustomer().getTier() == 2)
+  .filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 2, 1)) >= 0)
+  .filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 4, 1)) <= 0)
+  .flatMap(o -> o.getProducts().stream())
+  .distinct()
+  .collect(Collectors.toList());
+  
+  
+  
+  Exercise 5 — Get the cheapest products of “Books” category
+
+    Optional<Product> result = productRepo.findAll()
+        .stream()
+        .filter(p -> p.getCategory().equalsIgnoreCase("Books"))
+        .sorted(Comparator.comparing(Product::getPrice))
+        .findFirst();
+		
+		
+		    Optional<Product> result = productRepo.findAll()
+        .stream()
+        .filter(p -> p.getCategory().equalsIgnoreCase("Books"))
+        .min(Comparator.comparing(Product::getPrice));
+		
+		
+		
+		Exercise 6 — Get the 3 most recent placed order
+List<Order> result = orderRepo.findAll()
+        .stream()
+        .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+        .limit(3)
+        .collect(Collectors.toList());
+		
+		
+Exercise 7 — Get a list of orders which were ordered on 15-Mar-2021, log the order records to the console and then return its product list
+
+
+ List<Product> result = orderRepo.findAll()
+    .stream()
+    .filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 3, 15)))
+    .peek(o -> System.out.println(o.toString()))
+    .flatMap(o -> o.getProducts().stream())
+    .distinct()
+    .collect(Collectors.toList());
+view rawJavaStreamExercise7.java hosted with ❤ by GitHub

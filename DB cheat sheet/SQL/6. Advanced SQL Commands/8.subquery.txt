@@ -1,0 +1,135 @@
+$$$$$$$$$$$$$$$$8.Subquery$$$$$$$$$$$$$$$$$
+
+1.How to PERFORM SUBQUERY
+2.EXITS FUNCTION
+
+SUB QUERY-
+ALLOWS TO CONSTRUCT MORE COMPLEX QUERIES
+ESENTIALLY PERFORMING A QUERY ON THE REULTS OF ANOTHER QUERY
+IT INVOLVES TWO "SELECT" STATMENTS
+
+
+exmample 1
+Getting the students who scored more than average
+
+SELECT student,grade
+FROM test_scores
+WHERE grade>(SELECT AVG(grade))
+FROM test_scores)
+
+
+*first the code in parntheses would run and will return a value
+
+SELECT student,grade
+FROM test_scores
+WHERE grade>70//70 i the value returned from earlier
+
+
+*we can alo use the "IN" operator in conjunction with a subquery to check against multiple results returned
+
+
+example 2
+
+SELECT tudent,grade
+FROM test_scores
+WHERE student IN
+(SELECT student 
+FROM honor_roll_table)
+
+  |
+  |
+ SELECT tudent,grade
+FROM test_scores
+WHERE student IN
+(('Zach','Chris','Karissa'))
+ 
+ 
+ ***EXISTS-is used to test for existence of rows in a subquery
+  
+  
+  SYNTAXT
+  
+  SELECT column_name
+  FROM table_name
+  WHERE EXISTS
+  (SELECT column_name FROM
+  table_name WHERE condition)
+  
+  
+  example 4
+  
+  SELECT title,rental_rate
+  FROM film
+  WHERE rental_rate>
+  (SELECT AVG(rental_rate) FROM film)
+  
+  
+  
+  
+  example 5 
+  
+  **NEED TO WATCCH VIDEO liittle complex but good undertNDING
+  
+  SLECT film_id,title
+  FROM film
+  WHERE inventoryy.film_id IN
+  (SELECT inventory.film_id
+  FROM rental_rate
+  INNER JOIN invntory ON invntory.inventory_id=rental.inventory_id
+WHERE return date BETWEEN '2005-05-29' AND '2005-05-30-')
+ORDER BY film_id  
+
+
+example 6
+CUstomers who has one payment at least greater than 11
+
+
+SELECT first_name,lat_name
+FROM customer AS c
+WHERE EXISTS
+(SELECT * FROM payment as p
+WHERE p.customer_id=c.customer_idAND amount>11)
+
+
+
+  if we wan toppopsit use  "NOT EXIST"
+  
+  
+SELECT first_name,lat_name
+FROM customer AS c
+WHERE NOT EXIST
+(SELECT * FROM payment as p
+WHERE p.customer_id=c.customer_idAND amount>11)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

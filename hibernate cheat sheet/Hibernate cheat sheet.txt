@@ -102,11 +102,17 @@ time4.13-HOW TO CREATE a Data.sql and initalize data in the beiginning
 
 WATCH THE VIDEO 
 JUST some appliccation.properties file
+application.properties
+
+
+//show all queries
+spring.jpa.show-sql=true;
+spring.jpa.properties.hibernate.format_sql=true;
+loggin.level.org.hibernate.type=debug
 
 
 
-
-
+spring boot auto config enable schema create and Hibernate would ccreate it for us
 
 **************************049 Step 05 - Writing Unit Test for findById method*****************8
 
@@ -114,7 +120,7 @@ JUST some appliccation.properties file
 
 we will write a unit test to CourseRepository's
 public Course findById(Long id) {
-    retrun em.findById(Course.class,id);
+    retrun em.find(Course.class,id);
 }
 
 
@@ -196,7 +202,6 @@ public class CourseRepository{
 when @Transactional is given the deleteByID method  WILL BE ATOMIC AND RUN AS A WHOLE AT ONE GO
 
 
-
 ********051 Step 07 - Writing Unit Test for deleteById method******
 
 
@@ -204,7 +209,7 @@ In CourseRepositoryTest
 
 
 @Test
-@DirtiesContext
+@DirtiesContext//SINCE THIS IS A TEST WE SHOULD RESTORE THE DATA,WE CAN USE THIS ANNOTATION FOR IT
 public void deleteById_basic(){
     repository.deleteByID(10002L);
     assertNull(repository.findById(10002L))//***assertNull() checks if something is null if previous step deleted the value then assertNull() would return ture

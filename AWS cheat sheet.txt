@@ -1,0 +1,196 @@
+LINK-https://www.youtube.com/watch?v=uQdzcIf_KII&t=177s
+LINK-D:\Resources\courses\AWS
+
+We can upscale or downscale our servers depending on the demand and without buying servers ourselves using AWS
+
+AWS offers 100+ cloud services that expands different domains
+
+
+
+AWS-AMAZON WEB SERVICE
+provides
+1.Computer power
+2.Database
+3.Network
+4.Content storage
+etc....
+
+
+PAY AS YOU GO-you only pay for the services you are using
+
+other advantages
+
+1.Security
+2.Experience
+3.Flexibility
+4.Easy to use(quickly and securly)
+5.Scalable(applications can be scaled up or down)
+
+AWS provide wide range of services across various domains
+
+AWS provides computer services that support application development process from start to finish
+
+FROM  DEVELOPING RUNING DEPLOYING SCALING(up or down)
+
+populer services
+
+EC 2
+AWS LAMBDA
+Amazon LightSail
+Elastic bean stalk
+
+for storing data we can use "AWS storage services"
+which enables us to stroe,access,govern and analyis data that will make sure 
+cost are reduced,agility is improved and inovation accelarated
+
+popular services within this domain include
+
+Amazon s3,EBS,s3 Glacier,Elasic File Storage
+
+we can also store uer data in a datbase 
+which we can optimize and manage
+
+popular services within this domain include
+AMAZON RDS,DYNAMO DB,RED SHIFT
+
+
+IF A BUSIINESS TOOK OFF
+AND we want to seperate cloud infarstructure or scale up and much more
+we can do by networking services provided by AWS
+
+popular services within this domain include
+Amazon VPC,Amazon Route 53,Elastic Load balancing
+
+
+Other domains AWS provide infrastructure
+
+blockchain
+computer anylatics
+robotic 
+machine learning
+
+time 6.18-ABOUT AWS
+
+before AWS
+(2000's)
+caling up buying new machines was expensive
+even after getting the machine we had to optimize
+there often would be increae and decreae in the capacity
+
+but in today if we needs to scale up my new server is ready and ready instatenously
+with the tools AWS is providing
+making my app secure
+making data preserve
+compute capacity
+caching
+and more 
+all are ready instantaneously
+FOR ALL THOSE FEATURES AWS GOT OUR BACK
+
+all above we get as a PAY AS WE GO MODEL
+
+AWS IS 
+RELIABLE
+SCALABLE
+FLEXIBLE
+
+
+
+AMAZON S3 TIME 11.15
+
+great for internet backup
+cheap option for object stroage category
+data stored in s3 is retrivable
+
+AWS DATA
+monitor data
+
+anylse data
+
+
+EC2
+
+provides secure and  resizabel compute  capacity designed to make web-scalecloud computing easier
+
+
+
+Amazon SNS
+enables meages to be delicvered acros a large nuber of subscriberrs.
+systems and service and mobile devices
+
+
+Amazon KMS
+this service is encrypted into most other AWS services.It helps create and controle the encryption keys used to encrypt the users data
+
+
+
+Amazon LAMBDA
+
+a computer service excutes codeonly when needded and scales automatically
+(in seconds)
+(chepear than paying in hourly )
+
+
+
+Route 53
+The DNS web service is designed to give developers and busines a relaiblae and cost effective
+method to route users to internet application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

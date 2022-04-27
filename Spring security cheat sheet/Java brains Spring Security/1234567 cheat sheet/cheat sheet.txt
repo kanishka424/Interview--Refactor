@@ -1,0 +1,1003 @@
+C:\Users\Kanishka\Desktop\INTERVIEW RESOURCES REFACTOR\Spring security cheat sheet\Java brains Spring Security\1234567 cheat sheet
+
+D:\Resources\courses\java courses\Spring Security
+
+
+$$$$$$$$$$$$$$$$$$$3.Adding Spring Security to a New Spring Project$$$$$$$$$$$$$$$$$$$
+
+By adding dependeency "spring-boot-starter-security"
+we add spring security
+a mavean dependency
+this is a strater pack which pulls all the mavean security dependencies
+(so you jut dont want to hunt down each individual dependency,BTW you can do that)
+
+
+go to pom.xml
+after stsrter-web add starter-security
+
+%%%%%%%%%%%%%%%Dependency%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Most spring boot strater dependencies doesnt hvae an effect just by adding to path
+need to have some configuration that goes with it in order to tell spring "I have this dependency","take it","use it"
+BUT spring security as soon as you add it to calss path it works
+now when you run your application and try to access the url you would get a  sign in page
+it is even checking your credentials
+
+here pring ecurity is standing between user and the application and by the use of filters they are doing this
+filter are basic concept with servlet applications
+spring boot,spring security,etcc,...all are servlet applications
+under every tecnology is servelets
+
+
+time 4.40-see the story
+
+the user enters the url and depending on the url the servelet is picked by web server
+and after that a method inside the web server is executed
+
+FILTERS on the other hand stand between the request and the URL and inspects every request(time5.27) and they can to something with every request
+e.g-check every request a particuler header is there or not
+
+you can put a filter and say "This filter needs to intercept all URL"
+then you have that request allowed or denied based on the request
+
+
+this is what spring security does 
+it puts a filter there and say"IM GONNA SIT THERE AND INSPECT EVERY REQUEST AND DECIDE ALLOWED OR NOT "
+
+SPRING SECURITY DEFAULT BEHAVIOUR
+1.ADDS MANDATORY AUTHENTICATION FOR URLS
+but it would skip error page
+2.adds a login page
+3.handles login errors
+4.Creats a user and generates a PW(default user is "user")
+
+
+********************************
+we can add user and pw in application.properties
+
+spring.security.user.name=foo
+spring.security.user.password=foo
+***********************************************
+
+
+
+now the default user will have above credentials
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$4.How to configure Spring Security Authentication $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+we wiil learn THE way to do  authentication in spring security
+
+
+
+we need a pring boot security app(explined in previous video)
+
+
+here we will hard code couple of users and save them in-memory.Then we will Authenticate using those
+
+the way to do Authentication in Spring boot security is by using 'AuthenticationManager"
+it mangaes authentication in a spring boot application
+
+
+'AuthenticationManager" has  method called "authenticate()"
+"authenticate()" either return a succesful authentication or throws an Exception
+
+
+'AuthenticationManager" is what does the suthentication
+
+
+what we have to to is configure 'AuthenticationManager" and tell what 'AuthenticationManager" does ,we do this using BUILDER PATTERN
+
+we genrally do not work with 'AuthenticationManager" what we do is we work with
+'AuthenticationManagerBuilder" class 
+
+
+step 1 -get hold of 'AuthenticationManagerBuilder"
+step 2-set the configuration on it
+
+'AuthenticationManagerBuilder"-hey what type of authentication you need?
+user-I need in=-memeory
+'AuthenticationManagerBuilder"-okay tell me your UN,PW and Role
+
+
+
+
+after his discussion with 'AuthenticationManagerBuilder" a new 'AuthenticationManager"
+is built as per the configurations you asked
+
+
+
+
+how to get hold of 'AuthenticationManagerBuilder"?
+by leveraging a hook that is already there in pring security app
+
+
+
+in spring security app there i a calss and there is mehod "configure(AuthenticationManagerBuilder authManBuild)"
+which takes in 'AuthenticationManagerBuilder" as an argument
+
+the reason that class is there i you can extend the class and override the configure()"
+to make configuration you want.
+
+If  you dont override the default would happen
+
+
+THIS IS WHAT WE WIIL DO
+
+
+
+first remove properties in application.properties
+
+
+create a clas named SecurityConfiguration  which extends "WebSecurityConfigurerAdapter"
+this is the calss which has configure()
+
+
+there bunch of configure() methods but we talk about one whic takes 'AuthenticationManagerBuilder" as an argument
+
+
+now we can oveeride configure(AuthenticationManagerBuilder authManBuild)"
+
+
+
+we will make this an in-memeory authentication
+
+auth.inMemoryAuthentication()
+
+here we will configure one user
+
+*****code*****
+
+
+auth.inMemoryAuthentication()
+.withUer("blah")
+.password("blah")
+.role("Users")
+
+***********************************8
+
+
+above the cals put @EnableWebSecurity
+this  say we hve enabled web security
+
+@EnableWebSecurity-tell spring security this is  a websecurity confighration
+
+
+
+
+
+
+websecurity confi is one of theways other been method level security
+
+
+
+
+
+WE DONT WANT TO KEEP OUR PW AS CLEAR TExt
+
+
+
+
+SS will thin PW as clear tet
+
+SS enforces pw encode
+
+
+How to et pw encodr?just expose an @BEan of type PasswordEncoder
+
+
+
+******************code*******************
+@Bean 
+public PasswordEncoder getPasswordEncoder(){
+return NoOpPasswordEncoder.getInstance();//this is not recommended use othe encoders
+}
+
+***********************
+
+
+we can add more users
+
+*************code*******************
+
+*****code*****
+
+
+auth.inMemoryAuthentication()
+.withUer("blah")
+.password("blah")
+.role("Users")
+.and()
+.withUer("foo")
+.password("foo")
+.role("ADMIN")
+
+
+***********************************8
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$5.How to configure Spring Security Authorization - Java Brains
+$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+spring boot app with couple of users
+in-memeory authentication configured
+
+
+
+/-all can access
+
+/user-USER+ADMIN
+
+/admin-ADMIN
+
+**************************code*************************
+in HomeReosurce.java
+@GetMapping("/")
+public String home(){
+return ("<h1>Welcome<h1>");
+}
+
+
+@GetMapping("/user")
+public String user(){
+return ("<h1>Welcome User<h1>");
+}
+
+@GetMapping("/admin")
+public String admin(){
+return ("<h1>Welcome Admin<h1>");
+}
+
+
+*************************************************************
+
+Object of type "HttpSecurity" can do the authorization
+"HttpSecurity"
+lets you configure the paths and the path restrictions to that
+
+
+
+How to get hold of "HttpSecurity" object?
+very similer to how you get hold of authentication object (AuthenticationManager)
+
+
+there is this class that extends "WebSecurityConfigurerAdapter" (see time 4.22 for image)
+and when we extend we get to override that method
+this methods are hooks that spring security provides
+so when you implement that methods you get access to some key objects
+
+security configure-> extends  "WebSecurityConfigurerAdapter"
+
+Authentication
+@Override
+configure(AuthenticationManagerBuilder amb)//used in last video
+
+
+Authrization
+@Override
+^^configure(HttpSecurity httpSecurity)//how we cn do authorization
+
+/**-any path current level or below it
+
+^^anyMatch()//i the patteern matcher
+
+
+formLogin()//we neeed a form base login there are other method as well,formLOgin is the default and most famous
+
+
+we do have a logout page created by default
+at localhost:8080/logout
+
+
+^^permitAll()//any role can acces the url
+
+
+
+
+we go from mot restrective to the least restrctive url always
+
+
+
+
+spring security doesnt know that ADMIN has higher privilage than USER
+we have to say it
+so we ahva to do
+***************************
+antMatcher("/user").hasAnyRole("USER","ADMIN") 
+
+instead of 
+
+antMatcher("/user").hasRole("USER")
+********************
+
+
+
+*********************8code*************************
+@Override
+protected void configure(HttpSecurity http) throws Exception{
+http.authorizeRequests()
+.antMatcher("/admin").hasRole("ADDMIN")
+.antMatcher("/user").HasAnyRoe("USER","ADMIN")
+.antMatcher("/").
+.and()
+.formLgin()
+
+
+
+}
+
+******************************************************
+
+methods
+
+antMatcher()
+hasRole()
+hasAnyRole()
+FormLogin()
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$6.How Spring Security Authentication works - Java Brains.mp4$$$$$$$$$$$$$$$$$$$$$$$
+
+
+BOOTSTARP
+you dont invoke spring security 
+you just add spring security starter-security
+the requet start intercpting with spring security right out of the cave
+the way it handles this i by ADDING A FILTER TO APP
+FILTER-a construct in a servelt app let you intercept request
+before reaching a servlet the requet has to go through filters
+so filter can do anything before reaching the filter ,even can stop the request
+
+there is uually a one to one mapping in a severlet and a url
+BUT A FILTER CAN BE APPLIED TO A RANGE OF URLS.all,/**,etc....
+
+
+by adding spring security starter pack you add spring security filter
+and map to spring ecurites filter "dlegatingfilter proxy"  ????
+
+(time 2.33 see the image and listn again)
+
+otherwie we have to manuually add it
+
+
+following you find the xml code
+(ee time 2.37)
+
+we dont need to this ,the xmlcode
+since pring app gives it by default
+but if you are working with a non-spring app we need to manualy add it 
+
+/* allows to intercept every request
+
+
+DelegatingFiltrProxy-
+
+says in the name that it just intercept and delegate to other filters to what to does
+that do different thinngs depending on the url
+time 4.55 image
+
+even in a unconfigured out of the box sring security app there are around five of theses filters these filters do arious things
+
+one of thee filters are AUTHENTICATION FILTER that intercept all authentication requests and initiate the authentication process
+
+
+
+so that how pring security gets into the picture start things and intercept-BOOTSTRAP
+
+
+AUTHENTICATION
+
+
+
+
+input	----------
+------->|		|
+		| AUTHENTICATION      |				|
+output	|
+<-------|
+
+input-credentials
+output-can be a boolean saying authorized or not BUT in reality it is difeerent
+it doesnt just return  a boolean but returns a PRINICPLE the details about the logged in user
+
+when SPRING security provieds authentication it keeps details of both input and output
+by a object called "Authentication"
+
+when authentication happen "Authentication" object holds the credential and aftr it holds the PRINCIPLE(the uer who is logged in)
+you can think of "Authentication" as this data transfer object for authentication
+an dholder of principle after authentication is succesful
+
+what the thing that does actuall authentication?
+there are several ways but most common is using PROVIDERS
+we have "AuthenticationProvider" interface
+think of "AuthenticationProvider" as the thing reponible for doing the actual authentication
+"AuthenticationProvider" ha a method called authenticate()
+we need to have implementations of authenticate() and to have iplemntations about it and tell SS we have this authenticate() 
+then SS will call authenticate() to authenticate your user
+"this credientials are legit okay let them in"
+
+
+1.when user enter credentials
+2.An Authentication object with credentials is sentt to authenticate() in AuthenticationProvider and will output the Authentication object but this time insted of credentils it has thee PRINCIPLE(it clear credential after succesful authentication)
+time8.39-image
+
+
+
+see Authentication document for better undertanding
+getCredential()
+getprinciple()
+getAuthoraties()
+isAuthenticate()
+
+see docs
+
+A ingle app can have multiple authentiction stratgies
+SO AS A RESULT AN APPLICATION CAN HAVE MULTIPLE "AuthenticationProvider"s
+each one of them know how specificly it authenticate
+1.pw authentication
+2.OAuth authentication
+3.LDAP authentication
+time 11.12 image
+
+
+so how does this different authentication provider work with each other
+
+in order to cordinate there is a special type called "AuthenticationManager"
+with method authenticate() wich take Authentication object
+
+there are different ways can implent AuthenticationManager and the common wy we look into is "ProviderManager" with Provider pattern
+which does the authentication by delegating to differnet AuthenticationProvider
+it ask every authenticationProvider whether they support the type of requet it got(pw,oauth,etc...)
+seee image 12.06
+once it finds the AuthenticationProvider it dlegates the work to it
+
+
+AuthenticationProvider interface also has this supports()(not AuthenticationManager)
+support()-return boolean this iscalled by AuthenticationManager to check the authentication type supported
+
+
+
+
+once the AuthenticationProvider receive the credentials tit must be checked wth the data we have if we have correct 
+
+even if you are doin pw authentication or LDAP authentiction
+the cehck list/the verfication after retriving data is the same'
+WHICH IS WHY SS HAS EXTRACT THAT PART OUT to its own entity "UserDetailsService"
+this service takes username and return an object with user details (time 15.12  image)
+this iobject is of type "UserDetails"
+all details like whethe lockedor unlockedin,has expired?all that i included
+
+
+see document for UeerDetail object
+
+get Authorites()
+getPassword()
+getUserName()
+isAcoountNonExpired()
+isAcoountNonLocked()
+isCredentialsNonExpired()
+isEnable()
+
+
+time 16.00-from here SUMMARY IMPORTANT ,see the Image completed also
+
+
+
+if not succeful AuthenticationProvider throws an AuthenticationException and it bubbles up all the way up to authentication filter
+and there is either something catches iit or uer see the exception page posibly as an error page
+
+
+one lat thing
+
+after the AUTHENTICATION filter get the principle
+gets the principle and save in the theread context
+
+time 18.18-THERE IS A MECHANISM THAT LET THE CONTEXT(WITH SAVED PRINCIPLE) ASOCAIATE WITH THE SESION THATS WHY YOU NEED TO ENTER CREDENTAILS ONLY ONCE
+THAT WORK IS DONE BY ANOTHER FILTEER 
+THERE ARE BUNCH OF OTHER FILTER THAT DO BUNCH OF OTHER THING ONE FILTER MANAGES THE ESSION
+
+
+
+$$$$$$$$$$$$$$$$$$$$$7.How to setup JDBC authentication with Spring Security from scratch - Java Brains
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+creata a spring boot app
+named spring-security-jdbc
+web starter, spring security,H2,jdbc api
+
+
+create a class named "HomeResource"
+ 
+ 
+*****code*****
+in HomeReosurce
+
+@GetMapping("/")
+public String home(){
+return ("<h1>Welcome<h1>");
+}
+
+
+@GetMapping("/user")
+public String user(){
+return ("<h1>Welcome User<h1>");
+}
+
+@GetMapping("/admin")
+public String admin(){
+return ("<h1>Welcome Admin<h1>");
+}
+
+*******************************
+
+
+/-for any user
+/-for only authenticated users("USER","ADMIN",etc....)
+/admin-only for "ADMINS"
+
+
+
+
+
+step 2 
+create a calss named SecurityConfigurations that extends "WebSecurityConfigurerAdapter"
+this let me get hold of AuthenticationManagerBuilder object via configure()
+it lets me configure the authentication mecahnism I need in this case I need JDBC authentication
+
+on top of the SecurityConfigurations(class which extend "WebSecurityConfigurerAdapter")
+use the annotation @EnableWebSecurity 
+now we will use the AuthenticationManagerBuilder object to  do configuration
+
+auth.jdbcAuthentication()//auth is AuthenticationManagerBuilder instance
+//this tells we need jdbc authentication
+
+
+
+
+
+
+now afetre authorization and authentication is done we need to say SS hey SS I have credential in databae you need to go and check.See the username if it i available lookup the pw if matches,lookup if the user is valid ,user has expired?
+to do this we need to tell SS the strucutre and where our DB is
+the general way to tell SS where your DB is by CONFIGURING A DATA SOURCE BEan
+we need to auto wire the data source in "SecurityConfiguration" class ,the data source needed to be define somewhere else
+@Autowired
+DataSource dataSource;
+
+wire in the dataSource like above inside SecurtiyConfiguration class  and pass it to
+AuthenticationManagerBuilder that we are using
+
+****code*****
+@Autowired
+DataSource dataSource;
+
+@Override
+protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+auth.jdbcAuthentication
+	.dataSource(datasource);
+
+}
+
+*************************************************
+
+since here we have used an embeedded DB H2 spring boot is samrt enough to  create that data source for you it will autoconfigure the datasource
+
+by ".dataSource(datasource);" this line you have configure spring boot to configure to 
+H2 databse
+
+Now is to create chema in your H2 database and create users that are populated in that schema
+
+SS has some default opnion on how your schema for users should be
+SS ays if you give me a claen database to work with you dont need to create tables and authority tables I can do tht for you
+so we can say SS to create some default users
+
+
+*******************code*******************
+in SecurtiyConfiguration.java
+
+
+@Autowired
+DataSource dataSource;
+
+@Override
+protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+auth.jdbcAuthentication
+	.dataSource(datasource);
+
+}
+
+@Override
+
+@Override
+protected void configure(HttpSecurity http) throws Exception{
+http.authorizeRequests()
+.antMatcher("/admin").hasRole("ADDMIN")
+.antMatcher("/user").HasAnyRoe("USER","ADMIN")
+.antMatcher("/").
+.and()
+.formLgin()
+
+***********************************************************
+
+
+
+we change this to S reeading from some pre existing uer
+we do that uing "withDefaultSchema()"
+
+auth.jdbcAuthentication
+	.dataSource(datasource)
+	.withDefaultSchema();
+	
+	
+	
+	
+	
+	
+	
+	
+	now we have our H2 db populated with couple of tables
+	we have our "user" table and "authority" table
+	in our data source
+	
+	
+	next we can have bunch of uers in ti with "withUer()"
+	 where we pass uer objects
+	 
+	 .withDefaultSchema()
+	 .withUser(
+	 User.withUername("user")
+	 .password("pass")
+	 .roles("USER") 
+	 )
+	 .withUser(
+	  User.withUername("admin")
+	 .password("pass")
+	 .roles("ADMIN") 
+	 
+	 );
+	 
+	 here our dataSource points to a H2 db 
+	 but it could be something else 
+	 basically what "dataSource" oints to
+	 lets say it points to mySql or oracle
+	 SS will going to do all the stuff for that datasource
+	 
+	 when application starts up this above code will tell db to be populate with the schema and data
+	 at run time it will be verfied with waht is in datSource 
+	 
+	 now we can run but firt we need a password encoders
+	 here we ue NoOpPasswordEncoder which actually dos nothing
+	 time 11.30-run
+	 
+	 
+	 
+	 
+	******************8888code**************
+	SecurityConfiguration.java
+	
+	
+	@Autowired
+	DataSource datasource;
+	
+	
+	@Override 
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+	auth.jdbcAuthentication()
+	.dataSource(dataSource)
+	.withDefaultSchema()
+	.withUser(
+	User.withUsername("user")
+	.pasword("pass")
+	.roles("USER")
+	)
+	.withUser(
+	User.withUsername("admin")
+	.pasword("pass")
+	.roles("ADMIN")
+	)
+	
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception{
+	http.authorizationRequest()
+	.antMatcher("/admin").hasRole("ADMIN")
+	.antMartcher("/user").hasAnyROle("ADMIN","USER")
+	.antMatcher("/").permitAll()
+	.and().formLOgin()
+	}
+	@Bean
+	public PasswordEncoder getPasswordEncoder(){
+	return NoOpPasswordEncoder.getInstance();
+	}
+	
+	}
+	
+	}
+	**********************************************************************
+	
+	
+	
+	But thi is not practiacl we would not populate our H2 db and authenticate
+	
+	
+	
+	lets get rid of the default schema and users
+	
+	
+	ideally in a real world it should belike
+	
+	
+	
+	@Override 
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+	auth.jdbcAuthentication()
+	.dataSource(dataSource);
+	
+	the deafult schema is actually avaulbel in spring documentation(see time13.05)
+	you dont have to usee the  cheam you can cahnge it
+	
+	
+	now we will use the standered  schema but we wont ay SS to ue it we wiill use 
+	spring boot user schema mechanism(schema.sql) in order to (mut see 14.04 the doc)
+	
+	gives structure of uesers and authorites table the recommended schema
+	the schema is dependent on dialect 
+	e.g-oracle,h2,mysql
+	
+	just copy from the doc and create thefile Schema.sql in resources folder
+	
+	schema.sql is used to create a scheam by sql
+	basically you can use DDL statemnets here ave it to scheam.sql file 
+	and when spring boot runs it will going to run toe command and creat the schema
+	basically a place where you can setup your db before you start you application
+	likely going to be used fo development environment probably not for production
+	
+	
+	
+	
+	thsi is out of the SS default behaviour
+im manuualyy crreating schema myelf
+
+
+now we need to create two usesr in order to taht I need to create file data.sql
+
+
+
+**********************************code*****************************
+in data.sql
+	
+	INSERT INTO users(username,password,enabled)
+	values('user',
+	'pass',
+	true);
+	
+	INSERT INTO users(username,password,enabled)
+	values('admin',
+	'pass',
+	true);
+	
+	
+	INSERT INTO authorities(username,authority)
+	valueas('user','ROLE_USER');
+	INSERT INTO authorities(username,authority)
+	valueas('admin','ROLE_ADMIN');
+	
+	
+	***************************************************************
+	
+	
+	
+	
+	now we have done all the things which were  done previously by SS in default
+	we careated the user and authorities db
+	we populated those with users
+	so SS isnt initalizing anyhing
+	
+	
+	SS just look at the exiting DAtasource and will validate any Authentication attempts
+	
+	
+	now restart the application and give creedentials
+	
+	
+	COuple of thing s to know when working with external DBS
+	
+	let say your application stores db differently
+	for exmple table is "myUsers" 
+	now how to tell SS to lookup that rather than default schema?
+	SS actually doestn requir a pecific schema or strucutre or naming to lookup data
+	earlier we jut saw the deafult behaviour
+	you can tell SS if yoou have a different scheam so SS knows what tables to query and how to query
+	
+	and way to do this is by this two method calls
+	
+	usersByUsernameQuery() and authoritesByUseernameQuery() in configure(AuthenticationManagerBuildera auth) time 19.56 see
+	
+	this lets you pass the queries inorder to get users and autorites
+	
+	
+	
+	*******************code*********************************
+	
+	
+	
+	dataSource(dataSOurce)
+	.userByUsernameQuery("select userName,password,enabled from users where userName=?")
+	.authoritesByUsernameQuery("select userName,authority from authoriteies where userName=?)
+	
+	
+	
+	****************************************************
+	
+	
+	so therefor it is flexible with any schma we can jut change the sql as per our need
+	
+	
+	if you have different db
+	just in application.propertites  we can configure it
+	
+	
+	spring.datasource.url=url
+	spring.datasource.username=username
+	spring.datasource.password=password
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'AuthenticationManagerBuilder"-okay tell me your UN,PW and Role
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+
+
+
+

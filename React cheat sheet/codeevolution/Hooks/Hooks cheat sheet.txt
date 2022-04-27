@@ -1,0 +1,260 @@
+$$$$$$$$$$$$$$$$44444444442.useState Hook$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+before useState()if you encounter a state in a function it hould be converted to a JS class componenet
+
+
+we will first implement a counter with class componenet
+then we will secondly implement in ghooks
+
+
+
+*************code***************************
+in ClassCounter.js
+
+class ClassCounter extends Component{//1st step creating a class components/ClassCounter
+constructor(props){
+super(props)
+this.state={
+count:0// 2nd step creatt a state varible initalised to zero
+}
+}
+
+incrementCount=()=>{
+this.setState({
+count: this.state.count+1;//3rd step creat a method capable of changing the state value
+
+})
+
+})
+
+
+render(){
+return (
+<div>
+<button onClick={this.incrementCount}>Count{this.state.count}</button>
+</div>
+
+)
+}
+}
+
+
+export defult ClassCounter
+
+
+
+}
+
+}
+
+**********************************************
+
+*********************code****************************************
+
+
+
+import React from 'react'
+import  './App.css'
+import ClassCounter from './components/ClassCounter'
+
+
+
+function App(){
+return (
+<div className='App'>
+<ClassCounter>
+</div>
+)
+}
+
+export Defult App
+
+)
+
+
+
+}
+
+
+
+****************************************
+
+
+DOING USING REACT HOOKS
+
+
+const[count,setCount]=useState(0)//here "count" is the state value "setCount" is the method we use to handle "count" and"cont" is initalized to "0"
+
+
+**********************code****************************************
+
+function HooKCounter(){
+const[count,setCount]=useState(0)//here we are usin array destructing the JS feature
+
+return (
+<div>
+<button onClick={()=>setCount(count+1)}>Count {count} </button>
+</div>
+)
+
+
+
+export default HooKCounter
+
+
+}
+//useState()
+
+import useState() 
+asign initital values using array destructuring and use them in render functionthe 
+variable  "count" will always contain curent "count" value
+
+********************************************************888
+
+
+
+const[count,setCount]=useState(0)//here we are usin array destructing the JS feature and initalize "count" to zero ,the default value,the default value is not used i re-renders
+
+onClick={()=>setCount(count+1)//here after a click "1" would be added  to the CURRENT "count" value
+//afrer incremnting the SetCount() cause the component to re-render after re-render the "count" would contain a value of "1" (in the first click)
+
+
+
+RUELS TO USING HOOKS
+
+1.Only call Hooks at hte Top Level
+don't call Hooks inside loops,conditionsor nested functions
+
+
+2."only call Hooks from React Functions"
+call them from within React functional components and not just any regular JS function+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$6.useEffect Hook$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+side effects in coponent
+i,updating the dom
+ii,fetching data from an API end point
+iii,setting up subscriptions or timers
+
+
+Since render() is to early we need to use LCycle methods
+
+fo example updating document title to current counter value
+
+initally we need to use "0"
+and it should go in componentdidMount(){
+document.title=`you clicked ${this.state.count} timers`;
+}
+componentdidMount can only be used one time
+
+
+after that we need to use componentDidUpdate() o we need to add the same piece of code in componentDidUpdate() a in componentdidMount()
+
+componentDidUpdate(){
+document.title=`You clicked ${
+this.state.count} timers';
+}
+
+
+Timer
+
+componentDidMount(){
+this.interval=setInterval(this.tick,1000)
+}
+
+componentWIllUnmount(){
+clearInterval(this.interval)
+}
+
+
+
+
+COMBINE THE TWO SIDE EFFECTS
+
+componentDidMount(){
+document.title=`You clicked ${
+this.state.count} timers';
+}
+this.interval=setInterval(this.tick,1000)
+}
+
+componentDidUpdate(){
+document.title=`You clicked ${
+this.state.count} timers';
+}
+
+componentWIllUnmount(){
+clearInterval(this.interval)
+}
+
+
+
+here code related are put into diferent lifecycle methods which is scateered
+
+
+THE EFFECT HOOK LETS YOU ERFORM SIDE EFFECT IN FUNCTIONAL Component
+**IT IS A CLSOE REPLACEMENT FOR
+componentDidMount()
+componentDidUpdate()
+componentWIllUnmount()
+
+
+$$$$$$$$$$$$$$$$$$$$7.useEffect() after render$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+here we will mimic 
+
+componentDidMount()
+componentDidUpdate()
+
+
+useEffect() is a function
+for useEffect() we pass a parmeter which is a function which renders everytime
+
+
+*********************code**********************************************
+
+//HookCounterOne.js
+
+
+import React,{useState,useEffect} from 'react'
+
+function HookCounterOne(){
+const[const,setCount]=useState(0)
+
+useEffect(()=>{//HOW TO USE "ueEffect()" //RUN AFTEER EVER FIRST RENDER AND RENDERS AFTER MIMCS BOTH componentDidMount and componentDidUpdate
+document.title=`you clicked ${count} times`
+})
+
+
+
+return (
+<div>
+<button onClick={()=>setCount(count+1)}>Click{count} times </button>
+</div>
+
+)
+}
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$React Hooks Tutorial - 8 - Conditionally run effects
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44
+
+
+
+
+
+
+
+
+
+
+
+
+
+

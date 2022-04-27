@@ -138,10 +138,12 @@ to filter on aggreagtion function we must use HAVING
 SELECT company,SUM(sales)
 FROM finance_table
 GROUP BY company
-ORDER BY SUM(sales) DESC//using just sales wont work
+ORDER BY SUM(sales) DESC//****using just sales wont work
 LIMIT 5
 
-IF I ORDER BY AN AGGREGATE FUNCTION THAT AGGREGATE FUNCTION SHOULD BE IN SELECT CLAUSE
+
+IMPORTANT
+IF I ORDER BY AN "AGGREGATE FUNCTION" THAT AGGREGATE FUNCTION SHOULD BE IN SELECT CLAUSE
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 4.GROUP BY 2 $$$$$$$$$$$$$$$$$$$$$$$$$
 

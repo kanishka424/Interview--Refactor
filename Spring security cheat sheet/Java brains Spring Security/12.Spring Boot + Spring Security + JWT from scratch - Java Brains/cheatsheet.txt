@@ -1,0 +1,174 @@
+link-D:\Resources\courses\java courses\Spring Security
+
+
+create a new authentication API enddpoint
+
+Examine every incoming request for valid JWT and authorize
+
+
+create a project spring-security-jwt
+
+we need
+web
+security
+
+we need some other as well but for now these are enough
+
+
+a deefault user i created
+
+create HelloReource.java
+***************************8code **************
+
+@Controller
+public class HelloResource{
+@RequetMapping({"/hello"}){
+public String hello(){
+return "Hello World";
+}
+
+}
+
+
+*************************************************
+
+
+create the class SecurityConfigurer(extends  WebSecurityConfigurerAdapter)
+
+************code*********************************
+@EnableWebSecurity//let SS know about this class
+public class SecurityConfigurer exttends WebSecurityConfigurerAdapter{
+
+@Autowired
+private MyserDetailsService myUserDetailsService;//this is explained in 8.JPA video
+
+@Override
+protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+auth.userDetailService(myUserDetailsService);
+}
+
+}
+
+
+
+@Bean
+	public PasswordEncoder getPasswordEncoder(){
+	return NoOpPasswordEncoder.getInstance();
+	}
+}
+
+
+*****************************************
+
+in  service folder create MyUSerDetailService  (that implements UserDetailsService)
+here we will return a hardcode user(in 8.JPA we connected with DB)
+
+******************************code************************************
+@Service
+public class MyUSerDetailService implements UserDetailsService{
+
+@Override
+public UserDetails loadUserBYUsername(String userName) throws UsernameNOtFoundException{
+return new User("foo","foo",new ArrayList<>());//name,pw,authorties
+}
+
+}
+
+*********************************************************
+
+so far no JWT
+ut run the project
+
+now we need to add two dependencies
+1.jjwt-lets you create JWT and validate existing JWT by parsing
+2.jaxb-api-because of some jaxb and since java 9+ is we need to manualy add  so java xml bind jaxb apis are avaiable in calss
+(see time 9.30 for depenndencie)
+
+im going to create a util classs
+
+
+in util folder create JwtUtil.java
+which can extreact all the JWT related things
+adn also to pull andd see the exirationdate,etc... in a JWT
+
+see time 0.2913 we pate code*********************************
+
+the mot important method is generateToken(UserDetails userDetail) whic h take the UserDetailsobject retuned by UserDetailsService
+now we need to create JWT of our passed userDetail service
+o generateToken() will call createToken(Map<String,Object> claims,String subject)//which is also define in JwtUtil.java
+here in "createToken(claims,userDetails.getUsername())"
+claims -anything we need t0 include in JWT payload
+userDetails.getUsername()-JWT name
+
+createToken() will call Jwts API and its builder pattern(Jwts.builder())
+then setClaims(claims)(Jwts.builder().setClaims(claims))
+ythen set the subject ,subject is the person who i n]being authenticated .setSubject(subject)
+(Jwts.builder().setClaims(claims).setSubject(subject))
+here as the subject we pass userName createToken(Map<String,Object> claims,String subject)->"createToken(claims,userDetails.getUsername())"
+
+then we setIsuedAt(new Date(System.currentTimeMills())
+setExpiration(new Date(System.currentMills()+1000*60*60*10)//upto user
+
+fimally we sign the token with the secret key (SECRET_KEY)
+
+signWith(SignatureAlgorithn.HS256,SECRET_KEY).compact();//cmpact() ends the builder pattern not asocaiated with signWith()
+
+
+****Code**********************************
+in JwtUtil
+
+public String generateToken(UserDetails userDetail){
+Map<String,Object> claims=new HashMap<>();
+return createToken(claims,userDetails.getUserName());
+}
+
+private String createToken(Map<String,object> claims, String subject){
+return Jwts.builder().setClaims(claims).setSubject(ubject).setIsuedAt(new Date(System.currentTimeMills())))
+.setExpiration(new Date(System.currentMills()+1000*60*60*10))
+signWith(SignatureAlgorithn.HS256,SECRET_KEY).compact();
+}
+****************************************************************************************
+
+
+next important method is extractClaim(String token,Function<Claims,T> claimsResolver)
+//see Function interface in lambda
+this is a wy to get data out of existing JWT
+
+extractUserName(string token)
+extractExpiration(String token) and other some methods
+used extractClaims()
+
+***************8code********************************
+@Service
+public class JwtUtil{
+private String SECRET_KEY="secret";
+public String extractUserName(trng token){
+return extractClaim(token,Claims::getSubject);
+}
+
+public Date extractExpiration(String token){
+return extractClaim(token,Claims::getExpiration);
+}
+
+
+public <T> T extractClaim(String token,Function<Claims,T> claimsResolver){//see Function interface in lambda
+final Claimsclaims=extractAllClaims(token);
+return ClaimsResolver.apply(claims)
+}
+
+private Boolean isTokenExpired(String token){
+return extractExpiration(token).before(new Date())
+}
+
+public Boolean validateTokens(String token,UserDetails userDetail){
+fianl String userName=extractUserName(token);
+retrun (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
+}
+*************************************************************
+
+
+now let see waht we need to make this work with JWT
+we have a deafult user and form base login
+
+tie 15.20new phae STEP1
+

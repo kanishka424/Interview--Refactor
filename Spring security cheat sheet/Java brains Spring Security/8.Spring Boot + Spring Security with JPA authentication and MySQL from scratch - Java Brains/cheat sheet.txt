@@ -1,0 +1,480 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$Spring Boot + Spring Security with JPA authentication and MySQL from scratch - Java Brains
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+we will create an application that works with db authentications that connects to a myql db using JPA
+
+
+
+connect to db usingppring JPA 
+and authenticate users against users stored in that db
+
+
+create a db called springsecurity
+
+and a table called "user"
+ha columns id,active,password,roles,user_name
+
+here we have a "roles" column which i not typically the case in real world because in real world we have seperate table for roles,aauthoritese,etc.... wit h foreign key reference
+
+
+here we will store a user connect to mysql instance and validate against it the credential we used
+
+
+create project called pring-security-jpa
+add
+security
+web
+jpa
+mysql driver
+
+and generate project
+
+
+create a resource class to verify our implmentation
+
+
+
+******************code***********************************
+@RestController
+public class HomeResource{
+in HomeReosurce.java
+@GetMapping("/")
+public String home(){
+return ("<h1>Welcome<h1>");
+}
+
+
+@GetMapping("/user")
+public String user(){
+return ("<h1>Welcome User<h1>");
+}
+
+@GetMapping("/admin")
+public String admin(){
+return ("<h1>Welcome Admin<h1>");
+}
+
+
+*********************************************************
+
+we have added SS already now need to configure it
+
+SO WE CREATE THE CLASS THAT EXTENDS WebSecurityConfigurer(SecurityConfiguration)
+and firt override "configure(AuthenticationManagerBuilder auth)"
+
+
+*****************code*************************8
+
+public class SecurityConfiguration extends WebSecurityConfigurer{
+@Override
+protected void configure(AuthenticationManagerBuilder auth) throws Exception{//for authentication
+super.configure(auth);
+}
+
+
+@Overrideprotected void configure(Httpecurity http) throws Exception{
+http.authorizeRequests()
+		.antMatchers("/admin").hasRole("ADMIN")
+		.antMatchers("'user").hasAnyRole("ADMIN","USER")
+		.antMatcher("/").permitAll()
+		.and().formLogin(();
+
+
+}
+}
+
+
+***********************************************************************
+
+
+here I need to say  hey using spring JPA to connect to DB
+
+
+now lets see how to setup authentication uing spring JPA 
+
+if you want to use JDBC you can use JDBC MAanger for Authentication and ay what the query is etc...
+
+if you want to ue LDAP use LDAP PROVIDER
+
+
+however for JPA there is no out of box implmentation for jpa authentication
+
+so actually the way pring data need to retrive data from my sql has nothing to do with JPA
+
+(time 7.44)
+see the image on how authentication work
+"AuthenticationManager" talks to one of the "AuthenticationProvider"
+which talks to "UserDetailService" 
+
+
+ "UserDetailService"  has one method which get uer detail based on username
+ "loadUserByUserName()"
+ when we pass the usernmae we get an object of UserDetail
+" anytime you need to llok up a service call my service"
+
+
+ss will show you the logn form get the credentials and will use your authentication method so user can return UerDetail instance for the particular user
+and SS will  trust your service and say okay this is the user in the system im going to validate in system
+
+so I have the ability to create the service which given the uername give user details
+
+in order to SS work with spring jpa we need to create an instance of "UserDetailsService"
+once we create the "UserDetailsService" the mechanism it use to look up the user is pring JPA (seetime 9.18 for image)
+UserDetailService we create i not dependent at JPA at all
+you could have the service lookup the service in a text file and return hard coded users
+it jut happens the way to get Spring Security work with JPA there is no out of the box implementaions you have to create this UserDetailService instance in order to have it to work so in order to prove we will creatte a UserDetailService which provides a hardcoded user
+
+so there i a method "userDetailsService()" on AuthenticationManagerBuilder which let you pass a UerDetailervice instance and
+ make that as a spring service and set it on AuthenticationManagerBuilder(auth)
+ so just wih this spring security will call the method on  this "UserdDetailService"
+to make authentication when there is an authenticaation request
+
+ 
+*********************code*********************************8
+in SecurityConfiguration.java
+
+protected void configure(AuthenticationManagerBuilder auth) throws Exception{//for authentication
+auth.userDetailsService(uerDetailService)
+}
+
+*************************************************
+
+til we need to creat the "userDetailsService" and autowire it
+
+@Autowired
+UserDetailService uerDetailService;
+
+
+thethis will go to AuthenticationManagerBuilder and AuthenticationManagerBuilder will call a method to look up the uer every time
+
+
+
+crreating MyUserDetailService.java (the UserDetailService class)
+and override loadUserByUserNAme(String s)
+
+******************code***********************************
+MyUserDetailService.java
+
+
+public class MyUserDetailService implments UserDetailService{
+@Override
+public UserDetailws loadUserByUsrname(String s) throws UsernameNotFoundException{
+
+}
+
+
+}
+
+
+****************************************************
+
+
+SS will always trust what is returned by loadUserByUserNAme(String s) in UserDetailService intance  and SS will trust it(even if it is stupid)
+so we will crete a hardcode UserDetails instance in loadUserByUserName()
+
+
+so let create UserDetails  class
+thera are bunch of methods wwe need to implementaions
+e.g-getAuthorotie(),getPassword(),getUerName(),isAccountNonExpired()
+SS will take the object and will use that (MyUserDetails) to authenticate
+lets hardcode these methods 
+
+*******************Code***********************
+
+public class MyUserDetails implements UerDetails{
+
+public String userNAme;
+
+public MyUserDetails(String userName){
+this.userName=userName;
+}
+
+public MyUserDetails(){
+
+}
+
+
+
+@Override
+public  Collection <?extend GrantedAuthority> getAuthoroties(){
+return Arrays.asList(new simpleGrantedAuthority('ROLE_USER'));
+
+
+@Override
+pubic String getPassword(){
+return "pass";
+}
+
+
+@Override
+pulic String getUserName(){
+
+
+return userName;
+}
+
+
+@Override
+public boolaen iAccountNonExpired(){
+return true;
+}
+
+
+@Override
+public boolean isAccountNonLocked(){
+
+return true;
+
+}
+
+@Override
+public boolean isEnable(){
+return true;
+
+}
+
+
+
+
+
+}
+
+
+***********************************************************8888
+
+
+now the USerDetailService would returm MyUerDetails object
+and annotate it with @Service which is a stero type annotation
+
+
+********************code***********************************
+@Service
+public class MyUserDetailService implements UserDetailService{
+
+@Override
+public UserDetails loadUserBYUserNAme(String s) throws UsernameNotFoundException{
+
+return new MyUerDetails(s);
+
+}
+}
+
+***************************************************************
+
+use @EnableWebSecurity in WebSecurityConfigurerAdapter exttending class  which is SecurityConfiguration.java and also create the encoder
+
+
+
+************code***********************************
+
+@Bean
+	public PasswordEncoder getPasswordEncoder(){
+	return NoOpPasswordEncoder.getInstance();
+	}
+
+
+******************************************************8
+
+
+so now we have userDetailsService service pasing a UerDetails objectwhatever a you use fo rlogin this will be passed
+
+
+NOw we can ru the application
+
+this has nothing to do withJPA yet we have not used JPA YEt
+i can pass any credentials
+
+time 18.00-sumary of what happens
+
+time 19.18-end of PHASE1
+
+
+now we can imagine what it needs to work with JPA in "loadUserBYUserNAme(String s)"( in "MyUserDetailService" class(implements "UserDetailService")use JPA
+
+
+now we have SS wiring done already
+now we need to set JPA
+now we need to setup Repository class entity calss and then hvae a method taht looks up
+a uer from the dtabase   given a username
+now in "loadUserBYUserNAme(String s)" take return new UerDetails(s); out no hardocded users anymore
+instead call JPA method you have written
+
+NOW THE REST F THE TUTORIAL IS ABOUT JPA
+
+1.firt create "models" folder and create "User" class(the entity class)
+this calss represents a row in relation mapping
+
+mark it as @Entity
+and then as @Table(name="User")
+then for the key filed  @Id and @GeneratedValue(strategy=GenerationType.AUTO)
+
+
+***************Code**********************************
+
+@Entity
+@Table(name="User")
+public clas User{
+
+@Id
+@GeneratedValue(strategy=GenerationType.AUTO)
+privte int id;
+priivte String userName;
+private String password;
+private boolean active;
+private string role;
+
+
+
+//****************888create gettters and setters********
+
+
+*********************************************************************8
+
+now we will create a repository
+ this is actualy an interface
+
+here we just provide the defoniton JPA provides implementation
+
+
+
+
+
+ 
+
+
+
+
+
+
+wire the repository in MyUserDetailService.java(implments UserDetailService)
+
+@Autowired
+UserRepository userRepository;
+
+
+now replace the hardcoded object we get inside in "loadUserBYUserNAme()"
+with JPA  
+and when I get the user I need to convert it to type "MyUerDetails" 
+
+this time insttead of harcoding we will poluate the "MyUerDetails"  with detaails we get from db table
+
+
+****************************code********************************************
+in MyUserDetailService.java
+
+@Override
+public UserDetails loadUerByUsername(String userName) throws UsernameNotFoundException{
+Optional<User> user=userRepository.findByUserName(userName);
+return new MyUerDetails(user);
+
+}
+
+*******************************************************************************8
+
+now we need to chnge the entity class as well
+
+
+******************************code*************
+
+public class MyUerDetails implements UserDetails{
+
+private String userName;
+priate String password;
+private boolean active;
+private List<GranteAuthority> authorities;
+
+public MyUerDetails(User user){//this time we pass User object instead of the userName since we use JPA
+this.userName=user,getUserName();
+this.password=uer,getPasword();
+this.active=user.isActive();
+this.authorities=Arrays.stream(user.getRoles().split(",")).
+					map(SimpleGrantedAuthority::new)
+					.collect(Collectors.toLIsst()):
+
+}
+
+public MyUerDetails(){
+
+}
+
+@Override
+public Collection<? extends GranteAuthority> getAuthoroties(){
+return authorities;
+}
+
+
+
+
+@Override
+pulic String getUserName(){
+
+
+return userName;
+}
+
+
+@Override
+public boolaen iAccountNonExpired(){
+return true;
+}
+
+
+@Override
+public boolean isAccountNonLocked(){
+
+return true;
+
+}
+
+@Override
+public boolean isEnable(){
+return true;
+
+}
+
+
+
+
+}
+
+***************************************************************
+
+
+now we have MyUerDetails which is constructed from live data
+
+
+now in MyUserDetailService(implements UserDetailService)
+
+
+get the uer object and pass to MyUserDetails oject
+
+
+
+*****code********************************************
+@Service
+public class MyUserDetailService implements UserDetailService{
+@AutowiredUserRepository userRepository;
+
+@Override
+public UserDetail loadUserByUserName(String userName) throws UsernameNotFoundException{
+
+Optional<User> user=userRepository.findByUserName(userName);
+
+uer.orElseThrow(()->new UsernameNotFoundException('not found'+userName));//throws the UsernameNotFoundException if not found
+retrun user.map(MyUserDetails::new).get();
+
+
+
+
+}
+
+
+
+
+go to @SpringBootApplication calss and Enable JPA which is using
+@EnableJpaRepository(baePackageClasses-Uerrepository
+
+
+spring.datasource.url=url
+	spring.datasource.username=username
+	spring.datasource.password=password
+	spring.jpa.hibernate.ddl-auto=update

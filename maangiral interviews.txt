@@ -1,0 +1,18 @@
+new java features
+new react features
+saga pattern
+design pattern
+spring ms 3 turioal
+JS
+java memory managment
+java algorithms recap(start with udemy)
+react hooks
+noramlization
+https
+ssl
+OAuth
+git
+what if a pproduction bug?google
+how to debug an issue?google
+
+

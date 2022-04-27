@@ -1,0 +1,15 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$406 Establishing Relationships with JPA and Hibernate - OneToOne$$$$$$$$$$$$$$$$$$$$$
+
+
+$$$$$$$$$$$$$$$$$$066 Step 22 - Defining Entities - Student_ Passport and Review$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$067 Step 23 - Introduction to One to One Relationship$$$$$$$$$$$$$$$
