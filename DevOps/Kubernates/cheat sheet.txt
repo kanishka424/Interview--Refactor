@@ -1,0 +1,912 @@
+What is Kubernetes?(time 0.02.19)
+
+A open source container orchestration frame work
+it manages contatiers
+
+helps to manage up containers that are made up of 100 applications and helps to manage in different deployment environments,like physicalmachines ,virtual machines or cloud environments,HYBRID DEPLOYMENT ENVIRONMENT
+
+QUESTION --DIFFERENCE BETWEEN VIRTUAL AND CLOUD MACHINES
+
+
+what problems does Kubernetes solve?(time 0.3.28)
+tasks of an orchestration tool?
+
+
+
+need for cntainer orchestration tool?
+trend from Monolith to microservices
+increased usage of contaners(e.g-Docker)
+
+
+
+managing hundreds of ciontainers in Micro services multiple environments using
+scripts and self made tools can be really complex
+this prompt the need for container orchestration technologies
+
+What features do orchestration tools offer?
+1.High availability  or no down time-user gt to use it every time
+2,scalability or high performance-load fast and users have high reponse rate
+3.Disaster recovery-backup and restore if infrastructure has some problems 
+e.g- data is lost,server blowwss up if something happen with service center
+we have a mechanism to pic=kup the data and to restore to latest state
+so application doesnt loos any data and application can run from latest state after recovery
+
+all above are functions container orchestration task handles by tools like kuberneted
+
+ Kubernetes cOMPONENTS(TIME 6.30)
+SO MANY COMPONENTS BUT WE WIILL USE MALL PORTION OF IT
+
+we will see compnetn terms
+
+Node and Pod(time-6.06)
+
+Workerr node basic setup
+worker node =node (in Kubernetes terms)
+which is a simple server a physical or virtual machine
+
+
+Pod-smallest unit of a K8
+pod is AN ABSTRACTION OVER CONTAINER
+
+if you are famiiar with Docker containers or images what this does is it creats this running environment or layers over the container reason is K* wants to aabstact container so you can replace the technology and K8 doesnt have to work directly with Docker or any other container technology you use
+YOU ONLY INTERACT WITH K8 LAYER
+
+
+SO WE  have pod our own application which in turn ueses a Database pod with its own 
+container
+IMPORTANT-pod ususally only meant run one application container inide of it ,
+you can run multiple  applications inside one pod but usually its in only the cases
+oyou have one main application container and helper container or some side service
+that has to run inside that pod
+time-7.37 IMAGE we have one server and two CONTAINERS running on it with an abstract layer on top of it
+
+
+No w lets see how thery communicat with each other in K8 world
+that has to run inside that pod
+
+
+K8 offers a out of the box a VIRTUAL NETWORK
+WHICH MEANS EACH POD GETS ITSS OWN IP ADDERESS
+ THE POD GETS  THE IP ADDRESS(NOT THE CONTAINER)
+EACH POD CAN COMMUNICATE WITH EACH OTHER USING THAT IP ADDRESS
+THE IP ADDRES IS AN INTERNAL ONE NOT A PUBLIC ONE
+
+SOthe application communicate with Db using the IP address
+
+in K8 pods can die eaily(check this)
+and if that happens iif I see a DB container dead becaue the db crashed because node the server im runnin it ran out of resources A NEW ONE WILL CREAT IN ITS PLACE
+SO HERE IT WILL GET ASSIGNED A NEW IP ADDRESS
+WHICH IS INCONVENIEN IF YOU ARE DEALING WITH DB BECAUSE NOW EVERYTINME YOU HAVE TO ADJUST FOR POD RESTARTS
+BECAUSE OF THAT A ANOTHER COMPONENT OF K8 CALLED SERVICE IS USED 
+
+SERVICE AND INGRESS(time 0.08.56)
+
+
+Service -a permanent IP address that can be attached to each pod
+my-app will have its own service and DB have its own service(time 0.09.18)
+lifecycle of Pod and Service are not conneted
+EVEN IF THE POD DIES THE SERVICE AND POD WILL STAY  O WE DONT HAVE TO CAHNGE THAT END POINT ANYMORE
+nOW WE want ourr application to be accesible through out a browser
+for these we have to create an EXTERNAL SERVICE 
+EXTERNAL SERVICE - A Service that opens the communication from exteranl source
+but obviousely we dont need our db to open to public  for that we will create something called an INTERNAL SERVICE
+
+the Ecternal service url look looks like http//124.89.101.2:8080
+which is good for testing but not for end product so usauslly I want my URL to look like https://my-app.com if you want to talk to your aplication with a secure prortcol(https)
+and a domain name and for that (my-app.com)
+for that we have another component-INGRESS
+
+so instead of service the rquest first goes to Ingress  and do the forwarding to the service 
+(IMAGE basic setuo of K8-tie 10.54)
+nothing special yet K8 cool features are yet to come
+
+
+COnfigMap and  SECRET
+
+
+pods comunicate using a service
+my-app will have a DB end point lets say "mongo-db-service" taht it uese to communicate with mongo db database
+where do we set this db URL ?ususally in applications.properties file or some kind of external prorperty variable but ususally inside of the built image of the application
+
+for example if the name of the end point changed to "mongo-db" from "mongo-db-service"
+you have to aadjust the URL in the appplication
+uusally we have to rebuilt the application with a new version
+you have to puh it to repository
+pull that to our pod
+and restart the whole thing
+
+LITTLE BIT TEDIOUS FOR SMALL CHANGE LIKE DB URL CHANGE
+FOR THAT PURPOSE k8 HAS A COMPONENT called CONFIGMAP
+CONFIGMAP-external configuration to your app
+it is basically the exteranl configuration for your application
+
+
+
+
+CONFIGMAP ususallycontents details like URL for DB or other servicews tht you use and for K8 you jusst connect it through pods  so POD ACTUALLT CONTAINS THE DATA GIVEN BY COONFIGMAP
+
+AND NOW when you chanage the name it uses COnfiMap you dnt hacve to built new image
+
+
+External COnfig -can be username or pw
+which may also continue to change when application deploymnet start
+if we store data in a plain config text it would be insecure
+for this K8 has mechanism called "SECRET' similar to CONFIGMAP
+uses to store secret data e.g-username pw
+its not in palin text
+it uses base64 encodde format
+
+database user we can put in CONFIG MAP
+so secret would contain like credential,certification,pw,thing that you dont want others to see
+
+
+
+the built in security mechnism is not enabled by default
+
+we  use data from CONFIG MAP or SECRET inside of our appliction pod
+use it as environment variables or as a properties file
+
+Now we have learened almost all K8 basic componeents
+
+
+
+
+
+
+thing we learned
+POD
+SERVICE
+ingreaa
+configmap-for external configurations
+secret
+
+
+
+
+VOLUMERS-(image time 14.26)
+
+
+
+
+Now we will see DATA STROGE and how it will work in K8
+
+(IMAGE time 14.44)Now we have this database image which our application uses and generates data
+if container got restared it will loss data
+to persist data we use another componentcalled VOLUMES
+How VOLUMES work
+it basically attches a physical storage on your hard  drive to your pod
+that storage can be in local machine (MEANS SAME NODE AS YOU RUN APPLICATION) OR REMOTE
+outside of K8 cluster it could be cloud storage or your own STORAGE WHICH IS NOT A PART OF K8 CLUSTER o we just have some external reference on it
+(IMAGE -time 15.36)
+So now when the DB POD OR CONTAINER RESTRTED ALL THE DATA WOULD REMAIN IN THERE
+
+
+
+IT I IMPORTANT TO UNDERSTANDDISTINCTION BETWEEN K8 CLUSTER AND ALL ITS COMPONENTS IN ITS STORAGE 
+regardless whether its a local or remote storage ,thinks of a  storage as external hard drive plugged into K8 cluster beacuse K8 cluster doesnt manage DATA PERSISTENCE
+WHICH MEANS YOU AS THE USER OR ADMIN IS RESPONSIBLE FOR BACKUP THE DATA REPLICATING AND MANAGING IT MAKE SURE IT IS KEPT ON A PROPER HARDWARE,ETC...
+
+DEPLOYMENT AND STATEFUL SET(TIME- 16.23)
+NOW LETS SEE IF EVERTHING I RUNNING PERFECTLY AND A USER CAN ACCEESSour applicaion 
+
+
+WHAT HAPPENS IF MY APPLICATION POD DIES/RESTRTED?
+DIES  OR RESTRTED BECAUSE I CREATED A NEW CONTAINER IMAGE
+BASICALLY I WOULD HAVE A DOWN TIME TO REACH MY APPLICATION
+WHICH IS OBVIUOSLY  which is a bad thing if it happens in production
+THIS IS THE ADVANTAGE OF DISTRIBUTED SYSTEMS AND CONTAINERS
+
+SO INSTEAD OF RELYING IN ONE APPLICATION POD ,ONE DB POD ETCC...
+******WE WOULD REPLICATE EVERTHING ON MULTIPLE SERVERS
+SO WE WOULD HAVE ANOTHE CLONE WHERE A REPLICA OF OUR APPLICATION WILL RUN
+WHICH WOULD ALSO CONNECT TO OUR SERVICE
+(time IMAGE- 0.17.18)
+rember we said SERVICE is like a persitence SATIC permenatn IP ADDERESS  WITH DNS NAME
+so you DON CONTINOUSLY ADJUST THE ENDPOINT WHEN POD DIES
+
+***SERVICE IS ALSO A LOAD BALNCER
+SERVICE WOULD FETCH THE REQUEST AND FORWARD IT TO POD WHICH EVERR IS LESS BUSY
+SO IT HAS BOTH OF ITS FUNCTIONALITIES
+BUT IN ORDER TO create replica of "my-app" pod you WOULD NOT CREATE A SECOND POD
+INSTEAD YOU WILL CREATE A "BLUEPRINT' OF "my-app" pod  AND SEPECIFY HOW MANY REPLICAS OF THAT POD YOU WOULD LIKE TO RUN
+THAT BLUEPIRNT IS CALLED "DEPLOYMENT"  WHICH IS AN ANOTHER COMPONENT OF K8
+IN PRACTICE YOU WOULD NOT CREATE PODS YOU WOULD CREATE DEPLOYMENTS BECAUSE THERE YOU CAN SPECIFY HOW MANY REPLICAS THERE YOU CAN SCALE UP OR CALE DOWN NUMBER OF REPLICA PODS YOU NEED
+SO AS we said pod is a layer of abstreaction on top of  containers
+a DEPLOYMENT IS an abtraction on top of pods which make it easier CONVIENIENT TO INTERACT WITH PODS REPLICATE THEM EWITH OTHER CONFIGURATIONS
+SO IN PRACTICE WE WOULD MOSTLY WORK WITH DEPLOYMENTS NOT WITH PODS
+SO NOW IF AN APPLICATION POD DIES THE SERVICEWOULD FORWARD IT TO ANOTHER POD
+SO YOU APPLICATION WOULD BE STILL ACCESSIBLE TO THE USER
+(time-IMAGE -0.18.58)
+
+NOW we need DB rpelica as well
+HOWEVEER WE CAN REPLICATE DB USING "DEPLOYMENT"
+REASON IS THAT DB HAS STATE WHICH IS ITS DATA
+MEANING THAT IF WE HAVE CLONES/REPLICAS OF DB THOSE NEED TO ACCESS THE SAME SHAREDED DB.(TIME IMAGE-19.30)
+AND THERE YOU NEED TO HAVE SOME MECHANISM TO SAY WHICH PODS ARE WRITING TO DB WHICH PODS  ARE WRITING TO DB TO AVOID DATA INCONSISITENCCIES.
+
+THAT MECAHNSM IN ADDITION TO REPLICATION FEATURE IS OFFERED BY ANOTHE R K8 COMPONENT CALLED "STATEFULSET"
+THIS COMPONENT IS MEANT SPECIFICALLY TO APPLICATIONS LIKE DB 
+LIKE ELASTIC,NMONGOdB,MYSQL.,ETC...ANY OTHER DB SHOULD BE CREATED USING "STATEFULSET"
+NOT "DEPLOYMENT'
+
+DEPLOYMENT -FOR stateful apps-would replicate and scale up
+Statefulset-for stateful apps-other than what DEPLOYMENT does it would keep data conistency by making sure waht db writes what db reads
+
+BUT DEPLOYING DB USING STATEFULSET IS SOMEWHAT TEDIOUS
+ITS DEFINITLY MORE DIFFICULT THAN WORKING WITH DEPLOYMENT
+IT HAS ALL THIS CHALLENGESS
+THATS WHY IT DBS ARE OFTEN HOSTED OUTSIDE OF K8 CLUSTER
+AND TO  JSUT HAVE STATELESS APPLICATION THAT REPLICATES AND SCALE WITH NO PROBLEM
+ INSIDE THE K8 CLUSTER 
+ NOW WE HAVE REPLICATE DB AND APPLICATION (TIME IMAGE 21.26)
+ WHICH HAS TWO OF EACH IT IS LOAD BALCNCED
+ EVAN ONE NODE1 IS COMPLETLY DOWN WE STILL HAVE NODE2 with application and db replicated UNTIL NODE 1 RESTARTED TO AVOID DOWN TIME
+ 
+ MAIN K8 COMPONENTS SUMMARIZED (TIME 0.21.39)
+ 
+ WE learned the basic clusters so just by learning the basic we can create powerful cluters
+ 
+ 
+ KUBERNETES ARCHITECTURE(TIME-22.41)
+ 
+ WE WILL look at two type s of node
+ MASTER
+ SLAVE
+ 
+ AN DALL ITS OTHER PROCESS 
+ 
+ NODE PROCESS(TIME 0.21.13)
+ 
+ will strt with basic one node with two application pods running
+ one main thing in k8 is its WORKER SERVERS or NODES
+ EACH NODE HAS MULTIPLE APPLICATION PODS WITH CONTAINERS  RUNNING ON THAT NODE
+ THE WAY K8 DOES IS BY CREATING 3 PROCESS THAT MUST BE INSTALLED ON EVERY NODE THAT ARE USED TO SCHEDULE AND MANAGE THOSE PODS 
+ SO NODES ARE THE CLUSTER SERVICE THAT ACTUALLY DOES THE WORK THSTS WHY SOMETIMES CALLED THE "WORKER-NODE"
+ 
+ 1ST PROCESS-CONTAINER RUNTIME
+ IN THIS EXAMPLE IT IS "DOCKE" BUT CAN BE ANY OTHER TECHNOLOGY AS WELL
+ BEACUE APPLICATION POD HAS CONTAINER RUNNING INSIDE THE CONTAINER RUN TIME CAN BE INSTALLED ON EVERY NODE
+ BUT THE PROCESS THAT ACTUALLY SCHEDULE THOSE PODS AND CONTAINERS UNDERNEATH IS WHICH IS A "KUBLET" which is a K8 proocess it self
+ kublet interacts with both the container and node machine itself
+ "KUBLET" IS RESPONSIBLE FOR TAKING THE CONFIGURATION AND RUNNING THE POD WITH A CONTAINER INSIDE
+ AND ASSIGNING RESOURCES FROM NODE TO CONTAINER(CPU,MEMORYETC..)
+ 
+ USUALLY K8 CLUTER IS MADE OF MULTIPLE CLUSTERS ALSO MUST HAVE
+ K8 RUNTIME AND KUBLET INSTALLEDD (TIME IMAGE-24.54)
+ AND YOU AMY HAVE HUNDREDS OF WORKER NODES WHICH MAY RUN OTHER PART,CONTAINERS,REPLICAS,ETC...
+ 
+ COMMUNICATIO  BETWEEN NODES works using "SERVICES" WHICH IS SORT OF A LOAD BALANCER
+THAT BASICALLY CATHCES THE REQUEST  DIRECT TO POD OR APPLICATION (LIKE DB) FORWARDS IT TO RESPECTIVE POD 
+
+AND THE 3RD PROCESS THAT IS RESPONISBLE FORWARDING REQUEST  FROM SERVICES TO POD IS 
+"KUBE PROXY" THAT ALSO MUST BE INSTALED IN EVERYNODE
+"kUBE PROXY" HAS SOME INTELIGENT FORWARDING MECAHNISM INSIDE THE COMMUNICATION ALSO 
+WORKS WITH PERFORM LOWER HAND
+E.G-IF "MY-app" replica is making a db requet intead of forwarding it to a random db replica it would direct to the replica tath is running on the same  node that is initiatted in the request thus it reduces the overhaedof sending the request to another machine
+
+
+3 NODE PROCESS
+1.KUBLET
+2.KUBE PROXY
+3.CONTAINER RUNTIME
+
+
+THESE MUST BE INSTALLED IN EACH NODE FOR K8 CLUSTER TO RUN SMOOTHLY
+
+
+HOW TO INTERACT WITH THIS CLUSTTER?(TIME 26.49)SEE FRO QUETION REGRDING
+
+
+HOW TO SCHEDULE POD?
+MONITOR?
+RESCEDULE /RE START POD
+JOIN A NEW NODE
+
+
+ALL THE MAANGING PROCESORS ARE DONE BY MASTER NODE
+
+MASTER PROCESS(TIME27.00)
+
+MASTER NODES HAVE different processes running inside them
+four processes run on every master node
+taht controle the cluster state and worker state
+
+1.API SERVER
+first service is "API SERVER" so when a user needs to deploy a new application in K8 cluster you interact  with "api server " using some client it colud be  UI like k8 dashboasrd ,maybe cmd line like Kublet,
+"Api gateway" can be a "cluster gateway" which gets the initial request of any updates 
+to the cluster or query
+
+2.also aCTS AS A GATEKEEPER FOR AUTHENTICATION MAKE SURE ONLY AUTHORIZED AND AUTHENTICATED REQUEST GET THROUGH TO THE CLUSTER
+WHICH MEANS WHENEVER YOU WANT TO SCHEDULE NEW PODS DEPLOY PODS CREAT NEW SERVICE OR OTHE COMPONENTS WEHAVE TO TALK TO API SERVER ON MASTER SERVER AND API SERVER  VALIDATE REQUEST IF EVERTHING IS FINE IT FORWARDS THE REQUEST TO OTTHER PROCESS  TO SCCHEDULE THE POD OR CREATE THE COPONENET YOU REQUESTED TO
+
+
+ALSO IF YOU WANT TO QUERY STATUS OF YOUR DEPLOYMENT OR CLUSTER HEALTH ETC....
+YOU MAKE RESPONE TO API SERVER AND IT GIVES YOU REPONSE
+
+FOR SECURITY ONLY 1 ENTRYPOINT INTO THE CLUSTER
+
+
+
+2.SCHEDULER
+TIME 28.40 IMAGE  
+
+SEND A REQUEST TO CHEDULE A NEW POD TO API SERVER AND VALIDATED REQUEST WILL BE HANDLED TO SCHEDULER IN ORDER TO START THE APPLICATION IN ONE OF THE WORKER PODS
+INSTEAD OF RANDOMLY PLACING THE POD IN A NODE IT HAS INTELGNT WAY OF WHICH NODE TO NECXT POD IS SCHEDULED
+FIRST IT WILL LOOK AT YOUR REQUET AND SEE HOW MUCH RESOURCES TO SCHEDULE IT MAY NEED HOW MUCH CPU,NMEMORY,ETCC....
+AND SCHEDULER WILL GO THROUGH EACH NODE AND SEE HOW MUCH RESOURCES THEY HAVE TAKEN
+(TIME 0.29.32)
+IF IT SEES ONE NODE IS LEAST BUSY/HAS MOST RESOURCES AVAILABLE
+IT WILL SCHEDULE THE POD ON THAT NODE
+(TIME IMAGE 29.43)
+
+
+SCEADULER JUSRT DECIDES ON WHICH NODE NEW POD SHOULD BE SCHEDULED
+THE PROCESS THAT ACTULLY DOES THE SCHEDULING AND STARTS THE POD IN THE NODE IS DONE BY KUBELET
+
+(TIME IMAGE 0.30.00)
+
+so it(KUBLET) gets the request from scheduler  and executes the request on the NODE1
+
+
+
+3.CONTROLLER MANAGER(TIME 30.09)
+
+WHEN POD DIE ON A NODE THERE IS WAY TO DETECT THOSE AND TO RESCHEDULE AS SOON AS POSSIBLE
+C.M DOES IS DETECTS CLUSTER CHANGES LIKE POD DEATHS AND TRIES TO RECOVER AS SOON AS POSSIBLE
+IT(CM) MAKES A REQUEST TO SCHEDLER  TO RESCHEDULE THOSE DEAD PODS SAME CYCLE HAPPENS HERE WHERE SCHEDULER FINDS LESS BUSY NODE WHICH WORKER NODES SHOULD RESTART THOSE PODS AGAIN MAKE REQUEST TO THEIR KUBLETS ACTUALLY RESTART THE POD AND FINALLY
+
+
+4.etcd(last mater proce)
+to store cluster brain  you can think of it as a cluster brain
+every change in  a cluster when new pod gets scheduled, a pod dies ,etcc...
+cluster changes get stored in the key value storeof etcd(IMPORTANT)
+(time IMAGE 31.25)
+we call it cluter brain becaue all the mecahnism in this work because of its data
+for example how scheduler knows waht resources are available in  each worker node
+how does cluster Manager knows that state has been changed  or KUBLET restrted pod upon request of scheduler 
+or when you make a query request to api server regarding cluster ;health
+or your application server state where this inforamtion they get from 
+so all of this infromation "etcd" cluster what is not stored in etcd cluster key value store is ACTUALL APPLICATION DATA IS NOT STORED 
+
+IF YOU HAVE AN DB APPLICATION RUNNING INSIDE OF A CLUSTER THE DATA WOULD BE STORED IN SOME WHERE ELSE NOT IN etcd.etcd IS ONLY CLUSTER STATE INFROMATION FOR MASTER PROCESS TO TALK WITH WORKER PROCESSORS AND WISE VERCA
+
+MASTER PROCESORS
+1.API SERVER
+2.SCHEDULER
+3.CONTROLLER MAANGER
+4.etcd
+
+
+MATER PROCESSORS ARE VITAL
+SO K8 CLUSTER IS MADE UP OF MULTIPLE MASTERS WHERE EACH MATER NODE RUNS ITS OWN PROCESSORS
+WHEREEACH "API SERVER" OF THOSE IS LAOD BALNCED
+AND "etcd" is a distributed all over master nodes
+(time IMAGE 33.04)
+
+
+EXAMPL CLUSTER SETUP (TIME 0.33.10)
+
+
+SAY WE HAVE CLUSTER OF 
+2 MASSTER NODES 
+3 WORKER NODES
+
+
+ALSO to note that hw resources of master and worker nodes different
+master processors are MORE important BUT THEY HAVE LESS LOAD OF WORK  SO THEY NEED LESS REOURCES LIKE (CPU/RAM/STORAGE)
+WHERA AS WORKER NODES DOES THE ACTUAL WORK LIKE RUNING THE PODS CONTAINERS SO THEREFOR THEY NEED MORE RESOURCES
+AS DEMAND FOR APPLICATION INCREASE YOU MAY ADD MORE MASTER AND WORKER NODES TO YOUR CLUSTER  AND THUS CREATING MORE ROBUST AND  RESOURCE REQUIREMENTS
+WE CAN ADD NEW MASTER /NODE SERVERS PRETTY EASILY ON AN EXISTING CLUSTER
+(TIME IMAGE 34.22)
+1)GET NEW BARE SERVER
+2)INTALL ALL THE MASTER/WORKER NODE PROCESSES
+3)ADD IT TO CLUSTER
+
+SAME WAY IF YOU NEED SERVERS
+1)GET NEW BARE SERVER
+2)INTALL ALL THE MASTER/WORKER NODE PROCESSES(CONTAINER RUNTIME,KUBLETE,KUBLET PROXY)
+3)ADD IT TO CLUSTER
+
+
+
+these way you can increase the power of cluster when its resource demand increaes
+
+
+
+MINIKUBE AND KUBECTL (LOCAL SETUP) (TIME 0.34.46)
+
+MINIKUBE
+
+IN PRODUCTION WE HAVE AT LEAST TWO MASTER NODE AND MULTIPLE WORKER NODES
+WE HAVE ACTAUL SEPERATE VIRTUAL OR PHYSICAL MACHINES EACH REPRESENTS A NODE
+
+
+
+BUT IF YOU WANT TO TEST SOMETHING LOCALLY (DEPLOYMENT,ETC..) THIS SETUP WOULD BE DIFFICULT IF YOU DONT HAVE ENOUGH RESOURCES
+FOR THIS CAE WE HAVE THE OPEN SOURCE TOOL CALLED MINIKUBE
+ MIINIKUBE IS BASICALLY A ONE NODE CLUSTER WHERE MASTER PROCESSE AND WORKER PROCESSES 
+ RUN ON THE SAME NODE IT HAS A DOCKER RUNTIME PRE INSTALLED
+ SO WE CAN RUN THE POD IN THIS NODE 
+ THE WAY IT WILL RUN THIS ON YOUR LAP IS THROUGH A VIRTUAL BOX OR ANOTHER HYPER VYSOR
+ (TIME IMAGE 0.36.24)
+ 
+ MINIKUBE 
+ CREATES VIRTUAL BOX ON YOUR LAPTOP
+ NODE RUNS IN THAT VIRTUAL BOX
+ TO SUMMARIZE MINIKUBE IS A 1 NODE K8 CLUSTER RUNS ON YOUR LAPTOP 
+ 
+ 
+ WHICH YOU CAN USE FOR TESTING PURPOSESE
+ 
+ NOW AFTER YOU SETUP A CLUSTER OR MINI CLUSTER YOU NEED TO  WAY TO INTERACT WITH THIS 
+ CLUSTER
+ YOU NEED TO CONFIGURE COMPONENTS,CREATE COMPONENTS ETC....
+ 
+ 
+ KUBECTL (TIME 0.37.06)
+ 
+ NOW WE HAVE THIS NODE WHICH REPRESENTS MINIKUBE
+ NOW WE NEED TO INTERACT WITH THIS
+ AND TO CREATE OTHER K8 COMPONENTS WE NEED IT (SERVICE,SECRET,CONFIGMAP,ETC...)
+ FOR THIS WE USE KUBECTL WHICH IS A A COMMAND LINE TOOLS
+ 
+ 
+ REMEBER WE SAID MINIKUBE RUNS BOTH MASTER AND WORKER PROCESORS
+ 
+ ON EOF THE MASTER PROCESSES CALLED "API SERVER" IS THE MAIN ENTRY POIN TO K8 CLUSTER
+ 
+ TO DO ANYTHNG TO CREATE DELETE,CONFIGURE ETC...
+ YOU NEEED TO TALK TO API SERVER
+ WAY TO DO IT IS  THROUGH DIFFERENT CLIENTS
+ YOU CAN TALKK TO IT USING UI,API OR CLI (KUBECTL)
+ 
+ KUBECTL IS THE MOST POWERFUL OF THREE CLIENTS
+ BECAUSE U CAN DO ANYTHING IN K8 CLUSTER WITH ITS
+ 
+ 
+ 
+ ONCE YOU REQUET TO DELETE ,CRETE ,CONFIGURE  VIA API SERVER THE WORKER PROCESSES ON MINIKUBE WILL ACTUALLY MAKE IT HAPPENS
+ (IMAGE 0.38.22 ) THEY WILL ACTAULLY MAKE COMMAND TO CREATE THE POD DESTROY THE POD AND UPDATE THE POD,CREATE SERVICE  ETC....
+ 
+ 
+ 
+***IMPORTANT*** KUBECTL ISN'T  FOR MINIKUBE BUT FOR CLOUD CLUSTER HYBRID CLUSTER TO INTERACT WITH ANY KIND OF K8 CLUSTER
+ 
+ 
+ 
+ INSTALLATTION AND CREAEAT MINIKUBE CLUSTER (TIME 0.38.59)
+ 
+ 
+ 
+ MINIKUBE NEEDS VIRTULIZATION
+ INSTALL OME KIND OF HYPERVISOR(CAN BE VIRTUAL BOX)
+ 
+ MAIN KUBECTL COMMANDS (TIME 0.44.53)
+ HOW TO CREATE AND DEBUG POD IN A MINIKUBE CLUSTER
+ 
+ pre-requisites after this
+ 
+ -minikube installed 
+ -kubectl installed
+ 
+ 
+ getting status of the nodes
+  command-"kubectl get nodes"
+ 
+ 
+ 
+ check services
+ "kubectl get services"
+ 
+ we dont have a service yet so we will ceate a one now
+ using "kubectl create -h"
+ pod is the sammlest unit of the cluster  but ususally in practice you are not creating the pods  directly there is an abstraction layer  over the pod called DEPLOYMENT
+ SO THIS I WHAT WE WILL CREATE AND UNDERNEATH IT WILL BE CREATING THE POD
+  command-"kubectl create deployment NAME --image=image [--dry-run] [option]"
+ 
+ here we need to specify the image because based on that the deployment is done
+ 
+ lets go ahead and create nginx deployment
+ 
+ command-"kubectl create deployment nginx-depl --image=nginx"
+ 
+ THIS WILL GO AND DOWNLOAD THE LATET NGINX FROM DOCKER HUB
+ 
+ 
+ NOW WHEN WE USE
+ 
+ command- "kubectl get deployment"(time 0.47.41)
+ we see nginx deployment
+ 
+ now if you press 
+ command - "kubectl get pod"
+  we get the ngnix pod (time 0.47.53)
+  
+  first time in the example it is not ready but the second time we use the asme command it is runnign
+  (TIME 0.48.0)
+  
+  
+  
+ 
+ the way it works here is
+ whWHEN WE CREATE A DEPLOYMENT 
+ command "kubectl create deployment ngnix-depl --image=ngnix"
+ 
+ the deployment has the blue print for creating the pods
+ this is the most basic configuration for deployment(name and image to use)("ngnix-depl" and "--image=ngnix")we only say the name and the image the rest is dedfault
+ between  deployment and pod there is a another layer which is AUTOMATICALLY MANAGED BY K8 DEPLOYMENT WHICH IS CALLED "replicaset"
+ 
+ command-"kubectl get replicaset" (practical time 48.53) 
+ REPLICASET IS MANAGING THE REPLICAS OF A POD
+ YOU IN PRACTICE WILL NEVER HAVE TO CREATE OR DELETE REPLICASET
+ Ccommand - "kubectl create deployment ngnix-depl --image=ngnix"
+ 
+  HERE WITH THIS COMMAND WE CREATE ONLY ONE OF REPLICA BUT IF WE NEED MORE REPLICAS WE CAN USE ADDITIONAL ARGUMENTS(TIME 0.49.46) 
+  
+  command-kubectl create deployment NAME --image=image[--dry-run] [options]//by providing options
+ 
+ 
+ lAYERS OF ABSTRACTION(time 0.49.53)
+ everything below deployment is managed by K8 YOU DONT HAVE TO WORRY about any of it
+ 
+ ***IMPORTANT******for example THE IMAGE THAT IT USES I WILL HAVE TO EDIT IT IN DEPLOYMENT DIRECTLY NOT IN THE POD
+ 
+ command "kubectl edit deployment ngnix-depl"(time 44.15)
+ 
+we get an auto-geenrate configuration file with default values of the deployment
+
+because in  command line we gave only two options (name and image) everything else is defaulted and autoo generated by k8
+dont have to understand it now there will be a seperate video on synatx and configuration
+
+
+for now just go to iamge in generated configuration file spec:
+														containers:
+														image: ngnix :1.16
+														
+	(practiacl TIME 51.06)													
+
+
+and save that cahnge
+
+ 
+ now if we see pod
+ using command "kubectl get pod"
+ you will see the old nginc is terminating and the new one is running
+ (time practiacl 51.30)
+ 
+ 
+ 
+ 
+  now if we see pod
+ using command "kubectl get pod" again
+ we can see old one is gone and new one is created with same updated image
+ (TIME PRACTICAL 0.51.38_)
+ 
+ 
+ if we use 
+ command "kubectl get replicaset"
+ we see old one has no pods in it and new one ha been created
+ TIME practical 0.51.59)
+ you can see that you only created deployment and update the version anything below is handled by K8
+ thats how k8 works
+ 
+ 
+ 
+ DEBUGING PODS(TIME 52.05)
+ Another practical command
+ command "kubectl logs [pod-name]
+ which basically shows you how the application running inside pod actaully looks
+ (here we dont get anthing because ngnix didnt log anything)(time practical 0.52.40)
+ 
+ 
+ we will create a mongo-db pod
+ command -"kubectl create deployment mongo-depl --image=mongo"
+ 
+ and get pod name using 
+ command "kubectl get pod"
+ 
+ 
+ TIME 0.52.47 practical
+ 
+ time 53.04 practical
+ this stautus mean the pod is created but the container inside pod is not yet created
+ 
+ 
+ 
+ so when we try to log
+ command kubectl logs mongo-depl-67f895857c -fkspm
+ tells container nedd to start yet
+ 
+ command "kubectl describe pod[pod name]"
+ 
+ 
+ 
+  if we see the cotsiner is starting we can get some additional info
+(TIME practical 0.53.20)
+ 
+ shows the cahnges happeed to pod under "mesaage" column
+ 
+ 
+ now we can run 
+ command kubectl get pod
+ comman kubectl logs  mongo-depl-67f895857c
+ 
+ TIME practical 53.33)
+  we now see logs and it helps us to find if the container has problems
+ from wat application is actually printing
+ 
+ use 
+ command "kubectl get pod" to see pods again
+ 
+ 
+ anothe useuful command is
+ 
+ command "kubectl exec"
+ 
+	it does is it guess theTERMINAL OF MONGODB APPLICATION  CONTAINER
+	
+	
+ 
+ SO 
+ command kubectl exec -it [pod -name] --bin /bash
+ COMMAND kubectl exec -it mongo-depl-67f895857c-fkspm --bin/bash
+  with this i get the terminal of mongodb application server
+  (time practical 0.54.49)
+  
+ now as you can see im in the container of mongodb as a root user in mongodb in cmplete diferent setting(TIME practical 0.54.59) this is completely useful in debugging or tet something or try something
+ you can enter the container look at the terminal and execute some commands there
+ 
+ using "exit" you caqn exit it 
+ 
+ DELETE DEPLOYMENT AND APPLY CONFIGURATION FILES(TIME 0.55.12)
+ 
+ 
+ WITH KUBECTL WE CAN DELETE THE PODS
+ USE COMMAND "kubectl get deployment"
+ which gets deployment
+ the get pods
+ use command "kubectl get pod"
+ this gets all the pods replicas underneath
+ 
+ to get rid of pods and replicas underneath I will have to get rid of deployment
+ command "kubectl delete deployment [name]"
+ 
+ now when used 
+ command "kubectl get pod"
+  the pods are getting terminated
+  
+  if we do "kubectl get replicaet"
+  
+  db replicaet is gone as well
+  
+  
+ TIME 0.56.19 practical)
+ 
+ 
+ CRUD operation i k8 happens at deployment level everything underneath follow automatically
+ 
+ similar ways we can create components like service
+when we do a deployment in k8
+we have to provide lots of arguments 
+e.g-command "kubectl create deployment name image option1 option2"
+which is impractical in ccmd line so we have to work with configurations files
+
+rathe than passing all the options we just need to pass the configuration file so kubectlknow what to do 
+
+
+the way we do is
+command "kubectl apply -f[file name]"
+
+baically gets the file and apply what is done there i the file
+
+command "kublet apply -f config-file.yaml"
+
+example (time 0.58.19) what it does
+
+
+(time 0.58.38) basic configuration file for deployment must see!!!!
+
+
+(time 59.34) theway after we applied the configuraton file
+
+
+if we need to change something in that deployment I can change my local configuration
+
+(time 59.57 two replicas instead of one)
+and apply again 
+
+command "kubectl apply -f nginx-deployment.yaml"
+if the configuration file doesnt exit k8 would automatically create a one with default values
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
