@@ -1,0 +1,40 @@
+RDBMS
+youtube
+instagram
+stack overflow
+but all uses nosql for anayltics but core functionality run on dbms
+
+
+difference betwenn nosql and sql
+
+
+
+
+NOSQL
+advantage
+1.good for insertion and retrievel
+2.schema is easily changblea
+3.buuilt for scalibilty(availbilty over consistency)/shardding/vertical partitioning
+4.buitl for aggregation-average salary etc...
+
+
+disavantage
+1,not good if lots of updates are there
+2.data may not be consistent(ACID NOT MAINTAINED)(IN SQL ACID IS MAINAINED)
+3,not read optimized
+4.no implicit info about realtion
+5)joins are harder
+
+
+
+nosql if
+it write optimized
+aggreagation
+when redundency is neeeded
+
+
+
+
+CASSSANDAR(time 10.27)
+
+

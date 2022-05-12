@@ -1,0 +1,524 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$1.Introduction$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Grant type is a way an application gets an access token
+depending on the  application and use case  a specifice OAuth grant type can be used
+
+there can be a "server side web app" built using JAva or PHP  using specific grant type
+there can be a "server side script with no ui" this kind of application can use different kinf of grant type to acquire an access token 
+application can be alsso of "javascript single page app" or it can be  a "native mobile app" or can be a "device" application(like playstatuion) etc..
+
+because there are different applications and different level of security to those apps there are different grant types that suits each
+
+each grant type is ued to access token in slightly different way
+eg-
+
+there is a grant type called 'AUTHORIZATION CODE' this gratn type is often used in service side applications
+e.g-server side awen app,Mobile native app
+
+
+there is also a grant type called "CLIENT CREDENTIALS"
+used in SERVER side script with no UI with not DIRECTLY AVAILABLE TO END USER
+
+
+THERE IS ALSO AN EXTENTION TO "AUTHORIZATION CODE" GRANT TYPE caalled "PKCE ENHANCED AUTHORIZATION CODE"   
+used in application that CANT KEEP CLIENT CREDENTIALS CONFIDENTIAL
+THIS CAN BE JAVASCRIPT APPLICATION FOR EXAMPLE OR ALSO MOBILE APPLICATIONS
+
+
+
+
+THERE IS A GRANT TYPE CALLE "DEVEICE' THAT CANT OPEN A BROWER WINDOW 
+OR EXECUTE A CODE ON THE SERVER SIDE
+
+
+THERE ARE SOME GRANT TYPE WHICH ARE DEPRECTED BUT YOU WILL ENCOUNTER WORKING AT LEGECY SYTEM ONE OF THEM "IMPLICITE FLOW"
+USED IN JS APPLICATION AND MOBILE APPLICATIONS 
+"IMPLICITE FLOW" RETURNS AN ACCES TOKEN IMMEDIATLY WITHOUT EXTRA AUTHORIZATION STEP
+
+
+ANOTHER DEPERECATE AND NOT RECOMMENDED GRANT TPYE IS "PASWORD GRANT'
+HELPS TO EXCHANGE USER CREDENTIALS FOR AN ACCES TOKEN
+ITS THE CLIENT APP THAT HAS TO HOLD THE PW AND MAKE THE EXCHANGE
+
+
+THERE  IS ALSO "REFRESH TOKEN" GRANT TYPE
+EXCHANGE REFRESH TOKEN T FOR AN ACCESS TOKEN
+
+
+
+****GRANT TYPES*****
+
+1.AUTHORIZATION CODE
+2.CLIENT CREDENTIALS
+3.PKCE ENHANCED AUTHORIZATION CODE
+4.DEVICE(DEVEICE IS NOT THE NAME)
+
+
+***DEPRECATED GRANT TYPES********
+5.IMPLICITE FLOW
+6.PASWORD GRANT
+7.REFRESH TOKEN
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$2. Authorization Code. Introduction.$$$$$$$$$$$$$$$$$$$$$$$
+
+YOU have expirenced this when YOU GRANT AN MOBILE APPLICATION/WEB TO ACCESS YOUR FACE BOOK  OR GOOGLE FOR EXAMPLE
+THIS IS A REDIRECTION BAED FLOW
+
+TO USE this flow declines application for examle  a website must be capable of handling ypiiur right redirects from the authorization server
+and additionally to be able to handle your redirects the client application must be able to securely the client ecret that it will be using when excahnging in the authorizaton code for  an access token
+IF THE CLIENT APPLICATION CANT GURANTEE  THE CONFIDENTILITY OF SECRET KEY  
+THEN IT SHOULD NOT UE "AUTHORIZATION CODE GRANT" INSTEAD IT SHOULD USE "PKCE ENAHNCED AUTHORIZATION CODE" 
+
+IT IS RECOMMENDED THAT MOBILE APPLICATION ,SINGLE PAGE JS APPLICATIONS USE "PKCE ENAHNCED AUTHORITAZITON" CODE
+
+
+BUT IF YOUR APPLICATION IS A SERVER BASED WEB APPLICATION  IT IS CAPABLE OF SECURLY  STORING OAUTH SECRET KEY IN SERVER THEN AUTHORITAZITON CODE GRANT CAN BEUED
+
+
+
+TIME 01.45 -HOW AUTHORIZATION CODE GRANT WORKING
+
+A WEBSITE UER ALLOWS A WEBSITE TO CONNECT TO THEIR FB AND FETCH SOME DATA (TIME 01.56 IMAGE)
+SO THEY WIIL CLICK "CONNECT MY FB" BUTTON(Click on a link in IMAGE) and WEBITE WILL REDIRECT USER TO AN AUTHORIZATION SERVER URL  (Authorization code request) TO FB(AUTHORIZATIION SERVER) .THIS URL WILL CONTAIN OME REQUEST PARMETERE (TIME 02.075 IMAGE)
+following are those
+1.repsponse_type=code//THE VALUE IS 'CODE' NOT ANUMBER EXACTLY THE WORD 'CODE'
+the first url parameter  is "response_code" and for "AUTHORITAZITON CODE GRANT" THE  VALUE IS 'code' to let know the authorization serrver type of OAuth we use
+and it will indicate that  curent application will accept receving from Authorizaion server and "authorization code" 
+
+
+2.stae=hv8hf0h2i7d
+
+random alpha numeric characters  our application will generate  and it will include in the request
+the authorization erver will send us back this stae parmeter and it must be exactly the  same  
+if they differe some one else have initiate this request
+
+
+3.redirect_uri={redirect_uri}
+
+this is a uri that Authorization server would redirect user next if authorization is succesful
+and the client application must be capbale of handling this
+
+
+4.scope={Scopes}
+
+lit of scopes 
+for examples read folder or reead videos
+indicates the client information a app can access behalf of the user once authorization is successful
+
+
+5.client_id={client id}
+
+a client identifier not a user identifier to identify a user who tries to log in
+JUst a client identifier of our client
+in later viceos we will learn it actaull before authorizing the client sholud register with Authorization server and acquier ID and  secret key
+
+end of parmeter rquestss
+
+
+Once the authrization server receives and validate this request(time 4.42)
+
+IT WILL THEN PRESENT USER WITH LOGIN PAGE (TIME 4.45 IMAGE)
+WHERE YOU NEED TO PROVIDE WITH YOUR UN AND PW TO AUTNTICATE (NOT AUTORIZE) WITH YOU AUTRIZATION SERVER
+ONCE USER  SUCCESFULLY AUTHENTICATE WITH AUTHORITAZITON SERVVER AUTHORITAZITON SERVER WILL GENERATE A SHORT LIVED  AUTHORIZATION CODE AND IT WILL REDIRECT THAT USER TO TO A PROVIDED URI (TIME 05.15) AND IT WILL A TTACHED THIS REDIRECT URI TEO REQUEST PARAMETERS "code" and "state"
+the code rquestss parameter wil contain a short lived code and which will be generated by authorization server it i recommended the life sapn of this code must be maximum 10 minutes the code must be UNIQUE and not to use more than  one time.
+
+
+
+URI-redirct_uri?code={4fgh7sn}&state={CSFR} //see this between authorization server and website/client
+state mut be same as one from request the request (the first arrow inIMAGE) 
+
+we must va9date it 
+now our client has authorization code and it can exchange that for a ACCESS TOKEN
+
+IT WILL SEND HTTP POT REQUEST TO AUTHORIZATION SERVER  PROVIDING AUTHORITAZITONSERVER WITH VALUE OF authorization code('code") that wa generated by the authorization server and providing it with the same(arrow line 3 from web to AS)
+value of redirect uri to which it has redirected th ecode
+
+and then the authorization will validate the request(3rd arrow)  and response back with a JSON THAT WILL CONTAIN ACCES TOKEN
+
+THEN WEB/CLIENT CAN ACCE THE RESOURCES WITH WEB TOKEN AND THE RSOURCE SERVER WILL VALIDATE THE TOKEN WITH AUTH SERVER
+
+
+LETS LOOK AT THE FLOW USING ONE MORE DIAGRAM(TIME 6.41)
+THIS DIAGRAM EXPLAIN EVERTHING IN SUMMARY(TIME 8.570
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$3. Authorization Code Demo. Initial Request.$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+WATCHING THE VIDEO IS THE BEST WAY
+
+BECAUSE WE USE "GET" HERE ALL THE QUERY PARAMS GET APPENDED TO URL
+SO AT THE END INSTED OF RUNIING POSTMAN WE CAN GET THE URL AND RUN IT ON BROWSER
+
+THIS WILL PROVIDE A PAGE TO LOGIN (TIME 6.28)
+
+
+WITH SUCESFUL LOGIN YOU ARE REDIRECTED TO THE URI YOU SENT IN URL PARAMETERS(TIME 6.44)
+
+SEE THE URL OF THE BROWSER
+
+COPY AND PASTE IT TO A NOTEPAD (SEE THE VIDEO)
+'state't have the same value as we send in request url
+'code' have the value for authorization code THAT NEEDS TO BE EXCHANGED FOR AN ACCESS TOKEN
+
+
+CONTD.......
+
+$$$$$$$$$$$$$$$$$$$$$4. Authorization Code Demo. Exchange code for Access token.$$$$$$$$$$$$$$$
+WATCHING THE VIDEO IS THE BEST WAY
+
+LETS EXCHANGEET THIS AUTHORIZATION CODE(VALUE ASIGNED TO 'code')  For an access token
+(time 0.15)
+
+here we are using 'POST' 
+
+FOR THE VALUE OF "code" WE PROVIDE THE AUTHORIZATION CODE WE RECEIVED
+
+TIME 02.46 THE COMPLETE HTTP POST SENT TO AUTHORIZATION SERVER
+
+
+TIME 03.49 -WE GET ACCESS TOKEN IN EXCHANGE FOR AUTHORIZATION CODE(access_token) which is base 64 encoded
+we have  refresh token,id token,etc...
+
+all these are inside a JSON
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$5. PKCE-enhanced Authorization Code$$$$$$$$$$$$$$$$$$$$
+
+
+PKCE-Proof Key for Code Exchange
+
+built on top of standered AUTHORISATION CODE 
+
+most used by native and JS apps 
+provides additional level of security to apps that cant keep the confidentiality of its OAuth secret key
+e.g-JS single page application
+single page JS application cant keep the Oauth secret key saftely
+it cant gurntee its confidentaility
+this is because developers can preview the JS code in browser and see the secret key
+becaue JS page cant secure the secret key it cant use secret key
+as an alternative it makes user with own secret key 
+which it need s to generae in a way the authorizartion server can verify
+
+
+this proces is caled proof key  for coolish change or Berkesi in hands authorization code
+
+stepps in t his  floor are very similar to the regualr authorization code flow 
+except that now thew CLIENT APPLICATION NEEDST O FENERATE A COUPLE OF ADDITIONAL REQUEST PARAMETERS
+
+
+TIME 1.45-LETS SEE HOW IT WORKS
+
+ADDITIONAL ARMETERS
+
+1.code_challenge
+2.code_challenge_method
+
+
+1.code_challenge
+a base 64 encoded value there is a specific vway of generating this value
+(will see the way later)there is a special way the client app generates this value
+
+to generate"code_challenge" value the application must first generate "code_verifier"
+and client use "code_verifier" to derive "code_challenge"
+the code_verifiervalue declare the value need to be stored and then ue latter in the flow
+
+2.code_challenge_method
+
+need to be configured in authorizartion server for client application
+
+two vaues can be assigned
+1.s256//type of cryptographic hash fiunction that will be used to hash tthe verifyer ccode
+2."plain"
+no hashing is used for cryptographic hash function taht would be to verify hash function
+time 3,32 LOST IT!!!!!!!!!!!!!!!!!!
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$6.Generating Code Verifier$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+here we will dicus how to generate code verifier value which helps to generate "code_ challenge"(discussed in previous video)
+you can read the cOauth protoocl document on how client  create a code verifier
+basically this is a rando alpjhanumerics with min length of 43 characters
+maximum length of 128 cahracters
+these cahracters must be url safe and  base 64 encoded
+
+
+TIME 00.337-HOW TO IMpLMENT IT IN JAVA//see the below code with libraries
+#########################code############################
+public class PkceUtil{
+String generateCodeVerifier() throws UnsupportedEncodingException{
+SecureRandom secureRandom=new SecureRandom();
+byte[] codeVerififer=new byte[32];
+secureRandom.nextBytes(codeVerififer);
+retrun
+Base64.getUrlEncoder().withoutPadding().encodeTOString(codeVerifier);
+}
+
+###########################################################
+
+BASICALLY WE GENERATE RANDOM BYTES AND CONVERT THEM TO STREAMS
+AND BASE64 ENCODED USING BASE64 SAFE URL ENCODER
+THE FUNCTION WOULD RETURN  A STRING SIMILAR TO -SEE TIME 01.05 BOTTOM
+THIS WOULD BE THE CODE VERIFIER value that ned to be used requet to excahnge authorization code for an access token 
+
+ 
+#######################7..Generating Code Challenge#####################################################
+
+
+we need "c;ode verifier" value to generrate "code challenge" value,we did this in previous video
+there is a ection in OAuth "client creates the code challenge"
+
+uing s256(recomendded)
+code_challenge=BAE64URl-ENCODE(SHA256(ASCII(code_verifier)))//THIS WAS TAKEN FROM OAUTH DOC
+
+ABOVE STEPS NEEDED TO GENERATE "code_challenge"
+1.GENERATE 'code_verifier' VALUE
+2.ENCODE IT USING ASCII CODING
+3.GET A HASH  VALUE USING SHA256 CRYPTOGRAPHIC HASH FUNCTION
+4.BASE64 ENCODE USING "BASE64 SFAE URL ENCODING"
+
+ 
+##################JAVA CODE#########################
+STRING grenerateCodeChallange(String codeVerifier) throws UnsupportedEncodingException,NoSuchAlgorithmException{
+byte[] bytes=codeVerifier.getBytes("US-ASCII");
+MessageDigest messageDigest=MessageDigest.getInstnace("SHA-256");
+messageDigest.update(bytes,0,bytes.length);
+return 
+Base64.getUrlEncoder().withoutPadding().encodeTOString(digest);
+
+
+
+}
+
+###################################
+
+for abve code you will get something similar to "ZQNn8kfypf2X6jOHFdoApXgndA1LJr2-jm6kKJgsNDQ" (a stream)which is the "code_challenge" value
+you will use to need to use it for FIRST HTTP request to  authorization code
+
+#########################################
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$8. PKCE Demo. Requesting Authorization Code$$$$$$$$$$$$$$$$$
+
+
+BETTER THING IS TO WATCH THIS
+
+###########CODE TO GENERATE code_verifier and code_challenge (also the main calss)in java############
+
+Main class
+
+public class PkceExample{
+public static void main(String[] args){
+String codeVerifier=pkce.generateCodeVerifier();
+
+String codeCahllenge=pkce.generateCodeChallenge(codeVerifier);
+
+}catch(UnsupportedEncodingException|NoSuchAlgorithmException ex){
+Logger.getLogger(PkceExample.calss.getName(),log(Level.SERVER,null,ex);
+}
+
+}
+
+
+PkceUtil class
+
+public class PkceUtil{
+tring generateCodeVerifier() throws UnsupportedEncodingException{
+SecureRandom secureRandom=new SecureRandom();
+byte[] codeVerififer=new byte[32];
+secureRandom.nextBytes(codeVerififer);
+retrun
+Base64.getUrlEncoder().withoutPadding().encodeTOString(codeVerifier);
+}
+
+
+STRING grenerateCodeChallange(String codeVerifier) throws UnsupportedEncodingException,NoSuchAlgorithmException{
+byte[] bytes=codeVerifier.getBytes("US-ASCII");
+MessageDigest messageDigest=MessageDigest.getInstnace("SHA-256");
+messageDigest.update(bytes,0,bytes.length);
+return 
+Base64.getUrlEncoder().withoutPadding().encodeTOString(digest);
+
+
+
+} 
+
+
+}
+
+
+#######################################################
+
+
+FOR EVERY NEW AUTHORIZATION CODE VALUE WE ASK FROM AUTHORIZATION SERVER WE NEED A NEW TO GERNERATE "code_challenge" VALUE
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$9. PKCE Demo. Exchanging Code for Access Token#$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
