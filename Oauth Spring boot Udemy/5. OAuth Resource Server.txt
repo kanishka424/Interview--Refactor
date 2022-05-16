@@ -1,0 +1,286 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$1. Introduction$$$$$$$$$$$$$$$$$$$$$$$
+
+Auth resource server and when to use it
+in Oauth
+
+user=Resource user
+client-client(can be mobile,desktop or web app)
+resource server-going to provide the client with requested info,here it is a application spring boot where you can get update delete create requested info
+uusally these expose some web service end points that client application can send http request to
+e.g- a application can send request to 
+resource servee accepts the request and eturns a response
+the reource  service can be a simple mvc application or monolthic application that will expose many endpoints,or it can be a very small spring boot micro service application
+
+we call THIS SPRING BOOT APPLICATION SERVER A OAUTH RESOURCE SERVER WHEN WE ADD OAUTH
+RESOURCE CONFIGURATIONS TO IT!!!
+WE DO IT TOM PROTECT USER RESOURCES ONLY AUTHORIZE  USERS CAN ACCESS THIS 
+SOME REOURCES WEB SERVICE EXPOSES CAN BE PUBLLIC BUT MOST NEED CLIENT APPLICATION TO PROVIDE AN ACCESS TOKEN
+THIS ACCESS TOOKEN IS ONLY ISSUED BY THE AUTHORIZATION SERVER WHEN USER SUCCESSFULLY AUTHENTICATE WITH A.SERVER
+
+
+
+
+THE OAUTH CONFIGURATION WE ADD TO OUR REGUALR SPRING BOOT APPLICATION TO MAKE IT A OAUTH RESOURCE SERVER IN SIMPLE WORDS IT WILL HELP US TO VERIFY ACCESS TOKEN AUTOMATICALLY
+IF THE ACCESS TOKEN IS MISSING OR INVALID THE RESOURCE SERVER WILL NOT RETURN THE REQUESTED RESOURCE OR WILL NOT PERORM THE REQUESTED OPERATION
+
+
+TIME  2.52 -IMAGE THE HIGH LEVEL PIC
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$CREATING A NEW PROJECT$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+ALL ABOUT CREATING A SPRING BOOT APP
+
+
+PROJECT NAME-rESOURCE SERVER
+
+NEEDED DEPENDENCIED
+1.WEB
+2.DEV TOOLS-FAST APPLICATION RESTRAS AND NICE RELOADS(OPTIONLA)
+3.OAUTH2 RESOURCE SERVER(IMPORTANT**************)
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$4. Starting Resource Server on different port number$$$$$$$$$$$$
+
+in application properties
+
+server.port=8081
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+$$$$$$$$$$$$$$$$$$5. Creating a Rest Controller Class$$$$$$$$$$$$$$$$$$$$$
+
+will return a text
+
+@RestController
+@RequestMapping("/users')
+        public class UserController{
+
+        @GetMapping("/status/check")
+        public String status(){
+        return "working...."
+        }
+        }
+
+
+
+$$$$$$$$$$$$$$$$$$6. Access Token Validation URIs$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+client application to communicat4e with resource server client need to include
+a valid access token that was geenrated by Authorization server
+and to configure our resource server to  validate access token  with authorization server we need to add some configurationns in aplication.properties
+
+
+"spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/auth/relams/appsdeveoperblog"
+
+the value is the relam we created in earlier video section in KEYCLOAk
+
+spring security will use this value to LOOK FOR AUTHORIZATION SERVICE PUBLIC KEYS AND to VALIDATE ACCES CODE SIGNATURE
+THE CLIENT APPLICATION THAT WAS USED TO ACQUIRE AN ACCESS TOKENTHAT HAS BEEN VALIDATED
+MUST BE REGISTERED WITH KEY CLOACK RELAM 
+
+
+another way to configure acces token with authorization server and validate
+
+spring.security.oauth2.resourceserver.jwt.jwt-set-uri
+
+
+"spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8080/auth/relams/appsdeveoperblog/protocol/openid-connect/certs"
+
+this opens to the key dierectly(TImE 0.02.36)
+
+
+youcan use either "spring.security.oauth2.resourceserver.jwt.issuer-uri"or"spring.security.oauth2.resourceserver.jwt.jwk-set-uri" 
+
+can use both also
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$7. Accessing endpoints with an Access Token$$$$$$$$$$$$$$$$$$$$
+
+here we will run keycloack server
+run rsources server
+run 
+
+
+after running resource server 
+go to postman and make the initial request (TIME 01.03)
+start up a new google tab  and paste the url we copied from postman(AS WE ADD PARMETES THE URL IS UPDATING)
+after clicking enter
+you will be redirected A CALL BACK URL to url which has AUTHORIZATION CODE APPENDED
+COPY THE AUTHORIZATION CODE YOU GOT(TIME 1.23)
+NOW WE NEED TO EXCHANGE THIS AUTHORIZATION CODE FOR AN ACCCESSS TOKEN 
+TO DO THAT GO TO POST REQUEST IN POSTMAN APP(TIME 01.32 SEE THE POST REQUEST IN ABOVE TAB WE GET THE URL )
+PASTE THE AUTHORIZATION CODE IN "code" parmeter of postman
+after sending post request you will get the access token
+time 01.49
+
+COPY THE ACCESS TOKEN AND USE TO SENDING A REQUEST TO OUR PROTECTED END POINT(/users) in our sprin boot resource server(see from 2.05 to 4.00(end of video) to see this new get we are sending here,we first time learning)
+
+
+
+url-http://localhost:8081/users/status/check
+
+try sending it without access token you will get 401 not authorized(time 2.41)
+
+GO TO "Headers" IN post man GET tab(time 02.51)
+Provide an "Authorization"(we have to tpe in key) header  and provide value as
+Bearer{space}{access token} ********Important****************8
+
+if we disable this "authorization" header we will be said unauthorized 401 (if you are still getting a respone add try disabling cookies because cookies might be storing it check video for it)
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$8. Accessing Principal and JWT Claims$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+JWT CONTAINS LOT OF INFO AND IF YOU WANT TO ACCESS THERE IS WAY TO DO IT
+WE CAN ACCES ANY JWT TOKEN DETAILS AND CLAIMS IT CONTAINS
+
+
+
+CREATE A NE CLASS CALLED "TokenController"  and put that in controller package
+
+ uing spring security we can get an authentication object where we will find details about principle and claims in jwt
+ here we will use an Annotation  named "@AuthenticationPrinciple "
+ 
+*8*********wht it does is it will bind details about current principle to Jwt object
+from this Jwt object we can get details in Acces token
+
+ "jwt.gertTokenValue()" this will return all the JWT token values
+ there are specific  info methods as well see video''''Collections.singletonMap("principle",jwt)
+//check what is this
+
+@RestController
+@RequestMapping("/token")
+public class TokenController{
+@GetMapping
+public Map<String,Object> getToken(@AuthenticationPrinciple Jwt jwt){
+
+
+return Collections.singletonMap("principle",jwt)//prinicple is the key
+}
+}
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$8. OAuth2 and OpenID Connect(mitake this was from first PART)) (OIDC)$$$$$$$$$$$$$$
+
+
+
+acccess token may not have any deatils about current user
+openID connect is an additional layer to provide us  about currently authenticated user
+so openID connect comes as an additonal layer on top of oauth 2 and it is an identity layer that provide information about logged in user
+the authorization server that provides openId  provide client application with 
+identity information is  also called an identity provider***IMPORTANT**************
+following videos we will refer authorization server as identity server also.
+
+
+whebn user authenticated with client the client will get an access tokenfro authorization server BUT WITH OPEN ID CONNECT ADDITIONAL TO ACCESS TOKEN THE AUTHORIZATION SERVER WILL PROVIDE AN "ID TOKEN "(ADDITIONAL TO ACCESS TOKEN) AS WELL (TIME 01.37)
+
+
+THE ID TOKEN CONTAINS USER INFO AND THE CLIENT APPLICATION CAN USE ID TOKEN TO EXTRACT INFORMATION ABOUT CURRENTLY AUTHENTICATE USER
+
+NOW CLIENT WILL HAVE TWO TOKENS
+1.ID TOKEN-CHECKS WHETER USER IS WH THEY CAME TO BE(AUTHENTICATION)
+2.ACCESS TOKEN-WHETHER THEY HAVE ACCESS TO REQUESTED RESOURCE
+
+TIME 02.16 EXAMPLE OF DECODED ACCESS TOKEN PAYLOAD****IMPORTANT**************
+
+TIME02.28 EXAMPLE OF DECODED ID CODE EXAMPLE  (USER DETAILS RED COLUR)
+
+"OPENID" SCOPE MUT BE ADDED TO REQUEST
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$Demo - Accessing JWT Claims
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+STACK OVERFLOWANSWER FOR NEED OF AUTHORIZATION CODE
+
+21
+
+Could it also be that by having this intermediate step prevents the client from seeing the access token?
+
+From O'Reilly book:
+
+Authorization code This grant type is most appropriate for server-side web applications. After the resource owner has authorized access to their data, they are redirected back to the web application with an authorization code as a query parameter in the URL. This code must be exchanged for an access token by the client application. This exchange is done server-to-server and requires both the client_id and client_secret, preventing even the resource owner from obtaining the access token. This grant type also allows for long-lived access to an API by using refresh tokens.
+
+Implicit grant for browser-based client-side applications The implicit grant is the most simplistic of all flows, and is optimized for client-side web applications running in a browser. The resource owner grants access to the application, and a new access token is immediately minted and passed back to the application using a #hash fragment in the URL. The application can immediately extract the access token from the hash fragment (using JavaScript) and make API requests. This grant type does not require the intermediary “authorization code,” but it also doesn’t make available refresh tokens for long-lived access.
+
+
+UPDATE - yes indeed:
+
+When Should the Authorization Code Flow Be Used? The Authorization Code flow should be used when
+
+Long-lived access is required.
+
+The OAuth client is a web application server.
+
+Accountability for API calls is very important and the OAuth token shouldn’t be leaked to the browser, where the user may have access to it.
+
+More:
+
+Perhaps most importantly—because the access token is never sent through the browser— there is less risk that the access token will be leaked to malicious code through browser history, referer headers, JavaScript, and the like.
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$Demo - Accessing JWT Claims$$$$$$$$$$$$$$$$$$$
+
+
+WATCH VIDEO 3.00 MINURTES ONLY AND A DEMO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

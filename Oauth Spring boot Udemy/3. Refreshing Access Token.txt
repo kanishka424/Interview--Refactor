@@ -1,0 +1,102 @@
+$$$$$$$$$$$$$$$$$$$$REFRESH ACCES TOKEN$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+HOW TO REFRESH AN ACCESS TOKEN  USING A REFRESH TOKEN
+
+IN ORDER TO CLIENT TO COMUNICATE WITH RESOURCE SERVER IT NEEDS AN ACCES TOKEN
+IT NEEDS TO GET AN ACCESS TOKEN FROM AUTHORISATION SERVER
+
+
+
+SO CLIENT SENT REQUETING FOR ACCESS TOKEN FIRST(THIS CAN BE ANY GRANT TYPE WE DISCUSSED IN PART 2)
+
+IF THE AUTHORIZATION IS SUCCESFUL THE AUTHORIZATION SERVER WILL RESPOND WITH AN ACCESS TOKEN AND A REFRESH TOKEN
+
+NOW WHEN CLIENT HAS THE ACCES TOKEN IT CAN SEND A REQUET TO RESOURCE SERVER REQUESTING FOR THE PROTECTED RESOURCE
+
+IF EVERY THING IS OKAY WITH REQUEST THEN RESOURCE SERVER WILL SEND PROTECTED RESOURCE 
+
+BUT ACCES TOKEN EXPIREE MAMXIMUM LIFE OF ACCEESS TOKEN IS ABOUT 10 MINS
+LETS JUST THINK AFTER FEW HOURS IN THE SAME DAY THE CLIENT SEND A REQUEST TO SERVER
+TO FETCH USER DATA ONE MORE TIME
+SINCE FEW HOURS PASSED THE RESOURCE SERVER WILL RETURN AN INCALID TOKEN ERROR
+IDEALLY THE CLIENT MUST CHECK IF THE ACCESS TOKEN HAS EXPIRED and if it has it should not even send the request
+WAHT SHOULD WE DO WHEN ACCS TOKEN HAS EXPIRED?
+WHEN CLIENT APPLICATION LEARN ACCESS TOKEN HAS EXPIRED IT SHOULD END A REQUEST TO AUTHORIZATION ERVER TO REFRESH THE ACCES TOKEN 
+IT IS AT THIS TIME CLIENT SHOULD USE "REFRESH TOKEN" THAT IT ACCQUIRED WHEN IT RECEIVES THE ACCES TOKEN
+A REFRESH TOKEN IS USED TO RENEW OR REFRESH THE ACCESS TOKEN WHICH IS SHORT LIVED(MAXIMUM 10 MINS)
+WHE WE REFREH ACCESS TOKEN WE GET A NEW ACCESS TOKEN AND OPTIONALLY A NEW REFRESH TOKEN
+TIME 2.40 IMAGE THE FLOW
+SO IF YOUR CLIENT STORES THI DATA IN A DATBASE THEN OLD VALUES MUST BE REPLACED BY NEW ONES
+WHEN WE GET NEW ONE WE WILL GET REFRESH TOKEN WHICH EXPIRES IN CERTAIN TIME
+OR WE  CAN GET REFRESH TOKEN THAT NEVER EXPIRES
+TIME 03,02 -A REFREH TOKEN THT EXPIRE IN 30 MINUTES(1800/60)
+WE CAN REQUET A REFRESH TOKEN TAHT NEVER EXPIRES ('refresh_expires_in':0)
+TIME 03.25
+A NEVER EXPIRES REFRESH TOKEN MUST HAVE LEAST OF SCOPES AND AN ADDITIONLA SCOPE  CALLED "offline_access"  TIME 03.39
+
+"offline_access" refresh tokens never expire  and needs too be take special care
+
+if this type of refresh token get stolen a malicious user can request a new 
+
+ACES TOKEN AND ACCES USER DATA AT ANY TIME.EVEN AFTER DAYS IT WAS INITALLY REQUESTED
+
+
+TIME 04.05-THE REFRESH TOKEN,IN CLIENT APPLICATION, MUST BE SENT IN HTTP POST REQUEST
+TO \TOKEN END POINT 
+IT MUST PROVIDE AME CLIENT ID(client_id) AND SAME CLIENT CREDENTIALS)client_secret) THAT IT HAS INITAILL USED TO ACQUIRE ACCESS TOKEN
+
+'grsny-typr=refresh tokrn\
+
+authorization erverwill gernete a new access tokaen and a new refresh token
+
+
+
+$$$$$$$$$$$$$$$$$2. Requesting Refresh Token that never expires$$$$$$$$$$$$$$$$$$$$
+
+besst yo watch
+
+
+
+to get never expiring refresh token add 'offline_acesss' to"scope'
+
+then the json(which also includes the refresh token) would contain a 
+
+
+$$$$$$$$$$$$$$$$3. Refreshing Access Token. Demonstration.$$$$$$$$$$$$$$$$$$$$$$$$
+
+demo of how to refresh an aceess token using a refresh  token
+
+
+to refresh acces token we need to send a A HTTP POST REQUEST to same /token
+end point
+in the Body(for request parameters)
+
+for "grant_type" use value "refresh_token"
+
+to refresh access token we have to provide client credentials which we used to acquire the refresh token
+ so we imply copy the client_id and client_secret from our earlier GET request and paste to POST request body  forn client_id and client_secret
+ 
+ finally "refresh_token" copy it from the code we acquired
+ 
+ and finally send it
+ 
+ 
+ you will get a BRAND NEW REFRESH TOKEN AND AN ACCES TOKEN,REFREH TOKEN ACCESS TIME IN THE SAME JSON
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$1.intoduction$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4444
+
+"Scope is mechnis in Oauth 2.0 to limit an application to a user account.
+An application can requet one or more scope,this information is then presented to then
+user in the consent screen and the acces token issued to the application will be to the scope grnted"
+
+
+we have a uer,authorization server.client application(moblie,desktop ,web,etc..) and phot album reource server
+
+time 0.57 image
+
+client application can request for a list of users photo albums 
+
+in resource server there can be protected photo,privat photo,protected albums
+
+to get intoprivate or protected you need an acess token
+
+
+in initital GET request you need to add "cope" query parameter
+e.get
+...&scope=openId profile protected-photo-albums
+
+to get into protected albums my application needs to add the scope "protected-photo-album" 
+
+
+
+the same flow lite======
+
+
+protected-photo-album this scope would say tath client have the  necessary rights to access  the protected album in resource server
+
+
+protected-photo-album  IS A CUSTOM SCOPE!!!
+ WE ALREADY UED COPES LIKE "openId" and "profile"
+ 
+ "openId" and "profile" are open ID scopes
+ 
+
+
+openId is a layer on top of Oauth 2 that enables clients application to verify  an id of an end user as well as obtain some basic info about end user
+so with this two scopes openId and profile I would like to obtain some basic info about my client application
+
+
+ "openId" and "profile" are standard open ID scopes
+ 
+ 
+ 1.openId-informs authorization server thT CLIENT APPLICATION IS MAKING AN OPEN ID CONNECT REQUEST
+ THIS WILL ALSO MAKE AUTHORIZATION SERVER ADDITIONALLY RETURN AN ID TOKEN WITH THE ACESS TOKEN
+ 
+THE ID TOKEN WILL CONTAIN USER DETAILS SPECIFIED BY ABOVE TWO SCOPES
+
+
+2.profile-it would say thath it like to have access to user profile 
+user profile contains name,family name,middle name,et..... but it doesnt contain email address 
+email iss a seperate scope
+
+ 
+ time 5.45-7.00 open id standr scopes
+ 
+ openId
+ profile
+ email
+ address
+ phone 
+ offline_access
+ 
+ 
+ the info theses scopes return can be configured in server side and also you can define you custom scope
+ 
+ 
+ 
+ once you have the acces token(one or all of the scopes) you should be able to get
+ you should be able to get user info from  either by id token or by sendingthe request to uer information web service end point taht your authorization serer will expose
+ 
+ 
+ 
+ tto get it we need to send HTTP request to /userinfo end point
+ 
+ 
+ 
+/userinfo end point is provided by your oauth server it is part of oauth specifications
+
+
+but it may differ depending on Oauth server
+
+for keycloack time 8.41

@@ -1,0 +1,393 @@
+$$$$$$$$$$$$$$$$$$1.INTRODUCTION$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+WE WILL LEARN 
+A VERY POPULAR IDENTITY AND ACCES MANAGMENT SERVER 
+THAT SUPPORTS oPENiD CONNECT AND oAUTH 2 FLOWS
+
+IT IS CALLED KEYCLOACK
+
+
+TIME 0.23 IMAGE HERE WE HAVE DEPICT  FOUR DIFFERENT  PARTCIPENTS OF oAUTH FLOWS
+1.RESOURCE OWNER-USER
+2.CLIENT(CAN BE A WEBSITE,MOBILE APP,ETC...)
+3.RESOURCES SERVER (CAN BE SINGLE SERVER MONOLITHIC APPLICATION THAT EXPOE FEW END POINTS OR IT COULD BE SET OF DIFFERENT SMALL MS THAT ARE RUNNING BEHIND AN API GATEWAY  )
+4.AUTHORIZATION SERVER(*****THIS IS WHERE KEYCLOACK CAN BE USED)(THERE IS AWS COGINITA,OKTA,MICROSOFT IDENTITY PLATFORM,SPRINGBOOT AUTHOIZATION SERVER,KAEYCLOACK,ETCC,)
+
+
+TIME 1.51
+1.kEYCLOACK IS OPEN SOURCE IDENTITY AND ACCES MANAGMENT SOLUTIONS
+YOU CAN USE KEY CLOACK TO ADD AUTHENTICATION TO APPLICATION  AND SECURE SERVICES WITHMINIMUM AMOUNT OF WORK
+KEY CLOAK PROVIDE WITH YOU WITH BOTH WEB INTERFACE TO MANAGE USERS OF THE APPLICATION 
+AS WELL AS WITH REST API WHERE YOU CAN ADD NEW AND MANAGE EXISTING USERS
+
+KEYCLOAK IS OPEN SOURCE YOU CAN DOWNLAOD AND RUN IT AS STANDALONE IN YOU SERVER
+YOU CAN INTEGRATE IT WITH EXISTING SPRING BOOT APPLICATION 
+AND YOU CAN ALSO  RUN IT AS DOCKER  CONTATINERS AND USE WITH KUBERNATE
+
+2.KEYCLOAK SUPPORTS SINGLE SIGN ON(SSO) AND SIGN OUT
+THIS MEAN ONCE THE USER IS LOGGED INTO ONE APPLICATION USER DOESNT HAVE TO LOG INTO OTHER APPLICATIONS AGAIN
+AND ALSO IF THE USER LOGS OUT OF ONE APPLICATION IT WOULD BE LOGGED OUT OF OTHER APPLICATIONS AS WELL
+
+3.SUPPORTS SOCIAL LOGIN
+YOU CAN LOG INTO APPLICATION WITH YOUR SOCIAL NETWORK ACOOUNTS(FB,GGOLE,TWITTER,GITHUB)
+KEYCLAOCK CAN ALSO AUTHENTICATE USERS WITH EXISITING OPENID CONNECT OR SOME OTHER ID PROVIDERS THERE IS NOT MUCH WORK THAT YOU NEED TO DO TO MAKE IT WORK
+
+
+
+4.USER FEDERATION
+
+IF YOUR ORGANISATION HAS SOME EXISTING DB IT CAN ALSO BE INTEGRATE WITH KEY CLOACK
+KAEYCLOACK ALSO SUPPORT EXITING "LDAP"  AND ACTIVE DIRECTOR SERVICES
+AND YOU CAN ALSO IMPLEMENT YOR OWN PROVIDER AND INTEGRATE KEY CLOACK  WITH MYSQL
+FOR EXAMPLE
+
+TIME 3.32 -KEYCLOACK -WEBSITE INTERFACE THAT LETYOU MANAGE OAUTH CLIENT APPLICATION.
+UERS THEIR CREDENTIALS  AND THEIR ROLES YOU CAN SELECT WHAT OAUTH GRANT TYPE ARE SUPPORTED NY YOUR APPLICATIONS
+YOU CAN CREATE NEW CLIENT SECRET KEYS
+CAN CREATE CLIENT SCOPES
+
+AND DEFIENE FINE GRAIN  AUTHORIZATION PROCESS
+
+THE INTERFACE IS MUCH ENHANCED
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2. Starting up Standalone Authorization Server Keyclock$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+just watch iny 2 mins
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$3. Starting and Stopping Keycloak Server$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+**the video is outdated on how to start
+
+
+
+go to D:\SE Software\keycloak-18.0.0\bin
+
+and uing cmd do "bin/kc.bat start-dev"
+
+so the kEYCLOACK wil satrt
+
+this will make the keyclaock ui disaplay in port 8080 by default but we can cahnge t the port (search for it how to do in windows)
+
+
+we can run two keycloack server in same machine like in video
+
+can stop one using ctrl_c in cmd
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$4.Creating an initial Admin User$$$$$$$$$$$$$$$$$$$
+
+
+
+there will be no user name or pw initial in keycloack
+
+we need to create an initial admin user
+
+for the very first time you will see a pane l called "Administrational panel"
+create a new user and register a user and pw
+
+watch video short
+
+user-kanishka
+pw-malpana24
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444
+
+
+
+
+$$$$$$$$$$$$$$$$$45. Creating a new Realm$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+now there is no longer an otion to create a  user in interface(localhost:8080 )
+
+
+
+relam -IS LIKE A TENANT IN KEYCLOACK SERVER
+IT IS A SPACE TO ALLOW MANAGE SET OF USERS THERE ROLES AND ALSO THEIR CREDENTIALS
+WHEN USER LOGS IN THEY LOG INTO THIS RELAM
+ONE RELAM IS ISOLATED FROM ANOTHER RELAM
+
+WHEN KEYLOCK IS STARTED IT CREATE MASTER RELAM
+AND WE CREATE OUR INITIAL ADMIN USER IN THIS MASTER REALM
+
+MASTER RELAM IS AT THE TOP OF OTHER RELAMS AND IT IS AT THE TOP OF OTHER RELAMS
+CALL ADMIN REALMS IN MASTER RELAM HAS ACCESS TO MANAGE ANY OTHER RELAM CREATED ON THE SERRVER.
+WE ARE IN MASTER RELAM
+IT IS RECOMMANDED NOT TO USE MASTER RELAMS FOR REGULA USERS MASTER RELA IS FOR SUPER ADMINS SO THEY CAN MANAGE AND CREATE OTHER RELAMS IN THIS SERVER
+
+
+TIME 2.35-CREATING NEW RELAM
+
+
+
+in the new relam we create we can create as many regular users as we like
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$6. Creating a new user$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+DO AS VIDEO ONLY 2.45
+
+YOU CAN CREATE A MEW USER BY 
+1.WEB INTERFACE
+2.COMMAND LINE
+3.URL(http://localhost:8080/auth/relams/{nameofrelam}/account
+
+
+if you put the pw as temporary 
+then you will be directed to define a new pw next time
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$47. Creating a new OAuth client application$$$$$$$$$$$$$$$$$$$$$
+
+
+to create a new Oauth client application
+you need to login to a keycloak server as an admin user cand select "Relam"
+for which the client application neeeds to be created
+
+
+
+after login in select the relam you need to create the new oauth client application in
+
+
+
+go to client ection and click create button on upper left to create a new client
+
+
+
+TIME 01.07-IN ADD CLIENT PAGE "Cleint ID" is the id to use in OAuth  authorization  flow
+here in thi add client you only need to provide ["client ID"value
+create one for the standard authorization flow which is AUTHORIZATION CODE GRANT TYPE
+
+
+here we provide it as "photo-app-code-flow-cclient"
+for "client protocol" select "openid connect" or "saml"
+we choose "openid connect" 
+
+QUETON WHAT ARE SAML AND OPEN ID
+
+root url we donr provide heree
+
+
+by diffault this client is configured to work with STANDERED AUTHORIZATION CODE GRANT TYPE
+
+because "standard flow Enabled" is on
+
+also "valid Redirect URL" must be provided by us(which is required)
+
+
+
+acces type is "public"
+
+we talked about public vs confidential client types
+public-cant gurantee the confidentiality of their secret key e.g-single page js applications
+
+
+make implicit flow and direct access grant disabled
+
+
+"valid Redirect URL" -where authorization server would redirect next after user succesfully authenticates  with this server
+i dont have a client app like website or mobile app ready
+to provide a url here so  provide tempory one "http://localhost:8083/callback"
+
+*********iMPORT***********8888SO ONCE THE USER SUCCESFULY AUTHORIZE WITH AUTHORIZATION SERVER WE WILL REDIRECT TO THIS URL ABOVE( "http://localhost:8083/callback") AND IT WILL ATTACH THE AUTHORIZATION CODE TO THIS URL
+
+
+
+NOW SAVE DETAIL IN THIS FORM AND GENERATE A SECRET KEY FOR THIS CLIENT
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$8. Configuring Client Application Secrets$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+WE HAVE CREATED A NEW OAUTH CLIENT APPLICATION BUT THIS TIME ITS  A PUBLIC TYPE APPLICATION 
+FOR PUBLIC TYPE APPLICATION KEYCLOACK DOESNT EVEN ALLOW TO GENERATE CLIENT SECRET VALUES 
+SO TO GENERATE CLIENT ECRET VALUES WE NEED TO CAHNGE APPLICATION VALUE FROM "Public" 
+to "confidential"  and save setting
+
+and now you can see a new tab on the same page as "credentials" there you can see the 
+"secret"(client secret)  or you can regenerate it(for  new value)
+at top we have client id(photo-app-code-flow-cclient) and now we have client secret
+
+****now we have oauth client app created we have client id  and client secret created
+WE CAN PERFORM ONE OF AUTHS AUTHORIZATION FLOWS
+
+
+
+$$$$$$$$$$$9. Requesting Access Token and Refresh Token$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+BEter to watch video!!!!
+HERE WE ARE SENDING A POSYMAN GET REQUEST TO OUR NEWLY CREATED CLIENT APPLICATION 
+the value is "response_type" is code because wwe use AUTHORIZATION CODE
+the redirect_uri in postamn should MATCH the redirect uri in  Keylock client application we created in earlier two videos
+IF NOT THE REQUEST WONT WORK!
+
+
+
+
+COPY THE URL YOU CRREATED (TIME 1.19)(WE CREATED THE URL TO /AUTH ENDPOINT IN KEYLOACK) IN A BROWSER
+AND YOU WILL BE DIRECTED TO A LOGIN PAGE
+IF THE AUTHENTICATION IS SUCCESSFUL YOU WILL BE REDIRECTED TO THE :redirect_uri" we passed(and gave the same in creating client application in keyclaock)(time 01.36 we have provide a random url in that nothing is running that why "the site cant be reached")
+****important****the authorization server while redirecting attach the AUTHORIZATION CODE TO THE END OF THE URL!!!!(TIME 01.42)
+
+
+TIME 1.49 HERE WE WILL SEND THE POST REQUEST THAT WILL BE USED TO EXCAHNGE THIS
+AUTHORIZATION CODE  FOR AN ACCESSS TOKEN !!
+IN THE POSTAMNS POST TAB (NOT THE GET ONE WE EARLIER USED THIS IS FOR POST)
+FOR THE VALUE OF "code" COPY AND PAST THE AUTHORIZATION CODE WE RECEIVED FROM AUTHORIZATION SERVER EARLIER
+ALSO PROVIDE correct "client_id" and "client_secret" we have provided in ourr keyloack client application,copy and paste fro server
+"scope" is openid profile
+"redirect_uri" would be the same value as we gave to our INITIAL GET request copy and paste
+(remember authorization code ususally expire in less than 10 mins before that you have to use it in post request to get the access token)
+
+
+after that you get access token and id token
+QUESTION-ID TOKEN???WAHT IS THAT
+
+NOW WE WERE ABLE TO MAKE OAUTH AUTHORIZATION CODE GRANT TYPE
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$10. EnableDisable OAuth 2.0 Authorization Flow$$$$$$$$$$$$$$$$$$$$$$
+
+watch video!
+
+2.5 mins
+
+
+we can make the same option enabled( when creating client application server) for PKCE
+but additional settings you need to enable
+  
+to do that go to "ADVANCED SETTING"
+and elect 's256' for "product key for code exchange code challenge method"(if you selected empty PKCE wont work)
+
+
+$$$$$$$$$$$$$$$$$$$$11. OAuth 2.0 Client Scopes$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+SHOULD MAKE A NOTE
+eamil
+phone
+openId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

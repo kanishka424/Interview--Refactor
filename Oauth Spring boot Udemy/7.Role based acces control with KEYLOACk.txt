@@ -1,0 +1,113 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$$$1.INTRODUCTION$$$$$$$$$$$$$$$$$$$$$$$
+
+YOU WILL LEARN WHAT ROLE AND AUTHORITIES ARE
+how they work in pring boot server and how to validate roles using spring boot
+
+there is no much difference between role and authorities in sopring boot
+how do software developers most of the time organize roles and athoroties
+
+
+softwwares have diferenr users
+regualr users
+admin
+super admin etc..
+
+all these are roles
+
+privialges or authoroties
+
+1.regualr users-view profile,view others profile,edit own profile
+2.admin-view profile,view other's profiles,edit own profile,edit others profile,delete other users
+
+
+3.super admin-view profile,view other's profiles,edit own profile,edit others profile,delete other users,DELETE EDIT OTHER ADMINS
+
+
+privalage==authority
+
+
+
+A ROLES IS A COLLECTION OF AUTHORTIES
+ONE ROLE CAN HAVE ONE OR MORE AUTHORITES
+
+
+A USER WITH ONE ROLE CAN HAVE MORE OR LESS AUTHORITIES COMPARE TO ANOTHER USER WITH A DIFFERENT ROLE
+
+BUT FOR SPRING ;FRAME WORK THERE IS NO MUCH DIFFERENCE BETWEEN AUTHORITY AND ROLE
+
+
+TECHNICALLY PRING FRAME WORK DOESNT PROVIDE WITH SEPERATE APIS TO CREATE ROLES AND ADD AUTHORITES TO THOSE
+IN SPRING SECURITY ROLES AND AUTHORITES ARE IN A SINGLE LISRT
+
+WE CAN KEEP AUTHORITES IN A DATABAE BUT WHEN WE READ WE PUT INTO SINGLE LIST THEN IT BECOME A SINGLE COLLECTION OF GRANTED AUTHORITES
+
+THE ONLY DIFFERENCE IN ROLE AND AUTHORITIES ARE THERE NAME
+
+
+WHEN CREATING ROLE NAMES DEVELOPERS ADD "ROLE_" PREFIX TO THE ROLE NAME
+E.G-authority name=Role name=ROLE_ADMIN
+
+when checking for roles developer can use "hasRole()" function  in sprin security\
+e.g-haROle("ADMIN")
+
+
+to check authoroties we can use "hasAuthority()" function in spring boot
+
+eg- hasAuthority("ROLE_ADMIN")//HERE WE HAVE TO PROVIDE THE PREFIX BECAUE IT I CHECKING FOR AUTHORITES AND WILL NOT AUTMATICALL ADD"ROLE_" PREFIX
+
+
+BOTH FUNCTION WOULD USE THE AME SOURCE TO LOOK FOR AN AUTHORITY OR ROLEE
+(TIME 4.39)
+SO ANY OF THE FUNCTION USED IT WILL USE THE SAME GrantedAuthority(the source) which will create and give
+difference is hasRole("ADMIN") will add the ROLE_ prefix automaticcally
+
+
+Collection<GrantedAuthority> the source
+
+ROLES-
+ROLE_USER
+ROLE_ADMIN
+ROLE_DBADMIN
+
+
+AUTHORITES
+READ
+WRITE
+DELETE
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$3. Creating User Role$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
