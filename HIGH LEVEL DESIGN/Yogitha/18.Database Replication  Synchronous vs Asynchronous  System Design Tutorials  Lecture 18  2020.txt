@@ -1,0 +1,306 @@
+we will discuss
+replication 
+replication lag 
+sync vs async replication
+use case
+
+
+replica is a copy 
+in db terms a replica(slave) is db which has exact copy of another db(mani/mster/lead db)
+
+master db -the db which ha main data the main stores of writes and updates
+
+if you go back to how we handle fault and failure it says having a replica help greatly(video 16)
+
+
+say if promery db goes down,network error ,hw problem in that cae replica helps
+1)you have you data saved in a replica
+2)some systems when this happens replica take over and becomes the mastter db so your businees is protected
+
+
+3)Relicas help you reduce latency
+say you are watching this in Mumbai 
+the actaul source video is stored in a db in Ireand but also a replica is there in India so reading from indian replica is much faster it reduces the latency
+oterwise your db in Ireland woould have been accessed by dbs all around the would on sparse locations so there will be latency definitly.
+
+time 3.42 image o to do this we can keep replicas closer to each zone which will reduce latency drastically(quetion difference between DNS and this??)
+
+4)it is a common practice that when you have replicas your primary is a write/update db
+replicas are usually taken as read replicas
+e.g-when you save your video from mumbai it will store in Ireland primary db but when you read it it will read from Mubai replica
+
+
+for ecommerce site lets says an order is placed 
+so there would be lots of reads to this order like
+invoice genrators,anaylitic,marketing tem,etc...
+so having multiple replicas db you can enable such entites or service have reads
+having multiple replicas can allow you to scale and increase system availbility
+
+so these are basic aadvanages of having replicas
+1)application performance optimized
+2)reduce latecncty
+3)data saftery tolerate failures
+
+but there aare lots of complexity involved
+
+PART2 
+UNDERSTANDING REPLICATION LAG
+
+
+
+REPLICATION LAG THE TIME TAKEN TO COPY DATA FROM PRIMARY TO SECOONDRY/REPLICATION
+DB
+
+example we have one primary db and one replica
+ ORIMARY HAS X=1 AND REPLICA HAS A COPY OF THAT 
+ LET SAY THERE IS AN UPDAT(WRITE) FOR X (WHICH OBVIOUSLY COME TO PRIMARY) AS X=2(qt time t"t1")
+and THERE IS  A READ HAPPENING FOR REPLICAS "X: VALUE WHICH IS STILL 1(at time "t3")
+ 
+ LET SAY REPLICATION LAG IS "r"
+ if r<t3-t1
+ the read for replica wil read the new  value,no problem(x=2)
+ but if r>t3-t1
+ here the uer will read as x=1 which is the older value the primary db has not copied its new value to repica yet
+ 
+ ****this is okay if the replication lag is lower!!!(if in milisecons)
+ SEE TIME IMAGE 6.00
+ but if the replication lag is higher it can go bad if you have n numbers of replicas THIS CAN BE WORSE 
+ HOW DO WE SOLVE IT?
+ 
+ 
+ 
+ 
+ TIME 7.24 RPELICATION SYNCHRONUSLY
+ 
+ r>t2-t1 the entites or services reading from replica will end up getting inconitent data
+ 
+ i someone i readin from mater they will get x=2 but someone reading fro salve will get x=1
+ for same "x" peopla are getting two values
+ 
+ HOW TO SOLCVE?
+ 
+ CONISTENCY MODEL OR CONSISTENC ALGO
+ 
+ WE WILL DISCUS ONE CONSISTENCY MODEL HERE
+ 
+ ****READ AFTER WRITE MODEL****
+ 
+ 
+ LETS SAY ABOVE DB SCENARIO AT t3 there is an update coming "x=3" now we have to update taht on replica as x=3 as well replica updates it value fro primary db as x=3 and acknowledges db  once that is completed primary says to writer that your db write has been completed (time 8.56 image)
+ this means the writer would not know the write has been completed unless the new value has been propegated to replica
+ if we have more than one replica (time 9.36) master would propagete the updated data to every replica AND ONLY LET THE WRITER KNOW VAKUE HAS BEEN UPDATED WHEN ALL REOLICA ACKNOWLEDGE THEY HAVE UPDATED THEIR VALUES
+ IN THIS REPLICATION LAG IS ZERO BECAUE MASTER IS TAKING CARE OF NOT LETTING THE USER KNOW ABOUT UDATED DATA UNTILL ALL REPLICAS ACKNOWLEDGES IT
+ THIS IS CALLED SYNCHRONUS REPLICATION
+ 
+ 
+ 
+ PART 4 
+ ADVANTAGES OF SYNCHRONS REPLICATION
+ 
+ 
+ LAG IS ZERO THEDATAIS A;LWAYS CONSISTENT IN THESYSTEM
+ 
+ 
+DISADVANTAGE
+PERFORMANCE HIT EVERY WRITE NEED TO WAIT UNTIL ALL REPLICAS UPDATE AND ACKNOWLEDE MASTER AND MASTER ACKNOWLEDGES WRITERS  GOING TO TAKE HIGHRER TIME OTHERWISE LATENCY IS HIGHER FOR ALL SYSTEM
+
+2)IF ANY OF REPLICAS GO DOWN WRITE WOULD FAIL BECAUSE IT COULDNT ACKNOWLEDGE MASTER AND MASTER DIDNT ACKNOWLEDGE USER
+
+HOW DO WE SOLVE IT?
+
+
+PART 5 
+
+ASYNCHRONUS REPLICATION(TIME 11.300
+
+THE PRIMARY WOULD GET X=1 AND IT WOLD SEND IT TO REPLICAS BUT THIS TIME IT WOULD NOT WAIT FOR OTHER DBS(REPLICAS) ACKNOWLEDGMENT IT WOULD JUST PASS THE X=1 VALUE TO RPLICAS AND SAY WRITER OKAY VALUE HAS BEEN UPDATED (TIME 12.02 IMAGE)
+REPLICATION IS STILL HAPPENING BUT MASTER WOULD NOT WAIT FOR ACKNOWLEDGMENT OF REPLICAS IT WOULD HAPPEN IN BACKGROUND
+
+
+ADVANTAGE -WRITEIS FASTER 
+DISADVANTAGE -EVEN IF ONE REPLICA FAILS SYSTEMM WOULD BE IN AN INCONSISTENT STATE
+BUT IF THERE ARE MANY REPLICAS AT LEAST SOME OF THE DBS WOULD HAVE THOSE DATA
+
+ACTUALLY IT DEPENDS IF THE SYSTEM IS FOR LIKE AVAIATION OR FINANCE(BANKING) THIS MODEL IS NOT APPROPRIATE
+
+IF SOMETHING LIKE DATA INCONSISTENCY ALLOWED FOR SOME EXTENT THIS IS ALLOWED 
+FOR GENERATING INVOICE LIKE COUNTS OF FACBOOK,ETC....
+
+
+
+
+
+SEMI SYNCHRONUS APPROACH
+
+
+NOTES ARE INCOMPLETE FROM  13.37
+
+
+
+TIME 16.17 
+REPLICAS VS SANPSHOT
+
+
+
+
+SNAPSHOT-PARTICULAR DB AT A PARTICUALR TIME
+
+
+IF SOMETHING GOES WRONG YOU CAN ROLLE BACK TO THESE STATES
+
+
+TIME 17.32
+SUMMARY IS IMPORTANT
+
+EVERY 20 SECONDS REPLICATION HAPPEN BY A JOB
+
+SLIGTHES CHANGE RESULTS IN REPLICATION JOB RUNNING
+
+WE HAVE LOT OF TABLES WE CARE ONLY ABOUT SOME SO PARTIOAL DATA CAN HAPPEN''
+FOR I=ONE PARTICULAR DATA
+
+
+
+JOURANL REPLICATION
+REPLICATION USING LOGS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
