@@ -1,0 +1,348 @@
+in regular html forms are responsible itself to add inputs and update values at necesary places
+
+BUT WE WANT REACT TO CONTROLL FORM ELEMENTS INTSTEAD
+
+
+***SUCH FROM ELEMENTS WHOS VALUES ARE  CONTROLLED BY REACT ARE CALLED CONTROLLED COMPONENT
+
+time 0.56 see image building -consider an input element input element can have a value(value= )
+the input value can be changed on user interaction(onChange=) for example a user typing inn an email address
+how  do we change values within a component ? we use "state" and setState() function 
+
+so in a controlled component the value of the input  field  is set to "value" property
+
+next we have an onChange propert which will be fired at every change
+
+***in onChange handler we use setStae method to update the state
+when the state get updated the render () is calleed and the new  state is assigned to 
+as a value to  input element 
+
+
+
+#######################code##########################
+
+
+this.state={
+
+email:''
+}
+
+
+this.changeEmailHandler=(event)=>{
+this.setState({email:event.arget.value})
+}
+
+<input ='text' value={this.state.email} onChange={this.changeEmailHandler}/>
+
+image 1.50
+
+
+####################################################3
+
+
+so there is this cycle
+
+1.SETTING INITAL VALUE FROM THE STATE
+2.PROPGATING CHANGED VALUE TO THE STATE
+3.AND THEN BACK TO INPUT FIELD
+
+REACT WILL ALWAYS HAVE ACCESS TO COMPONENT STATE WHICH REFLECTS COMPONENTN VALUES
+FORM ELEMENTS
+THAT FORM ELEMENTS THEN CAN BE USED TO SUBMIT FORM DATA
+
+
+
+TIME 2.11 -CODE
+
+CREATE file called Form.js
+
+
+###############html element###############
+
+
+Class Form extends Component{
+
+
+
+render(){
+<form>
+<div>
+<label>Username</label>
+<input type='text' />
+
+</div>
+
+</from>
+
+}
+}
+
+###################################################
+this is just a HTML INPUT NOT A CONTROLLED ONE
+TO MAKE IT CONTROLLED WE NEED TO
+1.CREATE A STATE INSIDE AND INITALIZE THE VALUE "username"
+Asign the state propertiy "username" as  the value to input component
+2.Handle the "onChange" define a method and assigned it to "onChange" so any cahnge to "username" would be reflected in input component,the newly chnged value will be assigned to "value" of input component(here the method asigned is "handleUsernameChange")
+
+WHEN YOU ASSIGN A METHOD TO "onChange" THE "EVENT" ITSELF IS PASSED TO THE METHOD ASSIGNED
+FROM THIS EVENT WE CAN EXTRACT THE VALUE BY USING "event.target.value"
+so any time you type a value,that value can be accesssed using event.target.value 
+THEN WE HAVE TO ASSIGN THAT VALUE TO STATE PROPERTY
+AND TO UPADTE STATE WE USE "setState" method 
+
+
+
+###################code##########################
+
+class Form extends Component{
+constructor(props){
+super(props)
+
+this.state={
+username:''
+}
+}
+
+handleUsernameChange=(event)=>{
+this.setState(
+{
+uername:event.target.value
+}
+)
+}
+render(){
+return(
+<form>
+<div>
+<label>Username</label>
+<input
+type='text'
+value={this.state.username}
+onChange={this.handleUsernameChange}
+/>
+</div>
+</form>
+)
+
+}
+}
+
+export default Form
+
+###############################################################################
+
+NOW WE ARE WORKING WITH A CONTROLLED COMPONENT AND REACT STATE IS THE SINGLE SINGLE SOURCE OF TRUTH FOR THIS INPUT ELENMENT
+
+we have "usersname" as a state property 
+"username" property is supplied as "value" in the input   element 
+whenever there is a change in the "value" the "onChange" method is executed
+which then sets back "username" to updated value
+when the STATE IS SET (USING setState())(THE RENDER METHOD IS CALLED AGAIN
+)
+THEN THE "value" is set to the uPDATED VALUE
+
+
+
+
+time 6.46 then lets create a controlled componenet to select tag and a text area
+thi will help you tounderstand controlled component way of working with Form elements
+
+there are three simple steps
+
+same as three steps we talked above
+
+
+
+#####################code###################################
+
+
+			.
+			.
+			.
+	this.state={
+	username:'',
+	comments:'',
+	topic:'react'
+	
+	}
+
+
+			.
+			.
+			.
+	handleCommentsChange=event=>{
+	this.setState({
+	comments:event.target.value
+	
+	})
+	
+	}
+	
+	handleTopicChange = event =>{
+	this.setState({
+	topic:event.target.value
+	})
+	
+	}
+
+			.
+			.
+			.
+	render(){
+	<div>
+	<labe>Commetns</label>
+	<textarea
+	value={this.state.comments}
+	onChange={this.handleCommentsChange}
+	</div>
+	<div>
+	<label>Topic</label>
+	<select value={this.state.topic} onChange={this.handleTopicChange} >//adding a controlled select tag
+	<option value="react">React</option>
+	<option value="angular">Angualr</option>
+	<option value="vue">Vue</option>
+	</select>
+	</div>
+	</form>
+
+}	
+
+
+
+
+##################################################
+
+
+
+
+
+
+
+
+time  10.14 adding submit button
+
+inside the <form>
+
+
+##########################code##########################
+
+
+			.
+			.
+			.
+handleSubmit=event=>{
+alert(
+(`${this.state.username} ${this.state.comments} ${this.state.topic}`)
+event.preventDefault()//stop refreshing
+}
+}
+
+<form onSubmit={this.handleSubmit}>
+		.
+		.
+		.
+<button type="sumbit">Submit</button>
+</form>
+
+
+####################################################33
+
+
+
+
+##############complete code##########################
+
+class Form extends Component{
+constructor(props){
+super(props)
+
+this.state={
+	username:'',
+	comments:'',
+	topic:'react'
+	
+	}
+}
+
+handleUsernameChange=(event)=>{
+this.setState(
+{
+uername:event.target.value
+}
+)
+}
+
+handleCommentsChange=event=>{
+	this.setState({
+	comments:event.target.value
+	
+	})
+	
+	}
+	
+	handleTopicChange = event =>{
+	this.setState({
+	topic:event.target.value
+	})
+	
+	}
+	
+	handleSubmit=event=>{
+alert(
+(`${this.state.username} ${this.state.comments} ${this.state.topic}`)
+event.preventDefault()//stop refreshing
+}
+render(){
+const {username,comments,topic}=this.state//destrcturing so we dont need to use "this.state"
+return(
+<form onSubmit={this.handleSubmit}>
+<div>
+<label>Username</label>
+<input
+type='text'
+value={username}
+onChange={this.handleUsernameChange}
+/>
+<div>
+	<labe>Commetns</label>
+	<textarea
+	value={comments}
+	onChange={this.handleCommentsChange}
+	</div>
+	<div>
+	<label>Topic</label>
+	<select value={topic} onChange={this.handleTopicChange} >//adding a controlled select tag
+	<option value="react">React</option>
+	<option value="angular">Angualr</option>
+	<option value="vue">Vue</option>
+	</select>
+	</div>
+</div>
+<button type="sumbit">Submit</button>
+</form>
+)
+
+}
+}
+
+export default Form
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

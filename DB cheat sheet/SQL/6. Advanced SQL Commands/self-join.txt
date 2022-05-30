@@ -1,3 +1,4 @@
+
 SELF-JOIN
 
 A table is joined to itself

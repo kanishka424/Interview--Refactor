@@ -1,6 +1,6 @@
 What is Kubernetes?(time 0.02.19)
 
-A open source container orchestration frame work
+A open source container orchestration frame workdeployment
 it manages contatiers
 
 helps to manage up containers that are made up of 100 applications and helps to manage in different deployment environments,like physicalmachines ,virtual machines or cloud environments,HYBRID DEPLOYMENT ENVIRONMENT
@@ -172,7 +172,8 @@ Now we will see DATA STROGE and how it will work in K8
 
 (IMAGE time 14.44)Now we have this database image which our application uses and generates data
 if container got restared it will loss data
-to persist data we use another componentcalled VOLUMES
+to persist data we use another componentcall
+ed VOLUMES
 How VOLUMES work
 it basically attches a physical storage on your hard  drive to your pod
 that storage can be in local machine (MEANS SAME NODE AS YOU RUN APPLICATION) OR REMOTE
@@ -285,7 +286,7 @@ WORKS WITH PERFORM LOWER HAND
 E.G-IF "MY-app" replica is making a db requet intead of forwarding it to a random db replica it would direct to the replica tath is running on the same  node that is initiatted in the request thus it reduces the overhaedof sending the request to another machine
 
 
-3 NODE PROCESS
+ NODE PROCESS
 1.KUBLET
 2.KUBE PROXY
 3.CONTAINER RUNTIME
@@ -938,39 +939,6 @@ THIS IS ONF THE USE CASES IF YOU NEED DIRECT COMMUNICATION
 OPTION 1 
 TO CALL API SERVER AND IT WILL SEND SERVICE WITH K8
 //3.28.48-STOPPED HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

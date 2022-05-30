@@ -1,0 +1,158 @@
+package com.assignment.calculatorbackend.model;
+
+
+public class Product {
+    //    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    //    @Column(name = "product_name")
+    private String productName;
+
+    // @Column(name="units_per_carton")
+    private int unitsPerCarton;
+
+    //@Column(name = "single_unit_extra_percentage")
+    private double singleUnitExtraPercentage;
+
+    //@Column(name = "carton_price")
+    private double cartonPrice;
+
+    // @Column(name = "discount_percentage")
+    private double discountPercentage;
+
+    //@Column(name = "cartons_for_discount")
+    private int cartonsForDiscount;
+
+    public Product(String productName, int unitsPerCarton, double singleUnitExtraPercentage, double cartonPrice, double discountPercentage, int cartonsForDiscount) {
+        this.productName = productName;
+        this.unitsPerCarton = unitsPerCarton;
+        this.singleUnitExtraPercentage = singleUnitExtraPercentage;
+        this.cartonPrice = cartonPrice;
+        this.discountPercentage = discountPercentage;
+        this.cartonsForDiscount = cartonsForDiscount;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public int getUnitsPerCarton() {
+        return unitsPerCarton;
+    }
+
+    public void setUnitsPerCarton(int unitsPerCarton) {
+        this.unitsPerCarton = unitsPerCarton;
+    }
+
+    public double getSingleUnitExtraPercentage() {
+        return singleUnitExtraPercentage;
+    }
+
+    public void setSingleUnitExtraPercentage(double singleUnitExtraPercentage) {
+        this.singleUnitExtraPercentage = singleUnitExtraPercentage;
+    }
+
+    public double getCartonPrice() {
+        return cartonPrice;
+    }
+
+    public void setCartonPrice(double cartonPrice) {
+        this.cartonPrice = cartonPrice;
+    }
+
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public int getCartonsForDiscount() {
+        return cartonsForDiscount;
+    }
+
+    public void setCartonsForDiscount(int cartonsForDiscount) {
+        this.cartonsForDiscount = cartonsForDiscount;
+    }
+}
+
+
+
+
+
+
+
+
+  public List<Map<Integer,Double>> getPriceForUnits(List<Integer> productIds,int offset,int Limit){
+        Map<Integer,Double> penguineEarsUnitMap=new HashMap<>();
+        Map<Integer,Double> horseShoeUnitMap=new HashMap<>();
+
+        //*******conversion logic must be implmented
+        Product currentProduct=getProduct(1);//get ride of hardcode value
+        int unitPerCarton=currentProduct.getUnitsPerCarton();
+        for(int i=offset;i<=Limit;i++){
+            int numOfInitialUnits=i;
+            int numOfCartons=numOfInitialUnits/unitPerCarton;
+            int numOfFinalSingleUnits=numOfInitialUnits%unitPerCarton;
+            QuantityDetail quantityDetail=new QuantityDetail(1,numOfCartons,numOfFinalSingleUnits);
+            penguineEarsUnitMap.put(i,getTotal(quantityDetail));
+        }
+		
+		
+		
+		
+		
+		
+		
+		package com.assignment.calculatorbackend.model;
+
+import java.util.Map;
+
+public class ProductUnitsPrice {
+    private int productId;
+    private Map<Integer,Double> priceMap;
+
+    public ProductUnitsPrice() {
+    }
+
+    public ProductUnitsPrice(int productId, Map<Integer, Double> priceMap) {
+        this.productId = productId;
+        this.priceMap = priceMap;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public Map<Integer, Double> getPriceMap() {
+        return priceMap;
+    }
+
+    public void setPriceMap(Map<Integer, Double> priceMap) {
+        this.priceMap = priceMap;
+    }
+}
+
+
+object.keys()
+
+
+

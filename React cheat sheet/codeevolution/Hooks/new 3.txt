@@ -1,0 +1,92 @@
+import React, { Component } from 'react';
+import CalculatorService from '../services/CalculatorService';
+
+
+class ProductPriceTable extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            tableData: [],
+            loading: true,
+            noOfRows: 0,
+            initialProductDetail: []
+        }
+
+    }
+    // getPriceForUnits=(productsUnitRangeDetails)=>  CalculatorService.getPriceForUnits(productsUnitRangeDetails).then((res) => {
+    //     this.setState({
+    //         tableData: res.data,
+    //         loading: false,
+    //         mapKeys: Object.keys(res.data[0].priceMap)
+    //     })
+    // })
+    componentDidMount() {
+        // let productsUnitRangeDetails = {
+        //     "productIds": [1, 2],
+        //     "offSet": 1,
+        //     "limit": 50
+        // }
+
+        let productsUnitRangeDetails = {
+            "productIds": [],
+            "offSet": 1,
+            "limit": 50
+        }
+        CalculatorService.getProducts().then((res) => {
+            this.setState(
+                {
+                    initialProductDetail: res.data
+                }
+                , () => {
+                    this.state.initialProductDetail.map((product) => {
+                        console.log("id valuesssssssssssssssssss", product.id);
+                        productsUnitRangeDetails.productIds.push(product.id)
+                    })
+                    // getPriceForUnits(productsUnitRangeDetails);
+                    CalculatorService.getPriceForUnits(productsUnitRangeDetails).then((res) => {
+                        console.log("productsUnitRangeDetails", productsUnitRangeDetails);
+                        console.log("res.data[0]", res)
+                        this.setState({
+                            tableData: res.data,
+                            loading: false,
+                            mapKeys: Object.keys(res.data[0].priceMap)
+                        })
+                    })
+                    console.log("productsUnitRangeDetails.productIds", productsUnitRangeDetails.productIds);
+                }
+            )
+        })
+
+    }
+
+
+    render() {
+        if (this.state.loading === true) {
+            console.log("LODING");
+            return <label>Loading</label>
+        } else {
+            return (
+
+                <div class="container">
+                    <h2>Product Prices from 1-50 units</h2>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Number Of Units</th>
+                                {this.state.tableData.map((unitProduct) => <th>{unitProduct.product.productName}</th>)}
+
+                            </tr>
+                            {this.state.mapKeys.map((keyValue) => <tr><td>{keyValue}</td>
+                                {this.state.tableData.map((unitProduct) => <th> {unitProduct.priceMap[keyValue]}</th>)}</tr>)}
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            );
+        }
+    }
+}
+
+export default ProductPriceTable;
