@@ -1,0 +1,108 @@
+
+
+
+
+1.PaymentBrokerTemplate-it has auditTransaction methods and necessary properties are taken in this calss using getProperties(),this is an ABSTRACT CLASS
+
+2.PaymentBroker.java-its an interface
+has methods
+refund
+charge
+reverse
+capturePayment
+getProperties
+getRequestData(IPGRequestDTO ipgRequestDTO, List<CardDetailConfigDTO> configDataList)
+auditTransaction
+auditCCTransaction
+getReponseData
+captureStatusResponse
+resolvePartialPayments
+resolvePartialPaymentsForVouchers
+setIPGIdentificationParams
+isEnableRefundByScheduler
+getRefundWithoutCardDetails
+preValidatePayment
+advisePaymentCollection
+postCommitPayment
+getXMLResponse
+handleDeferredResponse
+isOfflinePaymentsCancellationAllowed
+getRequestDataForAliasPayment
+sendCancelOrderRequest
+sendCancelOrderRequest
+
+
+
+
+ 3.BmlPaymentUtils-created by me has methods 
+ like computeSHA1,
+ formatAmount,
+ validateHASH
+ convertToHex
+ getIPGConfigs
+ getHttpRequest
+ 
+ 
+ 
+ 4.		paymentbroker-impl.mod.xml
+this is from where we get properties you can see it below
+
+	#####################################code##############################
+				<bean id="paymentbrokerImplConfig"
+		class="com.isa.thinair.paymentbroker.core.impl.config.PaymentBrokerImplConfig">//class that is mapped and used in code for this bean it has 
+		//getPaymentBroker,setPaymentBroker,getPaymentBrokerMap,setPaymentBrokerMap this bena is configurations are used there -question?how this work  and how it used in DB
+		<property name="paymentBrokerMap">
+			<map>
+				<entry key="1_MVR"><ref bean="mpgECommercePaymentMVR"></ref></entry>
+				<entry key="3_MVR"><ref bean="bmlECommercePaymentMVR"></ref></entry>//only this line 3_MVR IS TAKEN FROM DB from this we connect to "bmlECommercePaymentMVR" bean below
+			</map>
+		</property>
+	</bean>
+	
+	
+	
+	to learn-check waht are different values and different keys
+				
+					<!-- Connecting to FlyMe BML e commerce test environment with TEST params -->
+	<bean id="bmlECommercePaymentMVR"
+		  class="com.isa.thinair.paymentbroker.core.bl.bml.PaymentBrokerBmlImpl" scope="prototype">//PaymentBrokerBmlImpl is the class that takes these values from property
+		<property name="brokerType"><value>external</value></property>//to learn -learn other payment types
+		<property name="requestMethod"><value>GET</value></property>
+		<property name="merchantName"><value>VILLA AIR PVT LTD</value></property>
+		<property name="acquirerId"><value>407387</value></property>
+		<!-- ISO currency number for the currency Code (e.g 462 for MVR, 998 for USD) -->
+		<property name="currency"><value>MVR</value></property>
+		<property name="signMethod"><value>SHA1</value></property>
+		<property name="locale"><value>en</value></property>
+		<property name="version"><value>2.0</value></property>
+		<property name="switchToExternalURL"><value>true</value></property>
+		<property name="password"><value>yCns47TY</value></property>//are this secure ?
+		<property name="apiKey"><value>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjYzZGU1ZDU1LTRiYWEtNGM2Yi1iNzBiLWExNGQ4ODNlNGVjNyIsImNvbXBhbnlJZCI6IjYxMmRlZjA1ZTkxMjdjMDAwOWYxNTc4MyIsImlhdCI6MTYzNDU3NDIzOSwiZXhwIjo0NzkwMjQ3ODM5fQ.KjoNR3PPD-AGcNrAfuvUuFU25bx84G9jqML0Lh6h6Oo</value></property>
+		<!-- Production URL -->
+		<property name="ipgURL"><value>https://api.uat.merchants.bankofmaldives.com.mv/public/transactions</value></property>
+		<property name="mapCardType">
+			<map>
+				<entry key="GC">
+					<value>5</value>
+				</entry>
+			</map>
+		</property>
+		<property name="enableRefundByScheduler"><value>false</value></property>
+		<property name="paymentQueryDR">
+			<ref bean="bmlQueryDR"></ref>//here it refers to below bean
+		</property>
+		<property name="emailDefault"><value>reservation@isa.ae</value></property>
+		<property name="xmlResponse"><value>false</value></property>
+		<property name="refundEnabled"><value>false</value></property>
+	</bean>
+	
+	
+	<!-- A Query Method is Not Available for BML//CHANGE THIS ACCORDINGLY -->
+	<bean id="bmlQueryDR"
+		  class="com.isa.thinair.paymentbroker.core.bl.bml.PaymentBrokerBmlQueryDR" scope="prototype">//PaymentBrokerBmlQueryDR is the class that takes values from property
+		<property name="merchantId"><value></value></property>
+		<property name="useProxy"><value>${aeroMART_commons_useProxy}</value></property>
+	</bean>
+	#####################################################################################################
+	
+

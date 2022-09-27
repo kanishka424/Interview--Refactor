@@ -1,0 +1,25 @@
+Version : 2
+
+Limitation : Development will be done on aeroMart code 008.0
+
+Description :  BML is upgraded the payment gateway version 2 which is not compatible with version 1. Currently flyme uses the BML payment gateway. 
+
+Payment flow
+
+The customer clicks the pay button on IBE
+
+aeroMart backend sends the payment initiation request to payment gateway
+
+aeroMart redirects the customer to payment gateway
+
+aeroMart process the redirection response
+
+High Level Diagram 
+
+
+
+
+
+
+
+Implementation details : https://jiraisa.atlassian.net/browse/PAY-1548

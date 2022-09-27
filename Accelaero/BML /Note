@@ -1,0 +1,283 @@
+READ ME
+1.to learn-things to learn
+2.question
+3.ARCHITECTURE-a step related to architecture
+
+search using above keywords for relevan ttopics
+
+ARCHITECUREL STEPS FROM UI
+1.PAYMENT-WHEN CUSTOMER CLICK ON PAYMENT BUTTON
+2.INITIATE PAYMENT-SENDS PROGRAMTICALLY (STEP 2 AND 3)-STEP 2
+3.PAYMENT RESPONSE FOR INITIATED PAYMENT-SEND PROGRAMITICALLY (SEE IN THE NOTE)-STEP 3
+4.INITIATE REDIRECTION CUSTOMER -STARTS REDIRECTING CUSTOMER TO BML PAGE
+5.REDIRECT TO PAYMENT GATEWAY-THIS WILL SHOW THE BML PAGE TO CUSTOMER AT END
+
+
+
+
+
+
+
+
+
+In my development 
+1.it first goes to PaymentBrokerBmlImpl files getRequestData(IPGRequestDTO ipgRequestDTO)  method(initital file of my development0
+
+
+PaymentBrokerBmlImpl extends PaymentBrokerBmlTemplate interface  (also created by me)
+
+***code***********8
+"public class PaymentBrokerBmlImpl extends PaymentBrokerBmlTemplate"
+*******8code**********
+
+tghen PaymentBrokerBmlTemplate is extended by PaymentBrokerTemplate and implements PaymentBroker
+
+**********code************
+"public class PaymentBrokerBmlTemplate extends PaymentBrokerTemplate implements PaymentBroker"
+8***********code****************8
+
+
+PaymentBrokerTemplate-it has auditTransaction methods and necessary properties are taken in this calss using getProperties(),this is an ABSTRACT CLASS
+
+PaymentBroker.java-its an interfaceto learn 
+has methods
+refund
+charge
+reverse
+capturePayment
+getProperties
+getRequestData(IPGRequestDTO ipgRequestDTO, List<CardDetailConfigDTO> configDataList)
+auditTransaction
+auditCCTransaction
+getReponseData
+captureStatusResponse
+resolvePartialPayments
+resolvePartialPaymentsForVouchers
+setIPGIdentificationParams
+isEnableRefundByScheduler
+getRefundWithoutCardDetails
+preValidatePayment
+advisePaymentCollection
+postCommitPayment
+getXMLResponse
+handleDeferredResponse
+isOfflinePaymentsCancellationAllowed
+getRequestDataForAliasPayment
+sendCancelOrderRequest
+sendCancelOrderRequest
+
+
+
+
+2.In side getRequestData(IPGRequestDTO ipgRequestDTO)  method in PaymentBrokerBmlImpl
+
+IPGRequestDTO-see the file it has returnurl,statusUrl,offerUrl,pnr,holderName,secureCode,expiryDate,amount,contactEmail etc.....-see the file for more details
+
+ ipgRequestDTO.getReturnUrl();-getting return URL (need to see how ipgRequestDTO is getting populated)
+ 
+ 
+ BmlPaymentUtils-created by me has methods 
+ like computeSHA1,
+ formatAmount,
+ validateHASH
+ convertToHex
+ getIPGConfigs
+ getHttpRequest
+
+
+	String merchantTxnId = composeMerchantTransactionId(ipgRequestDTO.getApplicationIndicator(),//debug and see the values of all parmeters
+				ipgRequestDTO.getApplicationTransactionId(), PaymentConstants.MODE_OF_SERVICE.PAYMENT);
+				
+				composeMerchantTransactionId() is in PaymentBrokerTemplate which is extended by PaymentBrokerBmlTemplate,which is extended by PaymentBrokerBmlImpl9current file)
+				
+				
+				in bmlInitiateRequest some property data are stored ,taken using methods define in PaymentBrokerTemplate implemented in PaymentBrokerBmlTemplate(see the relationship between curren and this file above) 
+			#############code##############    
+				
+				BmlInitiateRequest bmlInitiateRequest = new BmlInitiateRequest();
+		bmlInitiateRequest.setApiVersion(getVersion());
+		bmlInitiateRequest.setMerID(getMerchantId());
+		bmlInitiateRequest.setAcqID(getAcquirerId());
+		bmlInitiateRequest.setCurrency(getCurrency());
+		bmlInitiateRequest.setSignMethod(getSignMethod());
+		bmlInitiateRequest.setAmount(finalAmount);
+		bmlInitiateRequest.setSignature(BmlPaymentUtils.computeSHA1(finalAmount, getCurrency(), getApiKey()));
+		bmlInitiateRequest.setProvider(getMerchantId());
+		bmlInitiateRequest.setRedirectUrl(RETURN_URL);
+		
+		#########################################################
+		
+		here we take all  bean values configured in paymentbroker-impl.mod.xml
+		
+		
+	paymentbroker-impl.mod.xml
+this is from where we get properties you can see it below
+
+	#####################################code##############################
+				<bean id="paymentbrokerImplConfig"
+		class="com.isa.thinair.paymentbroker.core.impl.config.PaymentBrokerImplConfig">//class that is mapped and used in code for this bean it has 
+		//getPaymentBroker,setPaymentBroker,getPaymentBrokerMap,setPaymentBrokerMap this bena is configurations are used there -question?how this work  and how it used in DB
+		<property name="paymentBrokerMap">
+			<map>
+				<entry key="1_MVR"><ref bean="mpgECommercePaymentMVR"></ref></entry>
+				<entry key="3_MVR"><ref bean="bmlECommercePaymentMVR"></ref></entry>//only this line 3_MVR IS TAKEN FROM DB from this we connect to "bmlECommercePaymentMVR" bean below
+			</map>
+		</property>
+	</bean>
+	
+	
+	
+	to learn-check waht are different values and different keys
+				
+					<!-- Connecting to FlyMe BML e commerce test environment with TEST params -->
+	<bean id="bmlECommercePaymentMVR"
+		  class="com.isa.thinair.paymentbroker.core.bl.bml.PaymentBrokerBmlImpl" scope="prototype">//PaymentBrokerBmlImpl is the class that takes these values from property
+		<property name="brokerType"><value>external</value></property>//to learn -learn other payment types
+		<property name="requestMethod"><value>GET</value></property>
+		<property name="merchantName"><value>VILLA AIR PVT LTD</value></property>
+		<property name="acquirerId"><value>407387</value></property>
+		<!-- ISO currency number for the currency Code (e.g 462 for MVR, 998 for USD) -->
+		<property name="currency"><value>MVR</value></property>
+		<property name="signMethod"><value>SHA1</value></property>
+		<property name="locale"><value>en</value></property>
+		<property name="version"><value>2.0</value></property>
+		<property name="switchToExternalURL"><value>true</value></property>
+		<property name="password"><value>yCns47TY</value></property>//are this secure ?
+		<property name="apiKey"><value>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjYzZGU1ZDU1LTRiYWEtNGM2Yi1iNzBiLWExNGQ4ODNlNGVjNyIsImNvbXBhbnlJZCI6IjYxMmRlZjA1ZTkxMjdjMDAwOWYxNTc4MyIsImlhdCI6MTYzNDU3NDIzOSwiZXhwIjo0NzkwMjQ3ODM5fQ.KjoNR3PPD-AGcNrAfuvUuFU25bx84G9jqML0Lh6h6Oo</value></property>
+		<!-- Production URL -->
+		<property name="ipgURL"><value>https://api.uat.merchants.bankofmaldives.com.mv/public/transactions</value></property>
+		<property name="mapCardType">
+			<map>
+				<entry key="GC">
+					<value>5</value>
+				</entry>
+			</map>
+		</property>
+		<property name="enableRefundByScheduler"><value>false</value></property>
+		<property name="paymentQueryDR">
+			<ref bean="bmlQueryDR"></ref>//here it refers to below bean
+		</property>
+		<property name="emailDefault"><value>reservation@isa.ae</value></property>
+		<property name="xmlResponse"><value>false</value></property>
+		<property name="refundEnabled"><value>false</value></property>to learn 
+	</bean>
+	
+	
+	<!-- A Query Method is Not Available for BML//CHANGE THIS ACCORDINGLY -->
+	<bean id="bmlQueryDR"
+		  class="com.isa.thinair.paymentbroker.core.bl.bml.PaymentBrokerBmlQueryDR" scope="prototype">//PaymentBrokerBmlQueryDR is the class that takes values from property
+		<property name="merchantId"><value></value></property>
+		<property name="useProxy"><value>${aeroMART_commons_useProxy}</value></property>
+	</bean>
+	#####################################################################################################
+	
+	
+	
+	
+	####################code#############################
+	
+	IPGConfigsDTO ipgConfigsDTO = new IPGConfigsDTO();
+		ipgConfigsDTO.setAccessCode(getApiKey());
+		ObjectMapper oMapper = new ObjectMapper();
+		Map <String, String> postDataMap = oMapper.convertValue(bmlInitiateRequest, Map.class);
+		String strRequestParams = PaymentBrokerUtils.getRequestDataAsString(postDataMap);
+		String sessionID = ipgRequestDTO.getSessionID() == null ? "" : ipgRequestDTO.getSessionID();
+		
+		####################################
+		
+		
+		gets varibels and properties we set above convert to a map using "ObjectMapper" in "Jackson" and finally convert to a String
+		
+	##############################code##############################################	
+	if (log.isDebugEnabled()) {
+			log.debug("BML Request Data : " + strRequestParams + ", sessionID : " + sessionID);//prints the strRequestParams and sessionID to learn-how sessionID is used and how it is generated in the flow
+		}
+				
+
+	///private static Log log = LogFactory.getLog(PaymentBrokerBmlImpl.class);//the code that initate log Factory 
+	
+	#########################################################################
+
+
+
+
+
+#########################code#####################
+
+	try {
+			final ResponseEntity <String> response = BmlPaymentUtils.getHttpRequest(//***ARCHITECTURE***THIS IS "INITIATE PAYMENT" IN DIAGRAM(2nd step) and "PAYMENT RESPONSE FOR INITIATED PAAYMENT"(STEP 3)
+					gson.toJson(bmlInitiateRequest), MediaType.APPLICATION_JSON, headerMap, getIpgURL(),
+					HttpMethod.POST, String.class);//*******THIS IS A POST
+############################################################
+
+
+here we are sending our first request and and getting our first response -//get the result and write here when debugging
+we use "getHttpRequest" in "BmlPaymentUtils" and getHttpRequest uses "RestTemplate" in spring internally
+
+
+#######################code  in BmlPaymentUtils #########################################################
+
+	public static <T> ResponseEntity <T> getHttpRequest(String json, MediaType mediaType,
+			Map <String, String> headerValues, String url, HttpMethod method, Class <T> responseType)
+			throws HttpClientErrorException {
+
+		HttpHeaders headers = new HttpHeaders();//spring object for storing header values
+		for (Map.Entry <String, String> headerEntry : headerValues.entrySet()) {
+			headers.set(headerEntry.getKey(), headerEntry.getValue());//setting the header values we created
+		}
+		RestTemplate restTemplate = new RestTemplate();
+		HttpEntity <Object> requestEntity = new HttpEntity <>(json, headers);//creating a HttpEntity to pass to exchange with header values+ payload
+		return restTemplate.exchange(url, method, requestEntity, responseType);//***ARCHITECTURE***THIS IS "INITIATE PAYMENT" IN DIAGRAM(2nd step) and "PAYMENT RESPONSE FOR INITIATED PAAYMENT"(STEP 3)
+	}
+
+
+#########################################################################################################
+
+
+
+
+####################################################code#####################################################################
+
+	CreditCardTransaction ccTransaction = auditTransaction(ipgRequestDTO.getPnr(),//this is in PaymentBrokerTemplate 
+						getMerchantId(), merchantTxnId,
+						new Integer(ipgRequestDTO.getApplicationTransactionId()),
+						bundle.getString(SERVICETYPE_AUTHORIZE), strRequestParams + "," + sessionID,
+						response.getBody(), getPaymentGatewayName(), bmlInitiateResponseObject.getId(),//SAVED IN  t_ccard_payment_status TABLE
+						false);
+						
+						
+
+						
+##########################################################################################################################
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+**********************************************************************************************
+
+PaymentBrokerBmlTemplate  getReponseData(Map receiptMap, IPGResponseDTO ipgResponseDTO)
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+***************************************************************************
+
+
+
+getReponseData(Map receiptMap, IPGResponseDTO ipgResponseDTO)  in PaymentBrokerBmlTemplate
+
+
+
+
+
+
+
+
+
+
+
+
+
