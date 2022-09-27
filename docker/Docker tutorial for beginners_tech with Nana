@@ -1,0 +1,12 @@
+CONTAINER- a way to package applications with all the necessary dependencies and configurations
+            portable artifact easily shared and moved around9among devs and operations)
+            
+            makes development more efficient
+            
+where does containers live?container repositories
+private repositories
+
+Docker Hub -the public repo for docker containers
+
+
+
