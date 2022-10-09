@@ -1,0 +1,1 @@
+to get rows in a one table in a join of thbles use full outer join with where clause

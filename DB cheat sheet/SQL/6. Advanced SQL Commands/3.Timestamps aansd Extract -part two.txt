@@ -1,0 +1,71 @@
+COMPLETE NOTE!!
+
+
+
+1.Extract()-allows you to "extract' or obtain a sub-componenet of a date value
+
+YEAR
+MONTH
+DAY
+WEEK
+QUARTER
+
+USAGE-EXTRACT(YEAR FROM date_col)
+
+
+2.AGE()-calculates  and returns the current age given a timestamp
+useage-AGE(date_col)
+Returns-13 years 1 mon 5 days 01:;;34:13.003423
+
+
+3.To_CAHR()-General function to convert data types to text(
+not only for timestamps lot more other usages)
+Useful for timestamp formatting
+usage 
+TO_CHAR(date_col,'mm-dd-yyyy')
+
+exmaple
+
+
+
+i)SELECT EXTRACT (YEAR FROM payment_date)//will return year only
+FROM payment;
+
+SELECT EXTRACT (YEAR FROM payment_date) AS my_year//with Alias
+FROM payment;
+
+//MONTH,QUARTER can RPLACE  "YEAR"
+
+
+ii)SELECT AGE(payment_date)//will print age given in upper part
+FROM payment
+
+
+iii)SELECT TO_CHAR(payment_date,'')//converts one data type to text data type
+time 7.00-different options
+
+e.g-
+SELECT TO_CHAR(payment_date,'MONTH-YYYY')----->FEBRUARY-2007(//THE DASH IS WHAT WE PUST IF WE PRINT SAPCES INTEAD REULT WOULD BE SPACES INSTEEAD)
+SELECT TO_CHAR(payment_date,'MONTH  YYYY')----->FEBRUARY  2007
+
+
+SELECT TO_CHAR(payment_date,'mm/dd/yyyy')----->02/25/2021
+FROM payment
+
+
+there are lots of option check the docs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

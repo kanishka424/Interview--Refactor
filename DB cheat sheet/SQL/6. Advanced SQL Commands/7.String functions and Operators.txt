@@ -1,0 +1,38 @@
+COMPLETED NOTE!!
+
+PostgreSQL provides varity of STRING FUNCTIONS AND OPERATORS That allows us to
+edit
+combine
+alter text columns
+
+*there is doc about String functions and operators refer that
+
+here are few examples
+
+SELECT LENTH(column_name) FROM customer----->4
+
+SELECT firt_name||last_name--->JakeSuni
+FROM customer 
+
+
+SELECT firt_name||' '||last_name--->Jake Suni AS full_name
+FROM customer 
+
+SELECT upper(firt_name)||' '||upper(last_name) AS full_name--->Jake Suni 
+FROM customer 
+
+SELECT firt_name||last_name||'@gmail.com" -->KanishkaMalpana@gmail.com
+FROM customer 
+
+SELECT LOWER(lEFT(firt_name,2))||last_name||'@gmail.com" -->kaMalpana@gmail.com//in here it selected first two letters from first name and lower case the first
+FROM customer 
+
+
+
+
+
+
+
+
+
+

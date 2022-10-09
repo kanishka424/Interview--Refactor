@@ -1,0 +1,9 @@
+#####################7.Quick Intro to JPA########################
+
+JPA_Java persistence API
+
+over years maintaing thouands of lines(sql) is difficult in JDBC
+in JPA e ONLY SAY THIS ARE THE OBJECTS AND THESES ARE THE TABLES THEY MAP TO
+OUR ATTENTION SHIFTS TO DEFINING JAVA OBJECTS AND DEFINING RELATINSHI OF YOUR OBJECRTS WITH THE TABLES
+
+

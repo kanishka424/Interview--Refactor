@@ -1,3 +1,5 @@
+$$$$$$$$COMPLETED BUT BETTER TO LISTEN AGAIN BUT IF TIME NOT PERMITS THIS WILL SUFFICE##########
+
 $$$$$$$$$$$$$$$$8.Subquery$$$$$$$$$$$$$$$$$
 
 1.How to PERFORM SUBQUERY
@@ -18,11 +20,11 @@ WHERE grade>(SELECT AVG(grade))
 FROM test_scores)
 
 
-*first the code in parntheses would run and will return a value
+****IMPORTANT****first the code in parntheses would run and will return a value
 
 SELECT student,grade
 FROM test_scores
-WHERE grade>70//70 i the value returned from earlier
+WHERE grade>70//70 is the value returned from earlier
 
 
 *we can alo use the "IN" operator in conjunction with a subquery to check against multiple results returned
@@ -68,9 +70,20 @@ WHERE student IN
   
   example 5 
   
+  if our subquery returns multiple values we need to use "IN"
+  
+  its better to general construct the inner query first I think
+  so
+  SELECT inventory.film_id
+  FROM rental_rate
+  INNER JOIN invntory ON invntory.inventory_id=rental.inventory_id
+WHERE return date BETWEEN '2005-05-29' AND '2005-05-30-'
+
+first
+  
   **NEED TO WATCCH VIDEO liittle complex but good undertNDING
   
-  SLECT film_id,title
+  SLECT film_id,title//ONE NEEDED FOR INTERVVIEWS!!!
   FROM film
   WHERE inventoryy.film_id IN
   (SELECT inventory.film_id
@@ -79,9 +92,13 @@ WHERE student IN
 WHERE return date BETWEEN '2005-05-29' AND '2005-05-30-')
 ORDER BY film_id  
 
+THE ORDER WANT BE MAINTAINED BECAUE SQL WOULD TRY TO DO IT EFFICIENTLY A POSSIBLE SO WE HAVE ADDED "ORDER BY"
+
+
+
 
 example 6
-CUstomers who has one payment at least greater than 11
+CUstomers who has one payment at least greater than 11(ONE PAYMENT AT LEAST IS THE REASON TOUSE EXIST!!!EUREAKA!!!!)
 
 
 SELECT first_name,lat_name
@@ -91,15 +108,23 @@ WHERE EXISTS
 WHERE p.customer_id=c.customer_idAND amount>11)
 
 
-
+//IN EXIST THE WHERE CLAUSE OF INNER QUERY IS REFERING TO OUTER QUERY TABLES FIELD THATS THE DIFFERENCE BETWEEN "IN" AND "EXIST"?
+// The main difference between them is that IN selects a list of matching values, whereas EXISTS returns the Boolean value TRUE or FALSE
+//AD OF "IN" RIGHT?I THINK WE USE * INSTEAD IN "EXIST" RATHER THAN SPECFIED VALUES IN "SELECT" WHEN WE AE USING "IN"
   if we wan toppopsit use  "NOT EXIST"
-  
+ //The IN operator cannot compare anything with NULL values. The EXISTS clause can compare everything with NULLs
+ 
+ EXISTS-It is used in combination with subquery and checks whether a row is returned through this subquery or not. This operator returns TRUE if the subquery returns single or multiple records. Otherwise, it gives a FALSE result when no records are returned.
+
+
   
 SELECT first_name,lat_name
 FROM customer AS c
 WHERE NOT EXIST
 (SELECT * FROM payment as p
 WHERE p.customer_id=c.customer_idAND amount>11)
+
+//WE ALSO CAN USE JOIN INSTEAD RIGHT?
   
   
   

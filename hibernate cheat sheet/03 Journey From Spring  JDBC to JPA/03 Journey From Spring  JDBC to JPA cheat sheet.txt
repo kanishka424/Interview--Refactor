@@ -89,10 +89,12 @@ JdbcTemplate jdbcTemplate;
 
 public List<Person> findAll(){
 
-return jdbcTemplate.query("select* from person",
-new BeanPropertyRowMapper(Person.class))//******THIS MAPS THE ATTRIBUTES BY NAMES TO "Person" CLASS
+return jdbcTemplate.query("select* from person",//
+new BeanPropertyRowMapper(Person.class))//******THIS MAPS THE ATTRIBUTES //BY NAMES TO "Person" CLASS,WHEN THE inside QUERY is ecxecuted we get //something called result set and finally with //BeanPropertyRowMapper(Person.class) we return  List<Person>
+
 
 }
+
 
 we need to create Person.java but I skipped it for the note
 
@@ -310,6 +312,20 @@ return jdbcTemplate.query("select* fro person",new PersonRowMapper())."
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $$$$$$$$$$$032 Step 13 - Quick introduction to JPA$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
@@ -318,6 +334,16 @@ incstead of the row mappers we would define an entity @Entity
 JPA-a standard for ORM
 
 e.g-apping "Person" object to "PERSON" table
+object->row in table
+fields of object ->columns
+
+inmplementning query shifts from DEveloper to a  JPA framework like Hibernate
+
+
+
+
+
+
 
 
 
@@ -331,11 +357,15 @@ always define a no-args constructor
 public class Person{
 
 @Id
-@GeneratedValue
+@GeneratedValue//hibernates create the value,maybe a sequence of values
 private int id;
 
 @Column(name="nmaeX")//only if name of the table column is different
 private String name;
+
+
+
+
 
 $$$$$$$$$$$$$$$$$$$$034 Step 15 - Implementing findById JPA Repository Method$$$$$$$$$$$$
 
@@ -347,7 +377,7 @@ idealaly transaction ha to be around your busines services but for this we will 
 @Repository//DEclares it as a repository
 @Transactional//declares it to preserve transactional properties
 public class PeronJpaRepoitory{
-@PersistenceContext//this is where all operations are stored
+@PersistenceContext//***IMPORTANT**********this is where all operations are stored
 EntityManager entityManager;//connect to database
 //EntityManager all the operations you perform in  a SPECIFIC SESSION are stored in //the entity manager.All operations need to go through EntityMnager
 //EntityManager is the interface to @PersistenceContext
@@ -438,7 +468,7 @@ $$$$$$$$$$$$$$$$$$$036 Step 17 - Implementing deleteById JPA Repository Method$$
 
 public void deleteByID(int id){
 Person person=findById(id);//we defined findById(int id) earlier
-entityManager.rmove(person);
+entityManager.remove(person);
 
 }
 

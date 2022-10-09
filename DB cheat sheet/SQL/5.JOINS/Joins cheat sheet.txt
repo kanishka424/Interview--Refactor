@@ -1,3 +1,6 @@
+COMPLETE NOTE!!!S
+
+
 JOIN types
 1.INNER JOIN
 2.OUTER JOIN
@@ -14,6 +17,7 @@ AS
 
 SELECT SUM(amount) AS net_revenue
 FROM payment;
+THIS is maonly for readbility
 
 result will be shown but instead of "amount" it would be net_revenue
 
@@ -53,6 +57,7 @@ FROM TableA INNER JOIN TableB
 
 
 since we select * columns joining will duplicate
+to get ride of duplications of column names we hold specify the columns
 
 
 SELECT reg_id,Loigns.name,log_id//Loigns.name is the catch here
@@ -93,6 +98,9 @@ SELECT * FROM TableB
 FULL OUTER JOIN TableA
 ON TableA.col_match=TableB.col_match
 
+this takes everything in both tables whether present in one table or present in two tables
+
+order doesnt matter
 
 reference-full outer join table
 
@@ -101,6 +109,7 @@ reference-full outer join table
 *****FULL OUTER JOIN WITH WHERE
 Get rows unique to ether table
 (rows not found in both tables)
+in our example this will result in records whihc are only in one table ,which means people who regitered but didnt login or people who didnt registered but anyways logged in
 
 IMPORTANT
 
@@ -118,10 +127,10 @@ tie 12.23-where we select customers without payments and payments without custom
 
 
 
+select count(Distinct customer_id) from customer//not that relevant
 
-
-6.LEFT OUTER JOIN
-
+$$$$$$$$$$$$$$$$6.LEFT OUTER JOIN$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ORDER MATTERS FOR THIS!
  
 reuts in the set of records taht are in the left table,if there is no matchwith the right 
 table,the results are null
@@ -134,7 +143,7 @@ LEFT OUTER JOIN TableB
 ON TableA.col_match=TableB.col_match
 
 tablA+(dat in TableA and TableB)
-
+data only in A would have values accordingly from table A but table B side columsn would have nulls
 data only in table B wont be included
 
 
@@ -154,6 +163,8 @@ SSELECT * FROM TableA
 LEFT OUTER JOIN TableB
 ON TableA.col_match=TableB.col_match
 WHERE TableB.id is null
+
+q-we can do this by using FULL OUTER join where TableB.id is null right?
 
 gets unique records to table A
 

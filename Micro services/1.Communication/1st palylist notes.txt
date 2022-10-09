@@ -1,0 +1,78 @@
+
+##################15 Why you should avoid returning lists in APIs - Spring Boot Microservices Leve############
+
+WHY HARD coded urls are bad?
+
+1.changes required code updates
+2.Dynamic URLs in the cloud 
+3.Load balancing
+4.Multiple environment
+
+ Becuse of this we have SERVICE DISCOVERY
+ 
+ WE Build MS and you need the to talk to each other and how do you know what to talk to?
+ 
+ if we are to create a service discovery first we need to write  an abstract layer between CLIENT and services
+ this guy in middle knows where each service are and what client does is ccalls the that "Discovery Server" and finds the service neeeded(image Discovery Server)
+ client says "im looking or this service give me the url?" and Discoveryserver gives you that url 
+ each ervice taht want to be discoverd would register with that Discovery serverits like a phone boook)
+ 1.CLIENT SIDE dISCOVERY
+ 1.client asks for the url from DS
+ 2,DS returns the url
+ 3.then client discover uing url
+ 
+ 2.sEVER SIDE DISCOVERY S
+ N EXTRA HOPE DOEN THE CAHIN COMUNICATION
+SPRING CLOUD USED CLIENT SIDE
+ 
+ #######################18 Introducing Eureka - Spring Boot Microservices Level 1
+##########################
+
+the technology for client side service discovery is Eureak
+
+created by Netflix
+ leaders of MS libraries
+ Eureka ,Ribbo ,Hystrix,Zuul
+ 
+ spring has layers of abstraction over technologies
+ 
+ like spring data to use jdbc
+ 
+ 
+ 
+ 
+ 
+ ###############################19 Starting a Eureka server - Spring Boot Microservices Level 1
+###########################################
+
+we cn createa Eureak server by downloading a spring boot app
+
+we should add eureks server dependency
+and also
+annotate with @EnableEureakServer just above the main calss
+ 
+ 
+ addd folloing to application.properties file
+ eureka.client.registery-with-eureka=fale;
+ EUREKA.CLIENT.FETCH-REGISTRY=FALSE;
+ 
+ 
+ //NOT ONLY MULTIPLE EUREKA CLIENTS BUT YOU CAN HAVE MUOLTIPLE EUREKA SERVERS SO IF ONE FAIL OTHERS CAN TAKE OVER
+ //*****EVERY EUREKA SERVER IS A EUREKA CLIENT O IT MIGHT REGISTERE ITSELF
+ //SINCE HERE WE HAVE ONE SERVER WE TELL EUREKA SERVER TO NOT LOOK FOR OTHER SO NO NEED TO REGISTER
+ 
+ #####################################21 Discovering services through Eureka - Spring Boot Microservices Level 1
+#############################
+ 
+ @LoadBalance -THIS DOES SERVICE DISCOVERY annotation it say url is not exact url but a hint go through Eureka with hint and find it we say teh name in Eureak server
+ 
+ #######################CODE############################
+ @Bean
+ @LoadBalance
+ public RestTemplate getRestTemplate(){
+ return new RestTemplate();
+ }
+ 
+ 
+ resttemplate would assume the hint(the defacto url ) as the url serach server and will take ip and port
+ 

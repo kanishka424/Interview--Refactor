@@ -1,0 +1,68 @@
+###################2 Fault tolerance vs resilience - Spring Boot Microservices Level 2####################
+what is fault tolerence?
+how much of a tolerennce a system has for a fault (HERE WE ARE TALKING ABOUT ONE SPECIFIC FAULT)
+what if one MS fails ?will the whole system go down?will part of it go down 
+So what tolerence you system has is called FAULT TOLERENCE
+
+RESILIENCE-HOW MANY FAULTS CAN A SYSTEM TOLERATE BEFORE THE SYTEM CAN BE BROUGHT DOWN
+IF EVEN BECUASE OF SOMETHING GOES DOWN CAN IT KEEP IT TOGETHER TILL THE DEAD PART COMES BACK AND RUN NORMALLY
+
+IN FAULT TOLERENCE WE TALK ABOUT SPECIFIC FAULT BUT IN RESILIENCE WE TALK ABOUT MANY
+
+
+################4 Calling an external API - Spring Boot Microservices Level 2
+###############
+
+api.key is n this
+
+image-architecture
+
+
+
+
+###############5 What if a microservice goes down - Spring Boot Microservices Level 2
+######################
+
+
+
+how can we make it reelient ??
+here there is nothing even not a single try catch block 
+
+hee if either of service down the system is down
+so no fault tolernece
+
+with like of techlonie such as Ribbin there is client side load balnce
+
+
+###############6 What if a microservice is slow - Spring Boot Microservices Level 2
+######################################
+
+
+#################################20 Configuring Hystrix parameters - Spring Boot Microservices Level 2
+#######################
+@HystrixCommand(fallbackMethod=)
+@HystrixProperty(name="",value="")
+
+image -hystrixcommands
+
+
+
+
+########################3322 The bulkhead pattern###################################################
+can be implmented using hystrix
+
+image -bulkhead
+
+
+
+
+
+
+
+
+
+
+
+
+
+

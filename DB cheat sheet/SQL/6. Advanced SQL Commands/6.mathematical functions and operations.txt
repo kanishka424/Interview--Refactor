@@ -1,0 +1,24 @@
+COMPLETED NOTE!
+
+
+select renatl_rate/replacement_cost FROM film;----->>>0.3474784334734
+
+select ROUND(renatl_rate/replacement_cost,2) FROM film -------->0.33
+
+
+select ROUND(renatl_rate/replacement_cost,2) *100 FROM film------------>33.2900
+
+
+select0.1* replacment_cost AS deposit FROM film ------------->1.4999
+
+
+can see lot more options in Mathmatical Functions and Operators documentaions
+
+
+
+
+
+
+
+
+
