@@ -1,0 +1,7 @@
+nano ~/.profile
+nano ~/.bashrc
+
+source ~/.profile_**learn this
+
+
+1.grep -nr "CW_USER" *-when given in terminal of directory it would search for every place containing CW_USER

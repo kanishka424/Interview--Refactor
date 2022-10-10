@@ -1,0 +1,28 @@
+How To Squash Your Git History Like A Pro
+-https://www.youtube.com/watch?v=RwvTrSm7zEY&t=100s
+Multiple commits to one single commit
+so we dont need to send intermedite commits with meaningless commit messages
+time 4.57-SQUASHING starts
+
+
+Interactive rebase
+
+git rebase -i HEAD~4
+
+i-to tell to go interactive  mode
+
+we can either say how many commits to go back(like above) or give a particular commit to go to
+
+git rebase -i HEAD~4
+
+once this is executed we will be directed to a text editor listen 6.10
+ive squashed in   text editor it will be squashed most recent which was not  included
+time 6.55-once several commits are g
+
+time 7.32 -practical
+
+
+time 9.42-Squashing on merge
+
+
+

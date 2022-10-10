@@ -1,0 +1,15 @@
+access is given
+
+ssh -l kmalpana [IP NEEEDED]
+
+
+
+if you want to switch 'jenkins' user
+
+su - jenkins
+
+
+
+
+
+

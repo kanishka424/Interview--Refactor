@@ -1,0 +1,4 @@
+$$$$$$$$taking remote brnches locally$$$$$$$$$$$$$
+git fetch
+git switch [branch]
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

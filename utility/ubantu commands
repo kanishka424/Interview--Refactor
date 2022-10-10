@@ -1,0 +1,49 @@
+1.grep -nr "CW_USER4" *-when given in terminal of directory it would search for every place containing CW_USER
+
+2 cd ../ gpo one level up
+3.cd go to root
+4.history -take commands entered before
+
+
+5.ps aux | grep jboss-search for jboss keyword
+
+
+##tail 1000 -f [path to log file]
+/usr/isa/aares/logs-16/-module vice logs
+tail -1000 -f/var/log/jboss/nohup-web-16.out
+
+
+ps aux | grep Dubai International Airport - Terminal - 1
+
+wget [file path needs to be downloaded ]-copy and paste the file to current location
+ 
+ cat ond.js-to see the file content
+ 
+  su - [username]- to switch users
+ 
+ mount-   /*check what is done, google*/
+ 
+ 
+pwd-to get current path
+
+
+
+FILE EDITING
+$ vi <filename> — Open or edit a file.
+i — Switch to Insert mode.
+Esc — Switch to Command mode.
+:w — Save and continue editing.
+:wq or ZZ — Save and quit/exit vi.
+:q! — Quit vi and do not save changes.
+yy — Yank (copy) a line of text.
+p — Paste a line of yanked text below the current line.
+ 
+ 
+ SPECIAL COMMANDS
+ 
+ ##wget [file path needs to be downloaded ]-copy and paste the file to current location
+ 
+ 
+ ## mount-   /*check what is done, google*/
+ 
+ ##ps aux | grep Dubai International Airport - Terminal - 1

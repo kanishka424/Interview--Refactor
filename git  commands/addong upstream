@@ -1,0 +1,3 @@
+ 1.git remote add upstream <url to set upstream as> 
+2.git remote -v -to check upstream and origin
+

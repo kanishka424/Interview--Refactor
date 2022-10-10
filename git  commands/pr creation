@@ -1,0 +1,47 @@
+EXAMPLE FROM 1584
+
+
+
+
+git remote -v -to check upstream and orig
+
+
+
+
+
+
+
+HOW TO PUSH CHANGES
+1.git add configs/repository/modules/paymentbroker/clients/VP/resources/paymentbroker/mpg/paymentbroker-impl.mod.xml paymentbroker/src/java/com/isa/thinair/paymentbroker/api/model/CreditCardTransaction.java 
+//ADD EVERY FILE NEEDED TO BR COMMITED IGNORE CONFIG,ETC...
+
+2.git stash
+3.git pull upstream 008.0_oc_dev --rebase
+4.git commit -m "ASPPI-4879 PAY-1548 BML payment gateway integration PR fix"
+5.git pull upstream 008.0_oc_dev --rebase
+6.git statsu
+7.git push origin 008.0_oc_dev -f
+
+
+
+WHENM NEEDS GET ALL COMMITS IN ONE AND PUSH
+
+1.git add configs/repository/modules/paymentbroker/clients/VP/resources/paymentbroker/mpg/paymentbroker-impl.mod.xml paymentbroker/src/java/com/isa/thinair/paymentbroker/api/model/CreditCardTransaction.java 
+
+//ADD EVERY FILE NEEDED TO BR COMMITED IGNORE CONFIG,ETC...
+
+2.git log  --oneline
+//show all the commites against there reference numbers
+
+3.git reste <commit reference got from step 2>
+
+4.git log --oneline//see whether commit has been reset
+
+5.git commit -m "ASPPI-4879 PAY-1548 BML payment gateway integration PR fix"
+
+6. git pull upstream 008.0_oc_dev --rebase
+
+7.git statsu
+
+8.git push origin 008.0_oc_dev -f
+

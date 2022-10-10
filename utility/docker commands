@@ -1,0 +1,24 @@
+ 1.locate paymentbroker
+
+2.vi paymentbroker-impl.mod.xml 
+
+3.Esc then :q! -exit vi mode without saving
+
+4.locate payment-search for a file 
+
+5.ls-shows content inside folder
+
+6.-to go back
+
+
+7.path for paymnet broker config /usr/isa/config/repository/
+
+
+8.cd .. go up
+
+9.exit-go out of container
+
+10.docker exec -it <container-name> sh-to see inside a docker container
+
+
+
