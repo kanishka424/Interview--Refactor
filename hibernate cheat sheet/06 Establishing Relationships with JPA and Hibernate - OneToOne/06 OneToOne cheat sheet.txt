@@ -1,11 +1,35 @@
+ALMOST COMPLETED!!!  can refer and get idea dont have to watch video
+
+
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$406 Establishing Relationships with JPA and Hibernate - OneToOne$$$$$$$$$$$$$$$$$$$$$
+
+entites
+1.Course
+2.Student
+3.Passport
+4.Review
+
+
+between Course and Student there is a MANY TO MANY
+BETWEEN STUDENT and Passport there is only one to one relationship
+between Course  and Review ther is Many to one
+
+
+
 
 
 $$$$$$$$$$$$$$$$$$066 Step 22 - Defining Entities - Student_ Passport and Review$$$$$$$$$$$$$$$$$
+@Entity for rntity class
+@Id for primary key
+
+
+
+@Column(nullable=false)
 
 
 
 
+@GeneratedValue-hiberante generates a sequentail value
 
 
 
@@ -13,3 +37,234 @@ $$$$$$$$$$$$$$$$$$066 Step 22 - Defining Entities - Student_ Passport and Review
 
 
 $$$$$$$$$$$$$067 Step 23 - Introduction to One to One Relationship$$$$$$$$$$$$$$$
+
+Student Passport relationship
+
+here we can create a column name "pasport_id" in student table 
+or
+we can create a column name "student_id" in passport table
+
+we adding "paasport_id" to student table when we have it like that "Student" table is owning the relationship
+
+the other way is pasport ownin student =pasport raltionship''
+
+
+##############code#################
+
+
+@OneToOne
+Private Passport passport;
+
+
+#######################
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$068 Step 24 - OneToOne Mapping - Insert Student with Passport$$$$$$$$$$$$$$$$$
+
+
+
+
+######################code-to svae a student with passport###################################
+
+
+public void saveStudentWithPassport(){
+Passport passport=new Passport("Z1233456");
+Student student =new Student("Mike");
+student.setPasport(passport);
+em.persist(student);
+
+}
+
+
+########################################################################################
+this would give you a transient error becuae passport is still not in the db when it tries to save student in db
+
+so correct as foloows
+
+
+
+######################code-to svae a student with passport-corrected###################################
+
+
+public void saveStudentWithPassport(){
+Passport passport=new Passport("Z1233456");
+em.persist(pasport)//this makes it correct
+
+Student student =new Student("Mike");
+student.setPasport(passport);
+em.persist(student);
+
+}
+
+
+########################################################################################
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$069 Step 25 - OneToOne Mapping - Retrieving Student with Passport and Eager Fetch$$$$$$$$$$$$$$$$$$$$$
+
+
+Eager fetching
+
+
+
+
+Any one to one relationship is eager fetching
+
+means if students details are retrieveed passport details are retrieved too(a left outer join is performed)
+even though we have not requeted pasport details
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$070 Step 26 - OneToOne Mapping - Lazy Fetch$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+BUT EAGER FETCH WILL GIVE YOU PERFORMANCE ISSUES
+so we can avoid it as follows(onetoone is by default is eager)
+
+
+#######CODE###############
+
+@OneToOne(Fetch=FetchType.LAZY)
+private Passport passport;
+
+
+#################################
+
+****so here when a soon as student calss was found the transaction gets ended so no session therfor no eager fetch
+this will show as an error
+
+Now we can experiment with setting @Transactional to entire method
+as follows
+####################################################################################################
+
+
+@Test
+@Transactional//here we extend the scope of thranaction and setting it to whole method
+public void retriveStudentAndPasportDetails(){
+Student tudent=em.find(Student.class,20001L);
+logger.info("student->{}",student);
+logger.info("pasport->{}"student.getPassport());
+}
+
+########################################################
+
+in above course because we put  @Transactional the sesssion is live till the end of the method so it cwill retrive passport details as given (though we have used
+ @OneToOne(Fetch=FetchType.LAZY)
+private Passport passport;
+)
+
+thi is waht called as lazy fetching we get the details only when neede
+
+here we dont ay hibernate to how to et pasport details but still it does by using our mapping in each class
+
+
+
+
+
+$$$$$$$$$$$$$$$3071 Step 27 - Transaction_ Entity Manager and Persistence Context$$$$$$$$$$$$
+
+
+As soon as you use @Transactional in JPA you would be creatin a PERSISTENC Context
+
+PERSISTENC Context-ALL THE ENTITE YOU ARE OPERATING ARE STORED HERE(see below code)
+
+##############CODE##################################
+
+@Test
+@Transactional
+public void someTest(){
+//Databse Operation 1 -Retrieve student
+Student student=em.find(tudent.class,20001L);
+//persistance COntext(student)
+
+//Databse Operations2_retrive passport
+Pasport passport=student.getPassport();
+//Persistence Context(student,passport)
+
+//Database Operations 3-update  passport
+passport.setNumber("E12345");
+//Peristence Context (tudent,passport++)
+
+//Databse Operation 4-update student
+student.setName("Ranaga -updated");
+//Peristence Context (student++,pasport++)
+
+
+}
+
+##############################################
+
+
+here only after every step under @Tranactional(here after the method executed till end) is completd data is ent to DB.In other words only at end of Transaction_
+PC ALSO GIVES YOU ACESS TO DB
+
+THE  way we interact with PERSISTENC Context is by using Entity Manager
+when ever we are using Entity Manger what we are using is Persistence context
+
+if there isno @Tranactional in above code after each line of execution the Peristence context will close//the session would end
+
+so when "Pasport passport=student.getPassport();
+" i sabout to execute we would get an exception
+
+
+
+from time 7.30listen concept should be understood easy-WE CAN USE THE @TRANSACTIOANL 	in repository and can 
+cal a method so that method would inherit Transactional propertie from Repo class instead
+
+
+in JPA we ue EntityMAnager to acces Peristence context
+in hibernate we use Session and Session Factory
+
+
+
+$$$$$$$$$$$$$$$$$$072 Step 28 - OneToOne Mapping - Bidirectional Relationship - Part 1$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+now we want to get passport and from passport the student associated with it
+we did the opposite earlier but it is unidirectional
+
+
+we can do that by adding Student property to Passport class
+
+###########code##############################3
+
+@OneToOne(fetch=FetchType.LAZY)
+private Student student;
+
+########################################33
+
+
+
+but now we need to define an owning side(otherwie student would have a papoert column and pasport will also have a student column which is redundeent) lets say we need to make Student calss the owning class
+so in Passport calss we define mappedBy property as follows
+
+#####code##############################3
+@OneToOne(fetch=FetchType.LAZY,mappedBy="passport")
+private tudent student;
+
+##################################################
+
+mappedBy ensure thaat in Passport table the tudent column would not be created
+
+
+
+
+so now when you run the passport tble wont have a student column but the student tbale would have a passport column

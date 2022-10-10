@@ -1,6 +1,381 @@
 $$$$$$$$$$$$$$$$$$$078 Step 30 - ManyToOne Mapping - Designing the database$$$$$$$$$$$$$$
 
+relationhip betwenn course and its reviews
+we hae the column in MANY side which is review side
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$079 Step 30 - Part 2 - ManyToOne Mapping - Implementing the Mapping$$$$$$$$$$$$$$$$$$4
+
+
+in Course .java we will store as follows
+
+#################code########################
+
+@OneToMany
+private List<Review> reviews=new ArrayLst<>();
+
+##############################################
+
+we have 
+@OneToMany
+@ManyToOne
+
+here we think from Course aspect so we used @OneToMany
+
+
+here we dont want to give the whole revies list to somebody to manipulate at once so we provide access a follows
+
+###############CODE##############################
+
+@ManyToOne
+private Course course;
+
+public void addReview(Review review){
+
+this.reviews.add(review);
+}
+
+public void removeReviewReview review){//can we remove like this in a list??
+this.revviews.revmove(review);
+}
+
+#####################################################
+
+as we stated we would have the column in Review side(Many side)
+SO Review is the owning side of realtonship
+
+so mapped by is in the Course classes' "reviews" varinblae which is a list
+
+#########################code#################################
+@OneToMany(mappedBy="course")
+private List<Review> reviews=new ArrayLst<>();
+
+
+##################################################################
+
+
+here we have a foreign key constraint in Course table
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$080 Step 31 - ManyToOne Mapping - Retrieving and inserting Reviews for Course$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+when we are retriving  a ccoure now an additional query will execute as you see in the logs(time 3.18) 
+
+######################code########################
+
+public void addReviewForCourse(){
+//get the course 1003
+Course course =findById(100003L);
+logger.info("course.getReviews()->{}",course.getReviews());
+
+//add 2 reviews to its
+Review review1 =new Review("5","Great Hands on stuff");
+Review review2=new Review("5","Hatsoff");
+
+//setting the relationship//*****88here we have to include both ways
+course.addReview(review1);
+review1.setCourse(course);
+
+
+course.addReview(review2);
+review2.setCourse(course);
+
+
+//save it to the the database
+em.persist(review1)
+em.persistreview2);
+
+}
+
+###########################################################
+
+
+
+$$$$$$$$$$$$$$$$$$$$081 Step 32 - ManyToOne Mapping - Generalizing Insert Reviews$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+we create a method to addd reviews to a course(in addition to what it already has)
+
+
+#####################code#################################
+
+public void addReviewsForCourse(Long courseId,List<Review> reviews){
+
+Course course=findById(courseId);
+logger.info("course.getReviews()->{}",course.getReviews());
+for(Review review:reviews)
+{
+//setting the realtionship//always add to both sides
+coure.addReview(review)
+review.setCourse(course)
+em.persist(review);
+
+}
+
+
+
+
+
+}
+
+
+##################################################
+
+
+just an easy way ofpassing reviews to a course
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Wrapping UP$$$$$$$$$$$$$$$$$$
+watch this
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$083 Step 34 - ManyToMany Mapping - Table Design$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+realtionship between course and student
+student can have multiple courses and a course can have multiple students
+here we have to create a new table like COURSE_STUDENT
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$084 Step 35 - ManyToMany Mapping - Adding Annotations on Entities#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+#################code-in Course.java########################################
+
+@ManyToMany
+private List<Students> students =new ArrayList<>();
+
+
+#################################################################
+
+
+
+
+#################code-in Student.java########################################
+
+@ManyToMany
+private List<Course> courses =new ArrayList<>();
+
+
+#################################################################
+
+
+
+
+
+
+
+#################code-in Course.java########################################
+
+public List<Course> getCourse(){
+return courses;
+
+}
+
+public void addCourse(Course course){//here we don't want user of API to addd a list of courses so this we give
+this.courses.add(course);
+}
+
+#################################################################
+
+
+same as above to Student.java
+
+
+
+here after the insert query runs we will have two tables contining exactly same columnsa
+
+STUDENT_CCOURSES
+COURSES_STUDENT
+
+
+but  this is bad in next step we will resolve it
+
+
+#####################################################################
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+$$$$$$$$$$$$085 Step 36 - ManyToMany Mapping - Fixing two join tables problem$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+to fix the previous video problem WE NEED TTO MAKE ONE ENTITY OWNING SIDE
+(here anyways one joining table is created)
+
+will make Cours side the owning so in Student.java
+
+
+#######################code######################################
+
+@ManyToMany(mappedBy="course")
+private List<Student> students=new ArrayList<>();
+
+
+##############################################################
+
+Now only one table created STUDENT_COURSES
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$086 Step 37 - ManyToMany Mapping - Customizing the Join Table$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+where mappedBy is that entity  wont own the realtionship
+its like mappedBy is given instead
+
+
+so on the owning side we can used @JoinTable
+
+
+
+
+ ###################code######################
+
+@ManyToMany
+@JoinTable(name="STUDENT_COURSE",
+joinCColumns=@JoinColumn(name="STUDENT_ID"),
+inverseJoinColumns=@JoinColumn(name="COURSE_ID))
+)
+//joinColumn-STUDENT_ID
+//inverseJoinColumn-COURSE_ID
+private List<Student> students=new ArrayList<>();
+
+
+######################################################
+
+
+here we have changed table name column names//prviously all had "S" at the end STUDENT_COURSES,STUDENTS_ID,COURSES_ID
+
+
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$087 Step 38 - ManyToMany Mapping - Insert Data and Write Join Query$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+Nothing to note???right??
+
+
+
+
+
+
+
+
+
+$$$$$$$$$$$$088 Step 39 - ManyToMany Mapping - Retrieve Data using JPA Relationships$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+we will use Student Repository
+side @Test
+
+
+###########code#################################
+
+
+@Test
+@Transactional
+public void retrieveStudentAndCourse(){
+
+Student student=em.find(Student.class,20001L);
+
+logger.info("student->{}",student);
+logger.info("ccourses->{}",student.getCourses());
+
+}
+}
+#########################################################
+
+
+
+Here we told to fetch student but didnt say about courses so we didnt get
+ due to LAZY fetch
+** BY DEFAULT MANY TO MANY IS LAZY FETCHED
+
+
+BUT WE CAN CHANGE THAT as follows
+
+
+###########code-IN Student.java#################################
+
+
+@ManyToMany(fech=FetchType.LAZY)
+@JoinTable(name="STUDENT_COURSE",
+joinCColumns=@JoinColumn(name="STUDENT_ID"),
+inverseJoinColumns=@JoinColumn(name="COURSE_ID))
+)
+private List<Student> students=new ArrayList<>();
+
+
+#########################################################
+
+
+
+
+
+Now student and all courses will be fetched though we eexplicitly didnt said to retrive COURSE
+
+
+but this is not recommended
+
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$089 Step 40 - ManyToMany Mapping - Insert Student and Course$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+just watch this
+
+
+
+
+
+
+
 
 
