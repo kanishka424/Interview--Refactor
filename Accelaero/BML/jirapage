@@ -1,0 +1,390 @@
+Payment flow 
+
+The customer clicks the pay button on IBE
+
+ Send the payment initiation request to payment gateway 
+
+          Request
+
+curl --location --request POST 'https://api.uat.merchants.bankofmaldives.com.mv/public/transactions' \
+--header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjYzZGU1ZDU1LTRiYWEtNGM2Yi1iNzBiLWExNGQ4ODNlNGVjNyIsImNvbXBhbnlJZCI6IjYxMmRlZjA1ZTkxMjdjMDAwOWYxNTc4MyIsImlhdCI6MTYzNDU3NDIzOSwiZXhwIjo0NzkwMjQ3ODM5fQ.KjoNR3PPD-AGcNrAfuvUuFU25bx84G9jqML0Lh6h6Oo' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "localId": "W50",
+  "customerReference": "W50",
+  "signature": "a1d7a2027706f2fede541f7bac4531840035a3c0",
+  "amount": 2000,
+  "currency": "MVR",
+  "provider": "",
+  "appVersion": "aeroMart_8",
+  "apiVersion": "2.0",
+  "deviceId": "W50",
+  "signMethod": "sha1",
+  "redirectUrl": "https://flymecmb2.isaaviations.com"
+}'
+
+
+
+               Response                     
+
+{
+    "created": "2022-06-27T10:58:14.695Z",
+    "updated": "2022-06-27T10:58:14.710Z",
+    "amount": 2000,
+    "merchantId": "612def05e9127c0009f15783",
+    "customerId": null,
+    "currency": "MVR",
+    "payCurrency": "MVR",
+    "provider": null,
+    "providerHistory": [],
+    "state": "INITIATED",
+    "accountingState": null,
+    "qr": {},
+    "securityWord": "",
+    "canRefundIfConfirmed": true,
+    "canIncrementalPartialRefundIfConfirmed": true,
+    "canPartialRefundIfConfirmed": true,
+    "externalImport": false,
+    "externalId": "",
+    "localId": "W50",
+    "paymentToken": null,
+    "history": [
+        {
+            "state": "INITIATED",
+            "updatedDate": "2022-06-27T10:58:14.695Z",
+            "trigger": "SYSTEM"
+        }
+    ],
+    "appVersion": "aeroMart_8",
+    "apiVersion": "2.0",
+    "deviceId": "63de5d55-4baa-4c6b-b70b-a14d883e4ec7",
+    "originalDeviceId": "63de5d55-4baa-4c6b-b70b-a14d883e4ec7",
+    "redirectUrl": "https://flymecmb2.isaaviations.com",
+    "costStructure": null,
+    "providerDisplayName": null,
+    "remittanceId": null,
+    "orderInfo": null,
+    "originatorApp": "63de5d55-4baa-4c6b-b70b-a14d883e4ec7",
+    "refundId": null,
+    "refundReason": null,
+    "paymentErrorHistory": [],
+    "vendorQrCode": null,
+    "resellerMetadata": {},
+    "subTotal": null,
+    "taxesTotal": null,
+    "serviceChargeTotal": null,
+    "paymentLinks": [],
+    "initiator": null,
+    "url": "https://transaction.uat.merchants.bankofmaldives.com.mv/62b98d466601500009d081cc",
+    "initiatorDetails": null,
+    "expires": "2022-07-04T10:58:14.692Z",
+    "customerReference": "W50",
+    "hasError": false,
+    "allowRetry": false,
+    "threeDSecure": null,
+    "paddedCardNumber": null,
+    "providerBrandName": null,
+    "buyerIdentifier": null,
+    "tokenizationMethod": null,
+    "isPreAuthorization": false,
+    "isPaymentLink": true,
+    "isShop": null,
+    "isTapToPay": null,
+    "preauthorizedAmount": null,
+    "preauthorizedExpiryDate": null,
+    "refundExpiryDate": null,
+    "fxOrder": null,
+    "vendorUrl": null,
+    "payAmount": 2000,
+    "rating": null,
+    "signMethod": "sha1",
+    "dcc": null,
+    "implicitDcc": null,
+    "capturedAmount": null,
+    "urlHash": "OgZqonl4Q",
+    "shortUrl": "https://uat.pay.bml.com.mv/OgZqonl4Q",
+    "orderState": null,
+    "orderStateSlug": null,
+    "amountBeforeDiscount": null,
+    "amountDiscounted": null,
+    "isTest": null,
+    "cardExpMonth": null,
+    "cardExpYear": null,
+    "cardFunding": null,
+    "cardCountry": null,
+    "lastShared": null,
+    "availableBalance": 2000,
+    "refundTransactions": [],
+    "refundTransactionIds": [],
+    "parentTransactionId": null,
+    "paymentLinkSecurity": null,
+    "balanceMigrated": null,
+    "refundMigrated": null,
+    "oldRefundFlowTransaction": null,
+    "refundFlagMigration": null,
+    "invoiceInfo": null,
+    "availableBalanceMigrated": null,
+    "terminalId": null,
+    "locationMetadata": null,
+    "payerId": null,
+    "payerMetaId": null,
+    "tenantTermsId": null,
+    "merchantTermsId": null,
+    "payerIpAddress": null,
+    "billingInfoProvidedViaAPI": false,
+    "tokenizationDetails": {},
+    "id": "62b98d466601500009d081cc",
+    "amountAsDecimal": "20.00",
+    "amountFormatted": "MVR 20.00"
+}
+
+
+
+3. Redirect the customer to url   -  sample URL  https://transaction.uat.merchants.bankofmaldives.com.mv/62b98d466601500009d081cc
+
+               Redirect response               
+
+https://flymecmb2.isaaviations.com/?transactionId=62b98d466601500009d081cc&state=CONFIRMED&signature=a1d7a2027706f2fede541f7bac4531840035a3c0
+
+4. Process the redirection response 
+
+Query the payment status from payment gateway. 
+
+                 Query Request
+
+curl --location --request GET 'https://api.uat.merchants.bankofmaldives.com.mv/public/transactions/62b983eb64da1d00090a28e0' \
+--header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjYzZGU1ZDU1LTRiYWEtNGM2Yi1iNzBiLWExNGQ4ODNlNGVjNyIsImNvbXBhbnlJZCI6IjYxMmRlZjA1ZTkxMjdjMDAwOWYxNTc4MyIsImlhdCI6MTYzNDU3NDIzOSwiZXhwIjo0NzkwMjQ3ODM5fQ.KjoNR3PPD-AGcNrAfuvUuFU25bx84G9jqML0Lh6h6Oo'
+
+              Query Response
+
+{
+    "id": "62b983eb64da1d00090a28e0",
+    "created": "2022-06-27T10:18:19.091Z",
+    "updated": "2022-06-27T10:18:19.091Z",
+    "amount": 2000,
+    "merchantId": "612def05e9127c0009f15783",
+    "customerId": null,
+    "currency": "MVR",
+    "payCurrency": "MVR",
+    "provider": "bml_epos",
+    "providerHistory": [
+        "bml_epos"
+    ],
+    "state": "CONFIRMED",
+    "accountingState": null,
+    "qr": {
+        "url": "https://qr.uat.merchants.bankofmaldives.com.mv/612def05e9127c0009f15783/transactions/62b983eb64da1d00090a28e0_rykybv1656325099.png"
+    },
+    "securityWord": "ADORABLE LAPWING",
+    "canRefundIfConfirmed": true,
+    "canIncrementalPartialRefundIfConfirmed": false,
+    "canPartialRefundIfConfirmed": false,
+    "externalImport": false,
+    "externalId": "062702691946",
+    "localId": "W50",
+    "paymentToken": "691946",
+    "history": [
+        {
+            "state": "INITIATED",
+            "updatedDate": "2022-06-27T10:18:19.091Z",
+            "trigger": "SYSTEM"
+        },
+        {
+            "state": "QR_CODE_GENERATED",
+            "updatedDate": "2022-06-27T10:18:19.496Z",
+            "trigger": "SYSTEM"
+        },
+        {
+            "state": "CONFIRMED",
+            "updatedDate": "2022-06-27T10:21:21.188Z",
+            "trigger": "VENDOR_WEBHOOK"
+        }
+    ],
+    "appVersion": "aeroMart_8",
+    "apiVersion": "2.0",
+    "deviceId": "99000988",
+    "originalDeviceId": "63de5d55-4baa-4c6b-b70b-a14d883e4ec7",
+    "redirectUrl": "https://flymecmb2.isaaviations.com",
+    "costStructure": {
+        "currency": "MVR",
+        "feeRateExact": 50,
+        "rateFee": 50,
+        "fee": 50,
+        "payable": 1950,
+        "fixedFee": 0,
+        "merchantDiscountRate": {
+            "fixedFee": 0,
+            "rateFee": 250,
+            "code": "MCDEBT",
+            "provider": "bml_epos",
+            "resellerMetadata": {
+                "reseller": "BML",
+                "resellerCode": "MCDEBT"
+            }
+        }
+    },
+    "providerDisplayName": "bml_epos",
+    "remittanceId": null,
+    "orderInfo": null,
+    "originatorApp": "99000988",
+    "refundId": null,
+    "refundReason": null,
+    "paymentErrorHistory": [],
+    "vendorQrCode": null,
+    "resellerMetadata": {},
+    "subTotal": null,
+    "taxesTotal": null,
+    "serviceChargeTotal": null,
+    "paymentLinks": [],
+    "initiator": null,
+    "url": "https://transaction.uat.merchants.bankofmaldives.com.mv/62b983eb64da1d00090a28e0",
+    "initiatorDetails": null,
+    "expires": "2022-07-04T10:18:19.091Z",
+    "customerReference": "W50",
+    "hasError": false,
+    "allowRetry": false,
+    "threeDSecure": true,
+    "paddedCardNumber": "526431******6566",
+    "providerBrandName": "MasterCard Debit",
+    "buyerIdentifier": null,
+    "tokenizationMethod": null,
+    "isPreAuthorization": false,
+    "isPaymentLink": true,
+    "isShop": null,
+    "isTapToPay": null,
+    "preauthorizedAmount": null,
+    "preauthorizedExpiryDate": null,
+    "refundExpiryDate": null,
+    "fxOrder": null,
+    "vendorUrl": null,
+    "payAmount": 2000,
+    "rating": null,
+    "signMethod": "sha1",
+    "dcc": null,
+    "implicitDcc": null,
+    "capturedAmount": null,
+    "urlHash": "VvNlZjoAO",
+    "shortUrl": "https://uat.pay.bml.com.mv/VvNlZjoAO",
+    "orderState": null,
+    "orderStateSlug": null,
+    "amountBeforeDiscount": null,
+    "amountDiscounted": null,
+    "isTest": null,
+    "cardExpMonth": null,
+    "cardExpYear": null,
+    "cardFunding": null,
+    "cardCountry": null,
+    "lastShared": null,
+    "availableBalance": 2000,
+    "refundTransactions": [],
+    "refundTransactionIds": [],
+    "parentTransactionId": null,
+    "paymentLinkSecurity": null,
+    "balanceMigrated": null,
+    "refundMigrated": null,
+    "oldRefundFlowTransaction": null,
+    "refundFlagMigration": null,
+    "invoiceInfo": null,
+    "refundWorkflow": null,
+    "availableBalanceMigrated": null,
+    "terminalId": null,
+    "locationMetadata": null,
+    "payerId": null,
+    "payerMetaId": null,
+    "tenantTermsId": "625518c28af33c318c1d20b2",
+    "merchantTermsId": null,
+    "payerIpAddress": "5.107.201.139",
+    "billingInfoProvidedViaAPI": false,
+    "tokenizationDetails": {},
+    "amountAsDecimal": "20.00",
+    "amountFormatted": "MVR 20.00"
+}
+
+2.validate the signature  
+
+
+if response status is CONFIRMED && query status is CONFIRMED && signature is matching
+ ===> payment success
+ else
+ ===> payment fail
+
+
+
+
+Resources 
+
+API details - https://github.com/bankofmaldives/bml-connect
+
+Test Api Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjYzZGU1ZDU1LTRiYWEtNGM2Yi1iNzBiLWExNGQ4ODNlNGVjNyIsImNvbXBhbnlJZCI6IjYxMmRlZjA1ZTkxMjdjMDAwOWYxNTc4MyIsImlhdCI6MTYzNDU3NDIzOSwiZXhwIjo0NzkwMjQ3ODM5fQ.KjoNR3PPD-AGcNrAfuvUuFU25bx84G9jqML0Lh6h6Oo
+
+Test Cards:
+
+CARD TYPE
+
+MASTERCARD TRAVEL CARD
+
+CARD NAME
+
+MASTER-01
+
+CARD NUMBER
+
+5332970608422608
+
+EXPIRY DATE
+
+09/31
+
+SECURITY CODE
+
+714
+
+CARD TYPE
+
+MASTERCARD DEBIT
+
+CARD NAME
+
+MASTER-02
+
+CARD NUMBER
+
+5264310288096566
+
+EXPIRY DATE
+
+09/26
+
+SECURITY CODE
+
+762
+
+CARD TYPE
+
+MASTERCARD DEBIT
+
+CARD NAME
+
+MASTER-03
+
+CARD NUMBER
+
+5264310298371686
+
+EXPIRY DATE
+
+10/26
+
+SECURITY CODE
+
+003
+
+
+
+aeroMart test systems 
+
+CMB - https://flymecmb2.isaaviations.com/service-app/ibe
+
+jenkins CMB https://jenkins-ci.isaaviations.com/view/aeroMART/job/aeromart-deploy-thinair-vpcmb2/
+
+SHJ - https://flyme.isaaviations.com/xbe

@@ -1,0 +1,102 @@
+1.First show the Presentation
+ show tables at the end
+ 
+ paymentbroker-impl.mod-initial point where we get configs
+ 
+ 
+ first go to PaymentBrokerServiceBean.java
+ then PaymentBrokerManager.getRequestData(ipgRequestDTO);
+ then PaymentBrokerBmlImpl.java
+ 
+ 
+ $$$$$$$$$$$$$$$$$IN POST PAYMENT######################################
+****GOES TO HandleInterlineIPGResponseAction.java (GENERAL FLOW)
+THEN  HandleInterlineIPGResponseActionS' PaymentBrokerManager execute() 
+Making of receiptyMap(in order to store response data as a map) from "request" (using 	private static Map<String, String> getReceiptMap(HttpServletRequest request) method)
+HandleInterlineIPGResponseAction is extende by BaseRequestAwareAction , BaseRequestAwareAction contains  "protected HttpServletRequest request;" which captures the response from redirection<go throghu it and find >
+
+
+PaymentBrokerServiceBeans' getReponseData
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ In getReponseData() of PaymentBrokerBmlTemplate.java
+ 
+ 
+ flow to show 
+ 
+ HandleInterlineIPGResponseActionS->PaymentBrokerBmlTemplate
+ 
+ 
+ 
+ questions 
+ 1.How does we know what payment option user cliked and how it executes BML methods?
+ 2.how does the return url knows what payment gateway to execute?
+ 3.Why do we seesion out payments?becuase it holds sensitive data
+ 
+ 
+ 
+ technologies for support?
+ this grooming two session
+ 
+ 
+ 
+ 
+	private static Map<String, String> getReceiptMap(HttpServletRequest request) {
+		Map<String, String> fields = new LinkedHashMap<String, String>();
+		for (Enumeration<String> enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
+			String fieldName = (String) enumeration.nextElement();
+			String fieldValue = request.getParameter(fieldName);
+
+			if (fieldValue != null && fieldValue.length() > 0) {
+				fields.put(fieldName, fieldValue);
+			}
+		}
+		fields.put(PaymentConstants.IPG_SESSION_ID, request.getSession().getId());//check how this session id is
+		//where we get session check how it is used check if this is same as transaction id
+		//check with task response which stage is this
+		return fields;
+	}
+
+
+how sessions are included
+	private static Map<String, String> getReceiptMap(HttpServletRequest request) {
+		Map<String, String> fields = new LinkedHashMap<String, String>();
+		for (Enumeration<String> enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
+			String fieldName = (String) enumeration.nextElement();
+			String fieldValue = request.getParameter(fieldName);
+
+			if (fieldValue != null && fieldValue.length() > 0) {
+				fields.put(fieldName, fieldValue);
+			}
+		}
+		fields.put(PaymentConstants.IPG_SESSION_ID, request.getSession().getId());//check how this session id is
+		//where we get session check how it is used check if this is same as transaction id
+		//check with task response which stage is this
+		return fields;
+	}
+
+
+how sessions are included
+ 
+ 
+ 
+ 
+ to do 
+ 1.check the session id when initially sending and in getReponseData()
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

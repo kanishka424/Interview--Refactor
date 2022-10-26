@@ -1,0 +1,37 @@
+select * from t_temp_payment_tnx ORDER BY timestamp desc;
+select * from t_temp_payment_tnx ;
+ 
+select * from t_ccard_payment_status ORDER BY TRANSACTION_TIMESTAMP desc ;
+
+
+select * from t_payment_gateway;
+select * from t_Payment_Gateway_Config;
+select * from t_payment_gateway_currency;
+select * from t_payment_gateway_card_type;
+select * from t_payment_country_card_type;
+select * from t_payment_country_country_card;
+
+
+TPT_ID is also null
+TRANSACTION_REFERENCE should be PNR now it is null
+NM_TRANSACTION_REFERENCE should be  like W8000387
+gateway name is null
+Comment is null at least be time
+Transaction_ID is null
+
+response time is null
+
+
+
+select * from t_temp_payment_tnx ORDER BY timestamp desc;
+select * from t_temp_payment_tnx ;
+ 
+select * from t_ccard_payment_status ORDER BY TRANSACTION_TIMESTAMP desc ;
+
+select * from t_ccard_payment_status where NM_TRANSACTION_REFERENCE in('631f270cdc92a90009ff64bd','W8000387') AND SERVICE_TYPE='ccquery';
+
+
+select * from t_ccard_payment_status  where ORDER BY TRANSACTION_TIMESTAMP desc ;
+
+
+
