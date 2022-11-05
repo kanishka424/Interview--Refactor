@@ -1,2 +1,5 @@
 amzaon study plan-
 https://betterprogramming.pub/study-plan-to-land-senior-software-engineer-positions-at-meta-google-and-more-cd5362dda84
+
+The resources I used to prepare for FAANG interviews
+-https://medium.com/@SunnyB/resources-for-prepping-for-interviews-dc9f23bb41fb

@@ -1,0 +1,3 @@
+$$$$$$$$$$$$$$$$$$$$$$$$$092 Step 43 - JPA Inheritance Hierarchies and Mappings - Setting up entities$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
